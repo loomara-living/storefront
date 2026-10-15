@@ -24,11 +24,12 @@ function loomara_assets() {
         [],
         null
     );
-    wp_enqueue_style('loomara-theme', get_template_directory_uri() . '/assets/loomara.css', ['loomara-fonts'], '1.0.0');
+    wp_enqueue_style('loomara-theme', get_template_directory_uri() . '/assets/loomara.css', ['loomara-fonts'], '1.1.0');
     if (class_exists('WooCommerce')) {
-        wp_enqueue_style('loomara-woocommerce', get_template_directory_uri() . '/assets/woocommerce.css', ['loomara-theme'], '1.1.1');
+        wp_enqueue_style('loomara-woocommerce', get_template_directory_uri() . '/assets/woocommerce.css', ['loomara-theme'], '1.2.0');
+        wp_enqueue_script('wc-cart-fragments');
     }
-    wp_enqueue_script('loomara-theme', get_template_directory_uri() . '/assets/loomara.js', [], '1.0.0', true);
+    wp_enqueue_script('loomara-theme', get_template_directory_uri() . '/assets/loomara.js', ['jquery'], '1.1.0', true);
 }
 add_action('wp_enqueue_scripts', 'loomara_assets');
 
@@ -49,4 +50,72 @@ add_filter('body_class', 'loomara_body_classes');
 
 // The theme provides the collection heading; hide WooCommerce's duplicate title.
 add_filter('woocommerce_show_page_title', '__return_false');
+
+function loomara_cart_item_count() {
+    return function_exists('WC') && WC()->cart ? WC()->cart->get_cart_contents_count() : 0;
+}
+
+function loomara_header_cart_markup() {
+    $count = loomara_cart_item_count();
+    return sprintf(
+        '<a class="header-cart" href="%1$s" aria-label="%2$s"><span class="header-cart-label">Cart</span><span class="header-cart-count">%3$d</span></a>',
+        esc_url(wc_get_cart_url()),
+        esc_attr(sprintf(_n('View cart, %d item', 'View cart, %d items', $count, 'loomara-living'), $count)),
+        $count
+    );
+}
+
+function loomara_product_cart_quantity($product_id) {
+    if (!function_exists('WC') || !WC()->cart) {
+        return 0;
+    }
+
+    $quantity = 0;
+    foreach (WC()->cart->get_cart() as $item) {
+        if ((int) $item['product_id'] === (int) $product_id) {
+            $quantity += (int) $item['quantity'];
+        }
+    }
+    return $quantity;
+}
+
+function loomara_loop_cart_status_markup($product_id) {
+    $quantity = loomara_product_cart_quantity($product_id);
+    $class = 'loop-cart-status loop-cart-status-' . absint($product_id);
+    if (!$quantity) {
+        $class .= ' is-empty';
+    }
+    $label = $quantity ? sprintf(_n('%d in your cart', '%d in your cart', $quantity, 'loomara-living'), $quantity) : '';
+
+    return sprintf(
+        '<span class="%1$s" aria-live="polite"><span aria-hidden="true">✓</span> %2$s</span>',
+        esc_attr($class),
+        esc_html($label)
+    );
+}
+
+function loomara_loop_cart_status() {
+    global $product;
+    if ($product instanceof WC_Product) {
+        echo loomara_loop_cart_status_markup($product->get_id()); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+    }
+}
+add_action('woocommerce_after_shop_loop_item', 'loomara_loop_cart_status', 7);
+
+function loomara_cart_fragments($fragments) {
+    $fragments['a.header-cart'] = loomara_header_cart_markup();
+
+    if (function_exists('WC') && WC()->cart) {
+        $product_ids = [];
+        foreach (WC()->cart->get_cart() as $item) {
+            $product_ids[(int) $item['product_id']] = true;
+        }
+        foreach (array_keys($product_ids) as $product_id) {
+            $fragments['span.loop-cart-status-' . $product_id] = loomara_loop_cart_status_markup($product_id);
+        }
+    }
+
+    return $fragments;
+}
+add_filter('woocommerce_add_to_cart_fragments', 'loomara_cart_fragments');
 

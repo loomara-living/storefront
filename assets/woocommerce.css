@@ -2,7 +2,7 @@
   width: 100%;
   max-width: 100%;
   min-height: 70vh;
-  padding: clamp(4.5rem, 8vw, 8rem) clamp(1.25rem, 5vw, 5rem) clamp(6rem, 10vw, 10rem);
+  padding: clamp(2.75rem, 5vw, 4.5rem) clamp(1.25rem, 5vw, 5rem) clamp(5rem, 8vw, 8rem);
   background: var(--paper);
 }
 .woocommerce-content,
@@ -12,14 +12,14 @@
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(260px, 36rem);
   align-items: end;
-  gap: 2rem 4rem;
-  margin: 0 0 clamp(3.5rem, 7vw, 6rem);
-  padding-bottom: clamp(2rem, 4vw, 3.5rem);
+  gap: 1rem 4rem;
+  margin: 0 0 clamp(2.25rem, 4vw, 3.5rem);
+  padding-bottom: clamp(1.5rem, 3vw, 2.25rem);
   border-bottom: 1px solid var(--line);
 }
 
 .shop-heading .eyebrow { grid-column: 1 / -1; margin-bottom: 0; }
-.shop-heading h1 { margin: 0; font-size: clamp(3.75rem, 7vw, 7rem); }
+.shop-heading h1 { margin: 0; font-size: clamp(3.25rem, 5.5vw, 5.75rem); }
 .shop-intro { max-width: 34rem; margin: 0 0 .65rem; color: var(--ink-soft); font-size: clamp(1rem, 1.5vw, 1.2rem); overflow-wrap: anywhere; }
 .woocommerce .woocommerce-products-header { display: none; }
 
@@ -75,6 +75,42 @@
   font-weight: 600;
   letter-spacing: .04em;
 }
+.woocommerce ul.products li.product .loop-cart-status {
+  display: block;
+  width: fit-content;
+  margin: -.35rem 0 1rem;
+  padding: .35rem .65rem;
+  background: rgba(185, 135, 63, .12);
+  color: var(--ink-soft);
+  font-size: .72rem;
+  font-weight: 600;
+  letter-spacing: .04em;
+}
+.woocommerce ul.products li.product .loop-cart-status > span { color: var(--gold); }
+.woocommerce ul.products li.product .loop-cart-status.is-empty { display: none; }
+.woocommerce ul.products li.product .added_to_cart.wc-forward {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 48px;
+  margin: 0 0 0 .55rem;
+  padding: .8rem 1.25rem;
+  border: 1px solid var(--ink);
+  color: var(--ink);
+  font-size: .75rem;
+  font-weight: 600;
+  letter-spacing: .08em;
+  line-height: 1;
+  text-transform: uppercase;
+  vertical-align: top;
+  transition: background .2s, color .2s, transform .2s;
+}
+.woocommerce ul.products li.product .added_to_cart.wc-forward:hover {
+  background: var(--gold);
+  border-color: var(--gold);
+  color: #fff;
+  transform: translateY(-2px);
+}
 .woocommerce a.button,
 .woocommerce button.button,
 .woocommerce input.button,
@@ -113,14 +149,16 @@
 /* Cart */
 .woocommerce-cart .wp-page-content { background: var(--paper); }
 .woocommerce-cart .page-hero {
-  min-height: 390px;
+  min-height: 255px;
+  padding-top: clamp(2.75rem, 5vw, 4.5rem);
+  padding-bottom: clamp(2.75rem, 5vw, 4.5rem);
   background: linear-gradient(135deg, var(--cream), #efe2d1);
 }
-.woocommerce-cart .page-hero h1 { font-size: clamp(3.75rem, 7vw, 7rem); }
+.woocommerce-cart .page-hero h1 { font-size: clamp(3.25rem, 5.5vw, 5.75rem); }
 .woocommerce-cart .wp-page-content .entry-content {
   width: 100%;
   max-width: 1280px;
-  padding: clamp(3.5rem, 7vw, 7rem) clamp(1.25rem, 4vw, 3rem) clamp(6rem, 10vw, 10rem);
+  padding: clamp(2.75rem, 5vw, 5rem) clamp(1.25rem, 4vw, 3rem) clamp(5rem, 8vw, 8rem);
 }
 .woocommerce-cart .wp-block-woocommerce-cart,
 .woocommerce-cart .wc-block-components-sidebar-layout,
@@ -215,7 +253,7 @@
 }
 
 @media (max-width: 620px) {
-  .woocommerce-shell { padding-top: 4rem; }
+  .woocommerce-shell { padding-top: 2.75rem; }
   .shop-heading,
   .shop-intro,
   .woocommerce-content { width: 100%; max-width: 100%; }
@@ -223,7 +261,9 @@
   .woocommerce .woocommerce-ordering { float: none; }
   .woocommerce .woocommerce-ordering select { width: 100%; }
   .woocommerce ul.products { grid-template-columns: 1fr; }
-  .woocommerce-cart .page-hero { min-height: 310px; }
+  .woocommerce ul.products li.product .button,
+  .woocommerce ul.products li.product .added_to_cart.wc-forward { width: 100%; margin: .55rem 0 0; }
+  .woocommerce-cart .page-hero { min-height: 215px; padding-top: 2.5rem; padding-bottom: 2.5rem; }
   .woocommerce-cart .wp-page-content .entry-content { overflow: hidden; }
   .woocommerce-cart .wc-block-cart__empty-cart__title { padding: 0 .5rem; font-size: 2.15rem; }
   .woocommerce-cart .wc-block-cart-items .wc-block-cart-items__row { grid-template-columns: 88px 1fr; }

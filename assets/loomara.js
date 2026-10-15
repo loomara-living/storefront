@@ -36,3 +36,13 @@ document.querySelectorAll('[data-newsletter]').forEach((form) => {
     form.reset();
   });
 });
+
+if (window.jQuery) {
+  window.jQuery(document.body).on('added_to_cart removed_from_cart wc_fragments_refreshed', () => {
+    const cart = document.querySelector('.header-cart');
+    if (!cart) return;
+    cart.classList.remove('cart-updated');
+    window.requestAnimationFrame(() => cart.classList.add('cart-updated'));
+    window.setTimeout(() => cart.classList.remove('cart-updated'), 500);
+  });
+}

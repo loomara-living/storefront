@@ -26,7 +26,7 @@ function loomara_assets() {
     );
     wp_enqueue_style('loomara-theme', get_template_directory_uri() . '/assets/loomara.css', ['loomara-fonts'], '1.0.0');
     if (class_exists('WooCommerce')) {
-        wp_enqueue_style('loomara-woocommerce', get_template_directory_uri() . '/assets/woocommerce.css', ['loomara-theme'], '1.0.0');
+        wp_enqueue_style('loomara-woocommerce', get_template_directory_uri() . '/assets/woocommerce.css', ['loomara-theme'], '1.1.0');
     }
     wp_enqueue_script('loomara-theme', get_template_directory_uri() . '/assets/loomara.js', [], '1.0.0', true);
 }
@@ -46,4 +46,7 @@ function loomara_body_classes($classes) {
     return $classes;
 }
 add_filter('body_class', 'loomara_body_classes');
+
+// The theme provides the collection heading; hide WooCommerce's duplicate title.
+add_filter('woocommerce_show_page_title', '__return_false');
 

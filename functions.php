@@ -26,7 +26,7 @@ function loomara_assets() {
     );
     wp_enqueue_style('loomara-theme', get_template_directory_uri() . '/assets/loomara.css', ['loomara-fonts'], '1.1.0');
     if (class_exists('WooCommerce')) {
-        wp_enqueue_style('loomara-woocommerce', get_template_directory_uri() . '/assets/woocommerce.css', ['loomara-theme'], '1.2.0');
+        wp_enqueue_style('loomara-woocommerce', get_template_directory_uri() . '/assets/woocommerce.css', ['loomara-theme'], '1.2.1');
         wp_enqueue_script('wc-cart-fragments');
     }
     wp_enqueue_script('loomara-theme', get_template_directory_uri() . '/assets/loomara.js', ['jquery'], '1.1.0', true);
@@ -86,11 +86,17 @@ function loomara_loop_cart_status_markup($product_id) {
         $class .= ' is-empty';
     }
     $label = $quantity ? sprintf(_n('%d in your cart', '%d in your cart', $quantity, 'loomara-living'), $quantity) : '';
+    $cart_link = $quantity ? sprintf(
+        '<a href="%1$s">%2$s</a>',
+        esc_url(wc_get_cart_url()),
+        esc_html__('View cart', 'loomara-living')
+    ) : '';
 
     return sprintf(
-        '<span class="%1$s" aria-live="polite"><span aria-hidden="true">✓</span> %2$s</span>',
+        '<span class="%1$s" aria-live="polite"><span class="loop-cart-status-label"><span aria-hidden="true">✓</span> %2$s</span>%3$s</span>',
         esc_attr($class),
-        esc_html($label)
+        esc_html($label),
+        $cart_link
     );
 }
 

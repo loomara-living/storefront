@@ -31,8 +31,8 @@
       <?php if (!is_shop() && !is_cart()) : ?>
         <a class="header-cta" href="<?php echo esc_url(wc_get_page_permalink('shop')); ?>">Explore the collection <span aria-hidden="true">↗</span></a>
       <?php endif; ?>
+      <a class="header-account" href="<?php echo esc_url(wc_get_page_permalink('myaccount')); ?>"><?php echo is_user_logged_in() ? 'My account' : 'Sign in'; ?></a>
       <?php echo loomara_header_cart_markup(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
     </div>
   <?php endif; ?>
 </header>
-

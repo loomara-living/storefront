@@ -4,6 +4,8 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
+require_once get_template_directory() . '/inc/store-setup.php';
+
 function loomara_setup() {
     add_theme_support('title-tag');
     add_theme_support('post-thumbnails');
@@ -24,12 +26,12 @@ function loomara_assets() {
         [],
         null
     );
-    wp_enqueue_style('loomara-theme', get_template_directory_uri() . '/assets/loomara.css', ['loomara-fonts'], '1.1.0');
+    wp_enqueue_style('loomara-theme', get_template_directory_uri() . '/assets/loomara.css', ['loomara-fonts'], '1.2.0');
     if (class_exists('WooCommerce')) {
-        wp_enqueue_style('loomara-woocommerce', get_template_directory_uri() . '/assets/woocommerce.css', ['loomara-theme'], '1.2.1');
+        wp_enqueue_style('loomara-woocommerce', get_template_directory_uri() . '/assets/woocommerce.css', ['loomara-theme'], '1.3.0');
         wp_enqueue_script('wc-cart-fragments');
     }
-    wp_enqueue_script('loomara-theme', get_template_directory_uri() . '/assets/loomara.js', ['jquery'], '1.1.0', true);
+    wp_enqueue_script('loomara-theme', get_template_directory_uri() . '/assets/loomara.js', ['jquery'], '1.2.0', true);
 }
 add_action('wp_enqueue_scripts', 'loomara_assets');
 
@@ -40,13 +42,34 @@ function loomara_menu_fallback() {
     }
     echo '<a href="' . esc_url(home_url('/our-story/')) . '">Our story</a>';
     echo '<a href="' . esc_url(home_url('/contact/')) . '">Contact</a>';
+    if (class_exists('WooCommerce')) {
+        echo '<a href="' . esc_url(wc_get_page_permalink('myaccount')) . '">Account</a>';
+    }
 }
 
 function loomara_body_classes($classes) {
     $classes[] = 'loomara-wordpress';
+    if (is_page()) {
+        $page = get_queried_object();
+        if ($page instanceof WP_Post) {
+            $classes[] = 'loomara-page-' . sanitize_html_class($page->post_name);
+        }
+    }
     return $classes;
 }
 add_filter('body_class', 'loomara_body_classes');
+
+function loomara_product_category_url($slug) {
+    if (!taxonomy_exists('product_cat')) {
+        return home_url('/');
+    }
+    $term = get_term_by('slug', $slug, 'product_cat');
+    if (!$term) {
+        return class_exists('WooCommerce') ? wc_get_page_permalink('shop') : home_url('/');
+    }
+    $url = get_term_link($term, 'product_cat');
+    return is_wp_error($url) ? wc_get_page_permalink('shop') : $url;
+}
 
 // The theme provides the collection heading; hide WooCommerce's duplicate title.
 add_filter('woocommerce_show_page_title', '__return_false');
@@ -124,4 +147,3 @@ function loomara_cart_fragments($fragments) {
     return $fragments;
 }
 add_filter('woocommerce_add_to_cart_fragments', 'loomara_cart_fragments');
-

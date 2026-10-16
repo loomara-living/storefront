@@ -1,0 +1,31 @@
+/* Two compact desktop rows fit an eight-item catalog page comfortably. */
+.woocommerce ul.products li.product a img,
+.home-product-grid .woocommerce ul.products li.product a img { height:clamp(110px,9vw,130px); aspect-ratio:auto; object-fit:contain; margin-bottom:.65rem; }
+.woocommerce ul.products li.product .woocommerce-loop-product__title { font-size:1rem; line-height:1.25; min-height:2.5em; margin-bottom:.35rem; }
+.woocommerce ul.products li.product .price { font-size:.82rem; margin-bottom:.5rem; }
+.woocommerce ul.products li.product { padding-bottom:.6rem; }
+.woocommerce ul.products { gap:1.1rem 1.4rem; }
+.woocommerce ul.products li.product .button,
+.woocommerce ul.products li.product .added_to_cart { min-height:44px; padding:.6rem .8rem !important; font-size:.65rem !important; }
+.woocommerce ul.products li.product .wishlist-form { display:inline-flex; clear:none; vertical-align:top; margin:0 0 0 .35rem; }
+.woocommerce ul.products li.product .wishlist-button { min-height:36px; font-size:.7rem; }
+.woocommerce ul.products li.product .loop-cart-status { margin:0 0 .5rem; gap:.25rem; font-size:.65rem; }
+.woocommerce-shell { padding-top:1rem; }
+.woocommerce-shell .shop-heading { margin-bottom:.4rem; padding-bottom:.5rem; }
+.woocommerce-shell .shop-heading h1 { font-size:2.6rem; }
+.woocommerce-shell .shop-heading .eyebrow { font-size:.63rem; }
+.woocommerce-shell .shop-intro { font-size:.85rem; margin:0; }
+.woocommerce-shell .woocommerce-result-count,.woocommerce-shell .woocommerce-ordering { margin-bottom:.6rem; }
+.shop-discovery { margin-bottom:.3rem; }
+.woocommerce div.product .product_title { font-size:clamp(2rem,3.3vw,3.5rem); line-height:1.1; margin-bottom:1.25rem; }
+.woocommerce div.product div.images { max-width:470px; }
+@media(max-width:620px) {
+  .woocommerce ul.products li.product a img,
+  .home-product-grid .woocommerce ul.products li.product a img { height:120px; }
+  .woocommerce ul.products li.product .woocommerce-loop-product__title { font-size:.95rem; }
+  .shop-discovery { gap:.5rem; }
+  .collection-search { width:100%; }
+  .woocommerce-shell .shop-heading h1 { font-size:2rem; }
+  .woocommerce-shell .shop-intro { display:none; }
+  .woocommerce div.product div.images { max-width:100%; }
+}

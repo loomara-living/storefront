@@ -28,11 +28,17 @@
   </nav>
   <?php if (class_exists('WooCommerce')) : ?>
     <div class="header-actions">
-      <?php if (!is_shop() && !is_cart()) : ?>
-        <a class="header-cta" href="<?php echo esc_url(wc_get_page_permalink('shop')); ?>">Explore the collection <span aria-hidden="true">↗</span></a>
-      <?php endif; ?>
-      <a class="header-account" href="<?php echo esc_url(wc_get_page_permalink('myaccount')); ?>"><?php echo is_user_logged_in() ? 'My account' : 'Sign in'; ?></a>
+      <a class="header-icon header-search" href="<?php echo esc_url(wc_get_page_permalink('shop') . '#collection-search'); ?>" aria-label="Search products" title="Search products" data-search-toggle aria-expanded="false" aria-controls="header-search-panel"><?php echo loomara_icon('search'); ?></a>
+      <a class="header-icon header-account" href="<?php echo esc_url(wc_get_page_permalink('myaccount')); ?>" aria-label="Your account" title="Your account"><?php echo loomara_icon('user'); ?></a>
       <?php echo loomara_header_cart_markup(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
     </div>
   <?php endif; ?>
 </header>
+<?php if (class_exists('WooCommerce')) : ?>
+<div id="header-search-panel" class="header-search-panel" hidden>
+  <form role="search" method="get" action="<?php echo esc_url(home_url('/')); ?>">
+    <label for="header-product-search">Find your softer layer</label>
+    <div class="search-input-row"><input type="search" name="s" id="header-product-search" placeholder="Try bedsheets, comforter, sage…" required><input type="hidden" name="post_type" value="product"><button class="button button-primary" type="submit">Search</button><button class="search-close" type="button" aria-label="Close search" data-search-close>×</button></div>
+  </form>
+</div>
+<?php endif; ?>

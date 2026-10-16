@@ -28,16 +28,29 @@
   </section>
   <?php if (class_exists('WooCommerce')) : ?>
     <section class="home-products home-products-trending">
-      <div class="section-heading reveal"><div><p class="eyebrow">Chosen for softer spaces</p><h2>Trending now</h2></div><a class="text-link" href="<?php echo esc_url(wc_get_page_permalink('shop')); ?>">Shop all <span aria-hidden="true">→</span></a></div>
-      <div class="home-product-grid reveal"><?php echo do_shortcode('[products visibility="featured" limit="4" columns="4" orderby="date" order="DESC"]'); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></div>
+      <div class="section-heading reveal"><div><p class="eyebrow">A little inspiration</p><h2>Find your next favourite</h2></div><a class="text-link" href="<?php echo esc_url(wc_get_page_permalink('shop')); ?>">Shop all <span aria-hidden="true">→</span></a></div>
+      <div class="home-collection-tabs" data-collection-tabs>
+        <nav class="collection-tabs" aria-label="Discover collections">
+          <?php foreach (['all' => 'New arrivals', 'best-sellers' => 'Best sellers', 'sale' => 'Sale'] as $key => $label) : ?>
+            <a id="tab-<?php echo esc_attr($key); ?>" href="<?php echo esc_url(add_query_arg('collection', $key, wc_get_page_permalink('shop'))); ?>" data-collection-tab="<?php echo esc_attr($key); ?>"><?php echo esc_html($label); ?></a>
+          <?php endforeach; ?>
+        </nav>
+        <?php foreach (['all' => 'New arrivals', 'best-sellers' => 'Best sellers', 'sale' => 'Sale'] as $key => $label) : ?>
+          <div id="collection-<?php echo esc_attr($key); ?>" class="home-product-grid collection-tab-panel" data-collection-panel="<?php echo esc_attr($key); ?>" aria-label="<?php echo esc_attr($label); ?>"><?php loomara_home_collection($key); ?></div>
+        <?php endforeach; ?>
+      </div>
     </section>
     <section class="home-products home-products-new">
       <div class="section-heading reveal"><div><p class="eyebrow">Just arrived</p><h2>New collection</h2></div><a class="text-link" href="<?php echo esc_url(wc_get_page_permalink('shop')); ?>">Explore new arrivals <span aria-hidden="true">→</span></a></div>
       <div class="home-product-grid reveal"><?php echo do_shortcode('[products limit="4" columns="4" orderby="date" order="DESC"]'); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></div>
     </section>
+    <section class="home-products home-top-rated">
+      <div class="section-heading"><div><p class="eyebrow">Loved in real homes</p><h2>Top rated</h2></div></div>
+      <div class="home-product-grid"><?php loomara_top_rated_collection(); ?></div>
+    </section>
   <?php endif; ?>
   <section class="material-story"><div class="material-visual reveal" role="img" aria-label="Abstract close-up inspired by gently folded woven fabric"><span class="weave-line line-a"></span><span class="weave-line line-b"></span><span class="weave-line line-c"></span><p>Texture / tone / touch</p></div><div class="material-copy reveal"><p class="eyebrow">A thoughtful approach</p><h2>Beauty you can<br><em>feel.</em></h2><p>We believe the most enduring rooms begin with pieces that feel as good as they look. Our point of view favours breathable textures, restful palettes, and construction that earns a place in daily life.</p><a class="text-link" href="<?php echo esc_url(home_url('/our-story/')); ?>">Read our story <span aria-hidden="true">→</span></a></div></section>
-  <section class="intro section-grid">
+  <section id="loomara-feeling" class="intro section-grid">
     <div class="section-number">01</div>
     <div class="intro-heading reveal"><p class="eyebrow">The Loomara feeling</p><h2>Made for the<br><em>rhythm of home.</em></h2></div>
     <div class="intro-copy reveal"><p class="dropcap">Comfort is more than a finishing touch. It is the quiet backdrop to the first cup of tea, the chapter read before sleep, and the unhurried Sunday that asks nothing of you.</p><p>Loomara Living is an invitation to make those everyday rituals feel a little more considered—through calm colour, tactile layers, and details that settle naturally into your space.</p></div>

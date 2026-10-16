@@ -6,6 +6,7 @@ if (!defined('ABSPATH')) {
 
 require_once get_template_directory() . '/inc/store-setup.php';
 require_once get_template_directory() . '/inc/customer-experience.php';
+require_once get_template_directory() . '/inc/discovery.php';
 
 function loomara_setup() {
     add_theme_support('title-tag');
@@ -27,12 +28,14 @@ function loomara_assets() {
         [],
         null
     );
-    wp_enqueue_style('loomara-theme', get_template_directory_uri() . '/assets/loomara.css', ['loomara-fonts'], '1.4.0');
+    wp_enqueue_style('loomara-theme', get_template_directory_uri() . '/assets/loomara.css', ['loomara-fonts'], '1.5.0');
     if (class_exists('WooCommerce')) {
-        wp_enqueue_style('loomara-woocommerce', get_template_directory_uri() . '/assets/woocommerce.css', ['loomara-theme'], '1.4.0-cart1');
+        wp_enqueue_style('loomara-woocommerce', get_template_directory_uri() . '/assets/woocommerce.css', ['loomara-theme'], '1.5.0');
         wp_enqueue_script('wc-cart-fragments');
+        wp_enqueue_style('loomara-discovery', get_template_directory_uri() . '/assets/discovery.css', ['loomara-woocommerce'], '1.5.0');
     }
-    wp_enqueue_script('loomara-theme', get_template_directory_uri() . '/assets/loomara.js', ['jquery'], '1.4.0', true);
+    wp_enqueue_script('loomara-theme', get_template_directory_uri() . '/assets/loomara.js', ['jquery'], '1.5.0', true);
+    wp_localize_script('loomara-theme', 'loomaraStore', ['ajaxUrl' => admin_url('admin-ajax.php')]);
 }
 add_action('wp_enqueue_scripts', 'loomara_assets');
 
@@ -43,9 +46,6 @@ function loomara_menu_fallback() {
     }
     echo '<a href="' . esc_url(home_url('/our-story/')) . '">Our story</a>';
     echo '<a href="' . esc_url(home_url('/contact/')) . '">Contact</a>';
-    if (class_exists('WooCommerce')) {
-        echo '<a href="' . esc_url(wc_get_page_permalink('myaccount')) . '">Account</a>';
-    }
 }
 
 function loomara_body_classes($classes) {
@@ -82,7 +82,7 @@ function loomara_cart_item_count() {
 function loomara_header_cart_markup() {
     $count = loomara_cart_item_count();
     return sprintf(
-        '<a class="header-cart" href="%1$s" aria-label="%2$s"><span class="header-cart-label">Cart</span><span class="header-cart-count">%3$d</span></a>',
+        '<a class="header-cart header-icon" href="%1$s" aria-label="%2$s">' . loomara_icon('cart') . '<span class="header-cart-count" aria-hidden="true">%3$d</span></a>',
         esc_url(wc_get_cart_url()),
         esc_attr(sprintf(_n('View cart, %d item', 'View cart, %d items', $count, 'loomara-living'), $count)),
         $count

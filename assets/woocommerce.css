@@ -8,6 +8,12 @@
 .woocommerce-content,
 .shop-heading > * { min-width: 0; }
 
+.shop-discovery { display:flex; align-items:center; justify-content:space-between; gap:1rem; margin-bottom:1rem; flex-wrap:wrap; }
+.shop-discovery .collection-tabs { margin:0; border:0; }
+.collection-search { display:flex; width:min(100%,300px); border:1px solid var(--line); background:var(--cream); }
+.collection-search input { width:100%; min-width:0; border:0; padding:.6rem .75rem; background:none; font-size:.8rem; }
+.collection-search button { border:0; background:none; width:44px; min-height:44px; color:var(--ink); cursor:pointer; padding:.5rem; }
+
 .shop-heading {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(260px, 36rem);
@@ -17,6 +23,7 @@
   padding-bottom: clamp(1.5rem, 3vw, 2.25rem);
   border-bottom: 1px solid var(--line);
 }
+
 
 .shop-heading .eyebrow { grid-column: 1 / -1; margin-bottom: 0; }
 .shop-heading h1 { margin: 0; font-size: clamp(3.25rem, 5.5vw, 5.75rem); }

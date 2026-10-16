@@ -11,7 +11,7 @@ if (!defined('ABSPATH')) {
  * can safely be retried without duplicating pages, terms, media, or products.
  */
 function loomara_store_setup() {
-    $setup_version = '2026-10-16-1';
+    $setup_version = '2026-10-16-2';
     if (get_option('loomara_store_setup_version') === $setup_version) {
         return;
     }
@@ -74,6 +74,18 @@ function loomara_create_store_pages() {
     foreach ($pages as $slug => $page) {
         $existing = get_page_by_path($slug, OBJECT, 'page');
         if ($existing) {
+            // WordPress creates a draft Privacy Policy placeholder during setup.
+            // Publish that page with the store-specific policy instead of leaving
+            // the footer linked to an unavailable draft.
+            if ($slug === 'privacy-policy' && $existing->post_status !== 'publish') {
+                wp_update_post([
+                    'ID' => $existing->ID,
+                    'post_status' => 'publish',
+                    'post_title' => $page['title'],
+                    'post_content' => $page['content'],
+                    'comment_status' => 'closed',
+                ]);
+            }
             $ids[$slug] = (int) $existing->ID;
             continue;
         }

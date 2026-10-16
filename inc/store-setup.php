@@ -362,6 +362,11 @@ function loomara_registration_mobile_field() {
 add_action('woocommerce_register_form', 'loomara_registration_mobile_field');
 
 function loomara_validate_registration_mobile($errors, $username, $email) {
+    // Do not block WooCommerce's API/checkout customer creation paths, which
+    // receive their contact data separately from the account registration form.
+    if (!isset($_POST['register'])) {
+        return $errors;
+    }
     $mobile = isset($_POST['billing_phone']) ? wc_clean(wp_unslash($_POST['billing_phone'])) : '';
     $normalized = loomara_normalize_mobile_number($mobile);
 

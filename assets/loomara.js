@@ -46,3 +46,26 @@ if (window.jQuery) {
     window.setTimeout(() => cart.classList.remove('cart-updated'), 500);
   });
 }
+
+document.querySelectorAll('[data-registration-password]').forEach((input) => {
+  const tip = document.getElementById('password-tip');
+  input.addEventListener('input', () => {
+    const checks = [
+      [input.value.length >= 6, '6+ characters'],
+      [/[a-zA-Z]/.test(input.value), 'a letter'],
+      [/[0-9]/.test(input.value), 'a number'],
+      [/[^a-zA-Z0-9\s]/.test(input.value), 'a special character'],
+    ];
+    const valid = checks.every(([passed]) => passed);
+    input.setCustomValidity(valid || !input.value ? '' : 'Use at least 6 characters with a letter, a number and a special character.');
+    if (tip) {
+      tip.textContent = checks.map(([passed, label]) => `${passed ? '✓' : '○'} ${label}`).join(' · ');
+      tip.classList.toggle('is-valid', valid);
+    }
+  });
+});
+
+// A failed gallery enhancement must never leave the product photo invisible.
+document.querySelectorAll('.woocommerce-product-gallery').forEach((gallery) => {
+  gallery.style.opacity = '1';
+});

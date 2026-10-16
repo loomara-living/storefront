@@ -29,7 +29,7 @@ function loomara_assets() {
     );
     wp_enqueue_style('loomara-theme', get_template_directory_uri() . '/assets/loomara.css', ['loomara-fonts'], '1.4.0');
     if (class_exists('WooCommerce')) {
-        wp_enqueue_style('loomara-woocommerce', get_template_directory_uri() . '/assets/woocommerce.css', ['loomara-theme'], '1.4.0');
+        wp_enqueue_style('loomara-woocommerce', get_template_directory_uri() . '/assets/woocommerce.css', ['loomara-theme'], '1.4.0-cart1');
         wp_enqueue_script('wc-cart-fragments');
     }
     wp_enqueue_script('loomara-theme', get_template_directory_uri() . '/assets/loomara.js', ['jquery'], '1.4.0', true);

@@ -328,7 +328,7 @@
 .woocommerce div.product div.images.woocommerce-product-gallery { opacity:1 !important; }
 .woocommerce-product-gallery__image img { display:block; width:100%; height:auto; }
 /* Keep the line total; remove the duplicate per-item price underneath the name. */
-.woocommerce-cart .wc-block-cart-item__prices { display:none; }
+.woocommerce-cart .wc-block-cart .wc-block-cart-items .wc-block-cart-item__prices { display:none !important; }
 .woocommerce-cart table.shop_table .product-price { display:none; }
 .woocommerce .star-rating, .woocommerce-product-rating { display:none !important; }
 

@@ -337,7 +337,6 @@
 /* Keep the line total; remove the duplicate per-item price underneath the name. */
 .woocommerce-cart .wc-block-cart .wc-block-cart-items .wc-block-cart-item__prices { display:none !important; }
 .woocommerce-cart table.shop_table .product-price { display:none; }
-.woocommerce .star-rating, .woocommerce-product-rating { display:none !important; }
 
 .account-experience { display:grid; grid-template-columns:1fr 1fr; border:1px solid var(--line); overflow:hidden; }
 .account-editorial { background:#e5e8de; padding:clamp(1.5rem,3vw,3rem); }

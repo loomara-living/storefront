@@ -7,6 +7,8 @@ if (!defined('ABSPATH')) {
 require_once get_template_directory() . '/inc/store-setup.php';
 require_once get_template_directory() . '/inc/customer-experience.php';
 require_once get_template_directory() . '/inc/discovery.php';
+require_once get_template_directory() . '/inc/shopping-experience.php';
+require_once get_template_directory() . '/inc/address-book.php';
 
 function loomara_setup() {
     add_theme_support('title-tag');
@@ -28,13 +30,13 @@ function loomara_assets() {
         [],
         null
     );
-    wp_enqueue_style('loomara-theme', get_template_directory_uri() . '/assets/loomara.css', ['loomara-fonts'], '1.5.0');
+    wp_enqueue_style('loomara-theme', get_template_directory_uri() . '/assets/loomara.css', ['loomara-fonts'], '1.6.0');
     if (class_exists('WooCommerce')) {
-        wp_enqueue_style('loomara-woocommerce', get_template_directory_uri() . '/assets/woocommerce.css', ['loomara-theme'], '1.5.0');
+        wp_enqueue_style('loomara-woocommerce', get_template_directory_uri() . '/assets/woocommerce.css', ['loomara-theme'], '1.6.0');
         wp_enqueue_script('wc-cart-fragments');
-        wp_enqueue_style('loomara-discovery', get_template_directory_uri() . '/assets/discovery.css', ['loomara-woocommerce'], '1.5.0');
+        wp_enqueue_style('loomara-discovery', get_template_directory_uri() . '/assets/discovery.css', ['loomara-woocommerce'], '1.6.0');
     }
-    wp_enqueue_script('loomara-theme', get_template_directory_uri() . '/assets/loomara.js', ['jquery'], '1.5.0', true);
+    wp_enqueue_script('loomara-theme', get_template_directory_uri() . '/assets/loomara.js', ['jquery'], '1.6.0', true);
     wp_localize_script('loomara-theme', 'loomaraStore', ['ajaxUrl' => admin_url('admin-ajax.php')]);
 }
 add_action('wp_enqueue_scripts', 'loomara_assets');
@@ -43,6 +45,7 @@ function loomara_menu_fallback() {
     echo '<a href="' . esc_url(home_url('/')) . '">Home</a>';
     if (class_exists('WooCommerce')) {
         echo '<a href="' . esc_url(wc_get_page_permalink('shop')) . '">Shop</a>';
+        echo '<a class="nav-sale" href="' . esc_url(add_query_arg('collection', 'sale', wc_get_page_permalink('shop'))) . '">Sale <span aria-hidden="true">✦</span></a>';
     }
     echo '<a href="' . esc_url(home_url('/our-story/')) . '">Our story</a>';
     echo '<a href="' . esc_url(home_url('/contact/')) . '">Contact</a>';

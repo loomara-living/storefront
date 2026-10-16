@@ -170,18 +170,6 @@ add_filter('woocommerce_billing_fields', function ($fields) {
     $fields['billing_phone']['placeholder'] = '+91 98765 43210';
     return $fields;
 });
-add_action('woocommerce_after_edit_address_form_billing', function () {
-    echo '<p class="address-tip">Save your India billing address here. It will be filled in at checkout when you are signed in.</p>';
-});
-add_filter('woocommerce_product_tabs', function ($tabs) { unset($tabs['reviews']); return $tabs; }, 99);
-add_filter('woocommerce_product_get_reviews_allowed', '__return_false');
-add_filter('woocommerce_product_get_average_rating', function () { return '0'; });
-add_filter('woocommerce_product_get_rating_count', '__return_zero');
-add_filter('woocommerce_product_get_review_count', '__return_zero');
-add_action('init', function () {
-    remove_action('woocommerce_single_product_summary', 'woocommerce_template_single_rating', 10);
-    remove_action('woocommerce_after_shop_loop_item_title', 'woocommerce_template_loop_rating', 5);
-});
 
 /** One-time, reversible migration: keep prior options, page revisions and reviews. */
 add_action('init', function () {

@@ -1,4 +1,37 @@
-# Loomara Living v1.5.0
+# Loomara Living v1.6.0
+
+## Current release
+
+- Sale in primary navigation with a subtle sparkle and reduced-motion support.
+- Separate Best Sellers section; retain Just Arrived; remove the combined tabs.
+- Header heart icon links directly to the account wishlist.
+- Fixed product-card tracks align titles, stars, prices and buttons on desktop/mobile.
+- Native 1–5-star signed-in customer reviews, one per customer/product, nonce-protected
+  and held for moderation. Previously archived admin reviews stay archived.
+- Top Rated: maximum eight products averaging at least 4 stars; order by approved
+  review count, rating, then newest product date/ID (all descending). If none qualify,
+  clearly labelled unrated/newest pieces appear without claiming they are top rated.
+- Private India-only multi-address book: named shipping addresses, add/edit/default,
+  preservation of existing shipping details and saved-address selection at checkout.
+- One delivery/contact address also used for billing; prefilled email, manual entry,
+  and opt-in to save a new address after order creation.
+- Render native classic WooCommerce checkout in place of a checkout block, without
+  rewriting the page or changing payment methods/settings.
+
+### v1.6.0 rollback and customer data
+
+Redeploy baseline commit `c055364584d011ead7bc4cbf0a04e2597a1ac1a8` (v1.5.0).
+No schema migrations or destructive operations. Customer-submitted address data is stored
+in `_loomara_shipping_addresses` and `_loomara_default_shipping_address`; a selected
+default is copied into native shipping fields. Addresses/reviews remain after a code
+rollback. Never delete customer data to revert the UI. Review option changes are runtime
+filters, removed by a code rollback. Checkout page content is not rewritten.
+
+Validation: PHP parsing, JS syntax, 14 local functional assertions, desktop/mobile
+alignment and overflow, two saved addresses, checkout selection/manual edits, and a
+4-star review held for approval. No live test orders or payments. QA data is local only.
+
+## Prior release: v1.5.0
 
 - Fine-line search, account and shopping-bag icons with accessible labels.
 - Session-aware account/cart status refreshed outside cached page HTML.

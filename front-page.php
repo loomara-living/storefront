@@ -27,22 +27,13 @@
     </div>
   </section>
   <?php if (class_exists('WooCommerce')) : ?>
-    <section class="home-products home-products-trending">
-      <div class="section-heading reveal"><div><p class="eyebrow">A little inspiration</p><h2>Find your next favourite</h2></div><a class="text-link" href="<?php echo esc_url(wc_get_page_permalink('shop')); ?>">Shop all <span aria-hidden="true">→</span></a></div>
-      <div class="home-collection-tabs" data-collection-tabs>
-        <nav class="collection-tabs" aria-label="Discover collections">
-          <?php foreach (['all' => 'New arrivals', 'best-sellers' => 'Best sellers', 'sale' => 'Sale'] as $key => $label) : ?>
-            <a id="tab-<?php echo esc_attr($key); ?>" href="<?php echo esc_url(add_query_arg('collection', $key, wc_get_page_permalink('shop'))); ?>" data-collection-tab="<?php echo esc_attr($key); ?>"><?php echo esc_html($label); ?></a>
-          <?php endforeach; ?>
-        </nav>
-        <?php foreach (['all' => 'New arrivals', 'best-sellers' => 'Best sellers', 'sale' => 'Sale'] as $key => $label) : ?>
-          <div id="collection-<?php echo esc_attr($key); ?>" class="home-product-grid collection-tab-panel" data-collection-panel="<?php echo esc_attr($key); ?>" aria-label="<?php echo esc_attr($label); ?>"><?php loomara_home_collection($key); ?></div>
-        <?php endforeach; ?>
-      </div>
-    </section>
     <section class="home-products home-products-new">
       <div class="section-heading reveal"><div><p class="eyebrow">Just arrived</p><h2>New collection</h2></div><a class="text-link" href="<?php echo esc_url(wc_get_page_permalink('shop')); ?>">Explore new arrivals <span aria-hidden="true">→</span></a></div>
       <div class="home-product-grid reveal"><?php echo do_shortcode('[products limit="4" columns="4" orderby="date" order="DESC"]'); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></div>
+    </section>
+    <section class="home-products home-best-sellers">
+      <div class="section-heading"><div><p class="eyebrow">Chosen again and again</p><h2>Best sellers</h2></div><a class="text-link" href="<?php echo esc_url(add_query_arg('collection', 'best-sellers', wc_get_page_permalink('shop'))); ?>">Shop best sellers <span aria-hidden="true">→</span></a></div>
+      <div class="home-product-grid"><?php loomara_home_collection('best-sellers'); ?></div>
     </section>
     <section class="home-products home-top-rated">
       <div class="section-heading"><div><p class="eyebrow">Loved in real homes</p><h2>Top rated</h2></div></div>

@@ -5,6 +5,7 @@ function loomara_icon($name) {
     $paths = [
         'search' => '<circle cx="10.5" cy="10.5" r="7.5"/><path d="m16 16 5 5"/>',
         'user' => '<circle cx="12" cy="7" r="4.5"/><path d="M3.5 22v-2c0-4 3.8-6 8.5-6s8.5 2 8.5 6v2"/>',
+        'heart' => '<path d="M20.5 4.8a5.5 5.5 0 0 0-8.5 1 5.5 5.5 0 0 0-8.5-1c-3.2 3.4-.9 7.5 2 10.3L12 21l6.5-5.9c2.9-2.8 5.2-6.9 2-10.3Z"/>',
         'cart' => '<path d="M5 7h14c2 0 2.7 1.5 2.4 3.5l-1 8c-.2 1.8-1.4 2.5-3.4 2.5H7c-2 0-3.2-.7-3.4-2.5l-1-8C2.3 8.5 3 7 5 7Z"/><path d="M8 7V5a4 4 0 0 1 8 0v2"/>',
     ];
     return '<svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">' . ($paths[$name] ?? '') . '</svg>';
@@ -86,18 +87,13 @@ function loomara_home_collection($selection) {
 }
 
 function loomara_top_rated_collection() {
-    $products = wc_get_products(['status' => 'publish', 'visibility' => 'visible', 'limit' => 8, 'orderby' => 'rating', 'order' => 'DESC']);
-    $ids = [];
-    foreach ($products as $product) {
-        // Reviews were deliberately unpublished. Never relabel admin samples as
-        // genuine ratings or silently bring them back through a shortcode.
-        if (get_comments(['post_id' => $product->get_id(), 'status' => 'approve', 'type' => 'review', 'count' => true, 'meta_query' => [['key' => 'verified', 'value' => 1], ['key' => 'rating', 'value' => 0, 'compare' => '>', 'type' => 'NUMERIC']]])) {
-            $ids[] = $product->get_id();
-        }
-    }
+    $ids = loomara_top_rated_ids();
     if ($ids) {
         echo do_shortcode('[products ids="' . implode(',', array_map('absint', $ids)) . '" columns="4" orderby="post__in"]');
     } else {
-        echo '<div class="collection-empty"><span class="rating-outline" aria-hidden="true">☆ ☆ ☆ ☆ ☆</span><h3>Real homes. Honest favourites.</h3><p>Top-rated pieces will appear here when genuine customer reviews are available. For now, discover the layers that feel right for your home.</p><a class="text-link" href="' . esc_url(wc_get_page_permalink('shop')) . '">Find your favourite →</a></div>';
+        $unrated = get_posts(['post_type' => 'product', 'post_status' => 'publish', 'numberposts' => 8, 'fields' => 'ids', 'orderby' => ['date' => 'DESC', 'ID' => 'DESC'], 'tax_query' => WC()->query->get_tax_query(), 'meta_query' => ['relation' => 'OR', ['key' => '_wc_review_count', 'value' => 0, 'compare' => '=', 'type' => 'NUMERIC'], ['key' => '_wc_review_count', 'compare' => 'NOT EXISTS']]]);
+        echo '<p class="rating-empty-note">Customer favourites are still taking shape. Until pieces earn 4★ or above, discover these unrated new arrivals—not yet top rated.</p>';
+        if ($unrated) { echo do_shortcode('[products ids="' . implode(',', array_map('absint', $unrated)) . '" columns="4" orderby="post__in"]'); }
+        else { echo '<p>No pieces have earned 4★ yet. Your honest ratings will help shape this collection.</p>'; }
     }
 }

@@ -153,3 +153,34 @@ document.querySelectorAll('[data-registration-password]').forEach((input) => {
 document.querySelectorAll('.woocommerce-product-gallery').forEach((gallery) => {
   gallery.style.opacity = '1';
 });
+
+// Saved addresses are supplied only on the private, signed-in checkout page.
+document.querySelectorAll('[data-checkout-addresses]').forEach((book) => {
+  const select = book.querySelector('select');
+  let addresses;
+  try { addresses = JSON.parse(book.dataset.addresses || '{}'); } catch { return; }
+  let applying = false;
+  function applyAddress() {
+    const address = addresses[select.value];
+    if (!address) return; // Manual mode preserves the entered fields.
+    applying = true;
+    for (const [key, value] of Object.entries(address)) {
+      if (key === 'label') continue;
+      for (const prefix of ['billing', 'shipping']) {
+        const input = document.getElementById(`${prefix}_${key}`);
+        if (!input) continue;
+        input.value = value;
+        if (window.jQuery) window.jQuery(input).trigger('change');
+      }
+    }
+    applying = false;
+    if (window.jQuery) window.jQuery(document.body).trigger('update_checkout');
+  }
+  select.addEventListener('change', applyAddress);
+  document.querySelector('form.checkout')?.addEventListener('input', (event) => {
+    if (!applying && /^(billing|shipping)_(first_name|last_name|address_1|address_2|city|state|postcode|phone)$/.test(event.target.id)) select.value = '';
+  });
+  document.querySelector('form.checkout')?.addEventListener('change', (event) => {
+    if (!applying && /^(billing|shipping)_(state|country)$/.test(event.target.id)) select.value = '';
+  });
+});

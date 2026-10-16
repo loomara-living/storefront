@@ -26,7 +26,7 @@ function loomara_assets() {
         [],
         null
     );
-    wp_enqueue_style('loomara-theme', get_template_directory_uri() . '/assets/loomara.css', ['loomara-fonts'], '1.2.0');
+    wp_enqueue_style('loomara-theme', get_template_directory_uri() . '/assets/loomara.css', ['loomara-fonts'], '1.2.1');
     if (class_exists('WooCommerce')) {
         wp_enqueue_style('loomara-woocommerce', get_template_directory_uri() . '/assets/woocommerce.css', ['loomara-theme'], '1.3.0');
         wp_enqueue_script('wc-cart-fragments');

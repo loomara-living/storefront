@@ -266,13 +266,152 @@ function loomara_account_intro() {
     if (is_user_logged_in()) {
         return;
     }
-    echo '<div class="account-welcome"><p class="eyebrow">Your Loomara account</p><h2>Welcome back—or make yourself at home.</h2><p>Sign in to view orders and addresses, or create an account in a few moments.</p>';
-    if (shortcode_exists('nextend_social_login')) {
-        echo '<div class="social-login-wrap"><span>Continue securely with</span>';
-        echo do_shortcode('[nextend_social_login provider="google" redirect="' . esc_url(wc_get_page_permalink('myaccount')) . '"]'); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-        echo '</div>';
-    }
-    echo '</div>';
+    echo '<div class="account-welcome"><p class="eyebrow">Your Loomara account</p><h2>Welcome back—or make yourself at home.</h2><p>Sign in with your username, email address or registered mobile number to view orders and addresses.</p></div>';
 }
 add_action('woocommerce_before_customer_login_form', 'loomara_account_intro', 5);
+
+/**
+ * Return a stable, digits-only representation of a customer mobile number.
+ * Ten-digit Indian numbers are stored with the country code so +91 and local
+ * formats resolve to the same account.
+ */
+function loomara_normalize_mobile_number($value) {
+    $digits = preg_replace('/\D+/', '', (string) $value);
+
+    if (strlen($digits) === 10) {
+        $digits = '91' . $digits;
+    }
+
+    return $digits;
+}
+
+function loomara_find_user_by_mobile($mobile) {
+    $normalized = loomara_normalize_mobile_number($mobile);
+    if (strlen($normalized) < 10 || strlen($normalized) > 15) {
+        return null;
+    }
+
+    $users = get_users([
+        'number' => 2,
+        'fields' => 'all',
+        'meta_key' => '_loomara_login_phone',
+        'meta_value' => $normalized,
+    ]);
+
+    if (count($users) === 1) {
+        return $users[0];
+    }
+
+    // Backward compatibility for customers created before mobile login was
+    // introduced. Their WooCommerce billing phone is normalized on demand.
+    $legacy_users = get_users([
+        'fields' => 'all',
+        'meta_key' => 'billing_phone',
+        'meta_compare' => 'EXISTS',
+    ]);
+    $matches = [];
+    foreach ($legacy_users as $legacy_user) {
+        if (loomara_normalize_mobile_number(get_user_meta($legacy_user->ID, 'billing_phone', true)) === $normalized) {
+            $matches[] = $legacy_user;
+            if (count($matches) > 1) {
+                return null;
+            }
+        }
+    }
+
+    if (count($matches) === 1) {
+        update_user_meta($matches[0]->ID, '_loomara_login_phone', $normalized);
+        return $matches[0];
+    }
+
+    return null;
+}
+
+/**
+ * Resolve a mobile number to a WordPress user before core username/email
+ * authentication runs. Password verification remains entirely in WordPress.
+ */
+function loomara_authenticate_mobile($user, $username, $password) {
+    if ($user instanceof WP_User || is_wp_error($user) || empty($username) || empty($password)) {
+        return $user;
+    }
+
+    if (!preg_match('/^[+\d][\d\s().-]{8,20}$/', (string) $username)) {
+        return $user;
+    }
+
+    $mobile_user = loomara_find_user_by_mobile($username);
+    if (!$mobile_user instanceof WP_User) {
+        return $user;
+    }
+
+    return wp_authenticate_username_password(null, $mobile_user->user_login, $password);
+}
+add_filter('authenticate', 'loomara_authenticate_mobile', 19, 3);
+
+function loomara_registration_mobile_field() {
+    $value = isset($_POST['billing_phone']) ? wc_clean(wp_unslash($_POST['billing_phone'])) : '';
+    woocommerce_form_field('billing_phone', [
+        'type' => 'tel',
+        'required' => true,
+        'label' => __('Mobile number', 'loomara-living'),
+        'placeholder' => __('e.g. +91 98765 43210', 'loomara-living'),
+        'autocomplete' => 'tel',
+    ], $value);
+}
+add_action('woocommerce_register_form', 'loomara_registration_mobile_field');
+
+function loomara_validate_registration_mobile($errors, $username, $email) {
+    $mobile = isset($_POST['billing_phone']) ? wc_clean(wp_unslash($_POST['billing_phone'])) : '';
+    $normalized = loomara_normalize_mobile_number($mobile);
+
+    if ($mobile === '') {
+        $errors->add('loomara_mobile_required', __('Please enter your mobile number.', 'loomara-living'));
+        return $errors;
+    }
+
+    if (strlen($normalized) < 10 || strlen($normalized) > 15) {
+        $errors->add('loomara_mobile_invalid', __('Please enter a valid mobile number.', 'loomara-living'));
+        return $errors;
+    }
+
+    if (loomara_find_user_by_mobile($mobile)) {
+        $errors->add('loomara_mobile_exists', __('An account already uses this mobile number. Please sign in instead.', 'loomara-living'));
+    }
+
+    return $errors;
+}
+add_filter('woocommerce_registration_errors', 'loomara_validate_registration_mobile', 10, 3);
+
+function loomara_save_registration_mobile($customer_id) {
+    if (!isset($_POST['billing_phone'])) {
+        return;
+    }
+
+    $mobile = wc_clean(wp_unslash($_POST['billing_phone']));
+    update_user_meta($customer_id, 'billing_phone', $mobile);
+    update_user_meta($customer_id, '_loomara_login_phone', loomara_normalize_mobile_number($mobile));
+}
+add_action('woocommerce_created_customer', 'loomara_save_registration_mobile');
+
+function loomara_sync_customer_mobile($customer_id, $address_type = 'billing') {
+    if ($address_type !== 'billing') {
+        return;
+    }
+
+    $mobile = get_user_meta($customer_id, 'billing_phone', true);
+    if ($mobile) {
+        update_user_meta($customer_id, '_loomara_login_phone', loomara_normalize_mobile_number($mobile));
+    }
+}
+add_action('woocommerce_customer_save_address', 'loomara_sync_customer_mobile', 10, 2);
+
+function loomara_login_identifier_label($translated, $original, $domain) {
+    if ($domain === 'woocommerce' && $original === 'Username or email address') {
+        return __('Username, email address or mobile number', 'loomara-living');
+    }
+
+    return $translated;
+}
+add_filter('gettext', 'loomara_login_identifier_label', 10, 3);
 

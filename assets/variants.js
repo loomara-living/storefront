@@ -1,6 +1,16 @@
 jQuery(function ($) {
+  const forms = $('form.variations_form');
+  const breadcrumbCode = document.querySelector('[data-breadcrumb-product-code]');
+  if (breadcrumbCode) {
+    forms.on('found_variation.loomaraBreadcrumb', function (event, variation) {
+      breadcrumbCode.textContent = variation.sku || breadcrumbCode.dataset.defaultCode;
+    });
+    forms.on('reset_data.loomaraBreadcrumb hide_variation.loomaraBreadcrumb', function () {
+      breadcrumbCode.textContent = breadcrumbCode.dataset.defaultCode;
+    });
+  }
   const gallery = document.querySelector('[data-variant-gallery]');
-  if (!gallery) return;
+  if (!gallery) { forms.trigger('check_variations'); return; }
   const main = gallery.querySelector('[data-variant-main]');
   const link = gallery.querySelector('[data-variant-main-link]');
   const thumbnails = gallery.querySelector('[data-variant-thumbnails]');
@@ -44,7 +54,6 @@ jQuery(function ($) {
     const button = event.target.closest('button[data-gallery-index]');
     if (button) show(Number(button.dataset.galleryIndex));
   });
-  const forms = $('form.variations_form');
   forms.on('found_variation.loomaraGallery', function (event, variation) {
     render(variation.loomara_gallery);
     selection.textContent = [...this.querySelectorAll('.variations select')].map(s => s.options[s.selectedIndex]?.text || '').join(' / ');

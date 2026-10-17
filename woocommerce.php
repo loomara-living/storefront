@@ -1,5 +1,6 @@
 <?php get_header(); ?>
 <main id="main" class="woocommerce-shell">
+  <?php loomara_catalog_navigation(); ?>
   <?php if (is_shop() || is_product_taxonomy() || is_search()) : ?>
     <header class="shop-heading">
       <p class="eyebrow">The Loomara collection</p>
@@ -8,7 +9,6 @@
     </header>
     <?php loomara_shop_discovery(); ?>
   <?php endif; ?>
-  <div class="woocommerce-content"><?php woocommerce_content(); ?></div>
+  <div class="woocommerce-content"><?php if (is_product_category()) { loomara_category_colour_content(); } else { woocommerce_content(); } ?></div>
 </main>
 <?php get_footer(); ?>
-

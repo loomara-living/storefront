@@ -1,6 +1,21 @@
-# Loomara Living v1.7.0
+# Loomara Living v1.7.1
 
-## Current patch
+## v1.7.1 — category colours and catalogue navigation
+
+- Top-of-catalog breadcrumbs: Home → Category on category pages; Home →
+  Category → selected variant SKU on product pages. Nested categories supported.
+- Direct category-switch links for all four collections; keyboard-focus styles
+  and mobile wrapping. Breadcrumb SKU follows colour/size selection and reset.
+
+- Category grids show one card per available colour, with its own image, label,
+  variation price and colour/size-preselected product link.
+- Expand colours before eight-card pagination; don't duplicate cards across sizes.
+- Preserve category visibility/collection filters and price sorting. No inventory
+  mutations or new sellable product records.
+- Code-only rollback: redeploy v1.7.0 (edd73bfee9f0aec41585428c71036bffbf3f560b).
+  Existing WooCommerce inventory remains unchanged; do not rerun its migration.
+
+## Prior release: v1.7.0
 
 - King-size bedsheets, comforters and combos with canonical -K variant SKUs.
 - Colour/size selectors and corresponding image galleries; inventory respects deleted files.

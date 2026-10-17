@@ -1,4 +1,19 @@
-# Loomara Living v1.7.1
+# Loomara Living v1.7.2
+
+## v1.7.2 — confirmed merchant terms and product schema
+
+- Owner confirmed Loomara Living brand, free India shipping, dispatch in 1–2
+  business days, delivery in 5–10 business days after dispatch and free eligible
+  returns within 7 days of receipt (17 October 2026).
+- Extend native WooCommerce Product/Offer schema rather than emitting duplicates.
+- Match visible product/policy copy to confirmed terms. Preserve genuine native
+  reviews; never invent GTINs, ratings or offer dates. Dates only from a real sale.
+- India-only free shipping with no minimum order is configured separately in
+  WooCommerce under explicit owner approval. No payment settings changed.
+- Code-only rollback: redeploy v1.7.1 (f6e01a54411ad7978c01d5b5426066e2c8b2480e).
+  Shipping-zone configuration is separate from Git and remains in place on rollback.
+- Policy copy is updated at render time; the existing editor content and historical
+  revisions are retained. No product, customer or order data migration is required.
 
 ## v1.7.1 — category colours and catalogue navigation
 

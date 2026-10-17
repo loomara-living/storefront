@@ -40,6 +40,6 @@ add_action('wp', function () {
 });
 add_action('wp_enqueue_scripts', function () {
     if (function_exists('is_product') && is_product()) {
-        wp_enqueue_script('loomara-variants', get_template_directory_uri() . '/assets/variants.js', ['jquery', 'wc-add-to-cart-variation'], '1.7.1', true);
+        wp_enqueue_script('loomara-variants', get_template_directory_uri() . '/assets/variants.js', ['jquery', 'wc-add-to-cart-variation'], '1.7.2', true);
     }
 });

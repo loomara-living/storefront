@@ -291,17 +291,6 @@ function loomara_find_user_by_mobile($mobile) {
         return null;
     }
 
-    $users = get_users([
-        'number' => 2,
-        'fields' => 'all',
-        'meta_key' => '_loomara_login_phone',
-        'meta_value' => $normalized,
-    ]);
-
-    if (count($users) === 1) {
-        return $users[0];
-    }
-
     // Backward compatibility for customers created before mobile login was
     // introduced. Their WooCommerce billing phone is normalized on demand.
     $legacy_users = get_users([
@@ -353,7 +342,7 @@ function loomara_registration_mobile_field() {
     $value = isset($_POST['billing_phone']) ? wc_clean(wp_unslash($_POST['billing_phone'])) : '';
     woocommerce_form_field('billing_phone', [
         'type' => 'tel',
-        'required' => true,
+        'required' => false,
         'label' => __('Mobile number', 'loomara-living'),
         'placeholder' => __('e.g. +91 98765 43210', 'loomara-living'),
         'autocomplete' => 'tel',
@@ -371,17 +360,12 @@ function loomara_validate_registration_mobile($errors, $username, $email) {
     $normalized = loomara_normalize_mobile_number($mobile);
 
     if ($mobile === '') {
-        $errors->add('loomara_mobile_required', __('Please enter your mobile number.', 'loomara-living'));
         return $errors;
     }
 
     if (strlen($normalized) < 10 || strlen($normalized) > 15) {
         $errors->add('loomara_mobile_invalid', __('Please enter a valid mobile number.', 'loomara-living'));
         return $errors;
-    }
-
-    if (loomara_find_user_by_mobile($mobile)) {
-        $errors->add('loomara_mobile_exists', __('An account already uses this mobile number. Please sign in instead.', 'loomara-living'));
     }
 
     return $errors;

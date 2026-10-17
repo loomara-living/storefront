@@ -22,8 +22,6 @@ add_action('woocommerce_save_account_details_errors', function ($errors, $user) 
     if ($raw === '') { return; }
     $mobile = loomara_indian_mobile($raw);
     if (!$mobile) { $errors->add('loomara_account_mobile', 'Enter a valid 10-digit Indian mobile number, optionally prefixed with +91.'); return; }
-    $owner = loomara_find_user_by_mobile($mobile);
-    if ($owner && (int) $owner->ID !== (int) $user->ID) { $errors->add('loomara_account_mobile_used', 'This mobile number is already associated with another account.'); }
 }, 10, 2);
 add_action('woocommerce_save_account_details', function ($user_id) {
     if (!isset($_POST['account_mobile'])) { return; }

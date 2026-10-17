@@ -2,6 +2,15 @@
 /** Discovery and genuine, moderated customer ratings. */
 defined('ABSPATH') || exit;
 
+// Restyle only WooCommerce's account ownership notice. Keep the exact native
+// nonce-protected action link and all verification behaviour unchanged.
+add_filter('woocommerce_add_notice', function ($message) {
+    if (!function_exists('is_account_page') || !is_account_page()
+        || strpos($message, 'Confirm your email address to check for past orders and link them to your account.') === false) { return $message; }
+    if (!preg_match('/<a\b[^>]*>\s*Confirm email address\s*<\/a>/i', $message, $match)) { return $message; }
+    return '<div class="loomara-email-confirm">' . $match[0] . '<details class="loomara-email-help"><summary>Why confirm?</summary><p>Confirm your email address to securely link past orders to your account. We will send a confirmation link to your inbox.</p></details></div>';
+});
+
 // Append to configured menus as well as the theme fallback; never duplicate Sale.
 function loomara_sale_navigation($items) {
     if (!class_exists('WooCommerce') || strpos($items, 'collection=sale') !== false) { return $items; }

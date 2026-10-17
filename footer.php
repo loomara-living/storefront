@@ -1,5 +1,4 @@
 <footer class="site-footer">
-  <div class="footer-brand"><span class="footer-mark">L</span><div><strong>Loomara</strong><small>Living</small></div></div>
   <div class="footer-links"><p>Explore</p>
     <?php if (class_exists('WooCommerce')) : ?><a href="<?php echo esc_url(wc_get_page_permalink('shop')); ?>">Collection</a><?php endif; ?>
     <a href="<?php echo esc_url(home_url('/our-story/')); ?>">Our story</a>

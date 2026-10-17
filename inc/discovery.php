@@ -30,6 +30,37 @@ add_action('template_redirect', function () {
 add_filter('loop_shop_per_page', function () { return 8; }, 99);
 add_filter('loop_shop_columns', function () { return 4; }, 99);
 
+// Keep the results grid even when a query has a single match.
+add_filter('woocommerce_redirect_single_search_result', '__return_false');
+
+// WordPress's default search ignores product categories, tags and SKUs. Match
+// each word against those fields too, without bypassing catalog visibility,
+// stock filters, sale filters or native pagination in the enclosing query.
+add_filter('posts_search', function ($search, $query) {
+    if (is_admin() || !$query->is_main_query() || !$query->is_search()
+        || !in_array('product', (array) $query->get('post_type'), true)) { return $search; }
+    global $wpdb;
+    $phrase = preg_replace('/\bbed[\s-]+sheets?\b/i', 'bedsheet', (string) $query->get('s'));
+    $tokens = preg_split('/\s+/', trim($phrase), 6, PREG_SPLIT_NO_EMPTY);
+    if (!$tokens) { return $search; }
+    $clauses = [];
+    foreach ($tokens as $token) {
+        $variants = preg_match('/^bedsheets?$/i', $token) ? ['bedsheet', 'bed sheet', 'bed-sheet'] : [$token];
+        $matches = [];
+        foreach ($variants as $variant) {
+            $like = '%' . $wpdb->esc_like($variant) . '%';
+            $matches[] = $wpdb->prepare("({$wpdb->posts}.post_title LIKE %s OR {$wpdb->posts}.post_excerpt LIKE %s OR {$wpdb->posts}.post_content LIKE %s
+                OR EXISTS (SELECT 1 FROM {$wpdb->term_relationships} sr JOIN {$wpdb->term_taxonomy} st ON st.term_taxonomy_id = sr.term_taxonomy_id JOIN {$wpdb->terms} sn ON sn.term_id = st.term_id WHERE sr.object_id = {$wpdb->posts}.ID AND st.taxonomy IN ('product_cat','product_tag') AND (sn.name LIKE %s OR sn.slug LIKE %s))
+                OR EXISTS (SELECT 1 FROM {$wpdb->postmeta} sm WHERE sm.post_id = {$wpdb->posts}.ID AND sm.meta_key = '_sku' AND sm.meta_value LIKE %s)
+                OR EXISTS (SELECT 1 FROM {$wpdb->posts} sv JOIN {$wpdb->postmeta} vm ON vm.post_id = sv.ID WHERE sv.post_parent = {$wpdb->posts}.ID AND sv.post_type = 'product_variation' AND sv.post_status = 'publish' AND vm.meta_key IN ('_sku','attribute_colour','attribute_size') AND vm.meta_value LIKE %s))", $like, $like, $like, $like, $like, $like, $like);
+        }
+        $clauses[] = '(' . implode(' OR ', $matches) . ')';
+    }
+    $sql = ' AND (' . implode(' AND ', $clauses) . ')';
+    if (!is_user_logged_in()) { $sql .= " AND ({$wpdb->posts}.post_password = '')"; }
+    return $sql;
+}, 20, 2);
+
 function loomara_collection_selection() {
     $value = isset($_GET['collection']) ? sanitize_key(wp_unslash($_GET['collection'])) : 'all';
     return in_array($value, ['all', 'best-sellers', 'sale'], true) ? $value : 'all';

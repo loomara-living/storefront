@@ -11,8 +11,7 @@
       </div>
     </div>
     <div class="hero-art reveal" aria-label="An abstract arrangement inspired by layered bed linen" role="img">
-      <img class="hero-seal" src="https://horizons-cdn.hostinger.com/afc76bf0-621b-4376-8baa-6188eca190be/d684dbb59d647d2f19b70f7273f8bb18.jpg" alt="Loomara Living">
-      <div class="sun-disc"></div><div class="bed-frame"><div class="pillow pillow-one"></div><div class="pillow pillow-two"></div><div class="duvet"></div><div class="gold-thread"></div></div>
+      <div class="sun-disc"></div><div class="bed-frame"><span class="hero-brand brand-image"><img src="<?php echo esc_url(get_template_directory_uri() . '/assets/loomara-logo-transparent.png'); ?>" alt="Loomara Living" width="1536" height="1024"></span><div class="pillow pillow-one"></div><div class="pillow pillow-two"></div><div class="duvet"></div><div class="gold-thread"></div></div>
       <span class="art-note">Rest, considered.</span>
     </div>
   </section>
@@ -40,7 +39,6 @@
       <div class="home-product-grid"><?php loomara_top_rated_collection(); ?></div>
     </section>
   <?php endif; ?>
-  <section class="material-story"><div class="material-visual reveal" role="img" aria-label="Abstract close-up inspired by gently folded woven fabric"><span class="weave-line line-a"></span><span class="weave-line line-b"></span><span class="weave-line line-c"></span><p>Texture / tone / touch</p></div><div class="material-copy reveal"><p class="eyebrow">A thoughtful approach</p><h2>Beauty you can<br><em>feel.</em></h2><p>We believe the most enduring rooms begin with pieces that feel as good as they look. Our point of view favours breathable textures, restful palettes, and construction that earns a place in daily life.</p><a class="text-link" href="<?php echo esc_url(home_url('/our-story/')); ?>">Read our story <span aria-hidden="true">→</span></a></div></section>
   <section id="loomara-feeling" class="intro section-grid">
     <div class="section-number">01</div>
     <div class="intro-heading reveal"><p class="eyebrow">The Loomara feeling</p><h2>Made for the<br><em>rhythm of home.</em></h2></div>

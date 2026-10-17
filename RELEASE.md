@@ -1,4 +1,43 @@
-# Loomara Living v1.6.0
+# Loomara Living v1.7.0
+
+## Current patch
+
+- King-size bedsheets, comforters and combos with canonical -K variant SKUs.
+- Colour/size selectors and corresponding image galleries; inventory respects deleted files.
+- Neutral customer-facing image text; historical provenance remains internal.
+- Administrator-only, nonce-protected WooCommerce migration with identity preflight,
+  private product snapshot and status report. Prices/stock copied from live products,
+  never from local fixtures. Four designs/five variants; old rose URL redirects.
+- No customer/order/payment configuration changes and no QA products deployed.
+
+- Fix mobile block-cart grid placement so product names, descriptions, quantities
+  and line totals occupy separate rows without overlap; retain classic-cart support.
+- Add a line-art coupon/discount icon and a clear coupon-entry control.
+- Tighten homepage section spacing and remove the Texture / Tone / Touch section.
+- Present WooCommerce's email-confirmation action as a proper button, moving the
+  explanation into an expandable Why confirm? detail. Preserve the native signed URL
+  and verification behaviour; no emails sent by the update itself.
+- Preserve the original text wordmark in the header. Use the supplied transparent
+  logo in the hero without a background card; remove the footer logo.
+- Add restrained card, icon, button and hero transitions with reduced-motion support.
+- Expand product search to match category names/slugs, tags and SKUs as well as
+  titles/descriptions; support bedsheet/bed sheet spelling variants and retain
+  the results grid instead of redirecting single matches to a product page.
+
+Rollback: redeploy v1.6.0 (`5b885dcc43a856d6841fcba5a7a11dbb5dc408be`).
+Inventory migration is an explicit admin action, not an automatic storefront hook.
+Private snapshots are stored in option loomara_inventory_backup_170; status and child
+IDs in loomara_inventory_release_170. Reverting theme code alone DOES NOT reverse
+variable-product conversion. Review the snapshot with an administrator and reconcile
+orders/stock since migration before restoring product metadata. Do not restore the
+whole database over newer orders. Legacy product records are retained, not deleted.
+
+Validation: PHP/JS syntax; mobile cart at 320px/390px/658px, desktop layout,
+coupon expansion, compact email-confirmation fixture preserving its href,
+homepage section order/spacing, supplied logo, and existing account/rating checks.
+No live orders, payment attempts or confirmation emails submitted.
+
+## Prior release: v1.6.0
 
 ## Current release
 

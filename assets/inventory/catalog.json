@@ -1,0 +1,90 @@
+{
+  "version": "1.7.0",
+  "domain": "loomaraliving.com",
+  "designs": [
+    {
+      "design_id": "LM-BD-10001",
+      "name": "Feather Botanical Blanket",
+      "category": "Bedsheets",
+      "variants": [
+        {
+          "sku": "LM-BD-IV10001-K",
+          "source_id": 11,
+          "colour": "Ivory Sand",
+          "size": "King",
+          "size_code": "K",
+          "images": [
+            "1d79c1110a302f843969.jpg",
+            "409c6f869909823a9d2b.jpg"
+          ]
+        },
+        {
+          "sku": "LM-BD-DR10001-K",
+          "source_id": 14,
+          "colour": "Dusty Rose",
+          "size": "King",
+          "size_code": "K",
+          "images": [
+            "7fd012bd6b42d3510fcd.jpg",
+            "08cff817ffb0672bcfca.jpg"
+          ]
+        }
+      ]
+    },
+    {
+      "design_id": "LM-CB-10001",
+      "name": "Everyday Calm Bedding Combo",
+      "category": "Combo",
+      "variants": [
+        {
+          "sku": "LM-CB-SG10001-K",
+          "source_id": 29,
+          "colour": "Sage",
+          "size": "King",
+          "size_code": "K",
+          "images": [
+            "41d1274a29c3f9b2a545.jpg",
+            "13a1febdebbf21120f4e.jpg",
+            "a9c9b38bc480866d655b.jpg"
+          ]
+        }
+      ]
+    },
+    {
+      "design_id": "LM-CF-10001",
+      "name": "Cloud Rest Comforter",
+      "category": "Comforters",
+      "variants": [
+        {
+          "sku": "LM-CF-IV10001-K",
+          "source_id": 27,
+          "colour": "Ivory",
+          "size": "King",
+          "size_code": "K",
+          "images": [
+            "79fef529d641ddaae0f1.jpg"
+          ]
+        }
+      ]
+    },
+    {
+      "design_id": "LM-CC-10001",
+      "name": "Soft Geometry Cushion Cover Pair",
+      "category": "Cushion Covers",
+      "variants": [
+        {
+          "sku": "LM-CC-MX10001-X",
+          "source_id": 31,
+          "colour": "Terracotta / Oat",
+          "size": "Size not specified",
+          "size_code": "X",
+          "images": [
+            "e5bdc09e7bb9e0e7e817.jpg",
+            "c424c4bf3b35424c2500.jpg",
+            "6f20f8b188fc30926153.jpg"
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -9,6 +9,7 @@
 <body <?php body_class(); ?>>
 <?php wp_body_open(); ?>
 <a class="skip-link" href="#main">Skip to content</a>
+<?php loomara_offer_banner(); ?>
 <header class="site-header" data-header>
   <a class="wordmark" href="<?php echo esc_url(home_url('/')); ?>" aria-label="Loomara Living home">
     <span>Loomara <small>Living</small></span>

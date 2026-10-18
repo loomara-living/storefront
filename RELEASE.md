@@ -2,6 +2,16 @@
 
 All release details are maintained in this single file, newest first. Historical notes describe the behaviour and policies at the time of each release.
 
+## v1.9.2 — Saved addresses and polished customer stories
+
+- Customer stories show one full-width testimonial at a time rather than cards. Multiple published stories rotate right with looping, touch swipes, previous/next and pause; one quote stays still. Reduced motion disables autoplay. All quotes share a reserved grid row to avoid height shifts.
+- Closing homepage links become distinct gold/outlined buttons with keyboard focus and mobile stacking. Signed-in authors see a private pending-review message for their own submitted testimonial; approval requirements remain unchanged.
+- Signed-in customers may delete their own saved address using a nonce-protected POST and an in-page confirmation. Past orders and billing fields remain unchanged.
+- Deleting the default chooses the next saved address; deleting the last clears native shipping fallback and prevents a stale deleted address from reappearing.
+- Remove the Razorpay product-page affordability promotion at its native hooks. Checkout EMI choices, gateway configuration and other payment methods remain unchanged, as explicitly requested.
+- Eleven isolated deletion tests and five product-promotion hook checks passed. No real customer addresses deleted during QA. Desktop/mobile local carousel and button checks passed without horizontal overflow; QA quotes remain outside the theme and are never published.
+- Rollback: restore v1.9.1 code. Customer-requested address deletions are not automatically restored.
+
 ## v1.9.1 — Magic Checkout saved addresses
 
 - Save a complete India shipping address from a paid Razorpay Magic Checkout WooCommerce order into that order owner's private address book.

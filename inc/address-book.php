@@ -20,7 +20,7 @@ function loomara_saved_addresses() {
     foreach (loomara_address_fields() as $field => $label) {
         $legacy[$field] = (string) get_user_meta(get_current_user_id(), 'shipping_' . $field, true);
     }
-    if (!$addresses && $legacy['address_1']) {
+    if (!$addresses && $legacy['address_1'] && !get_user_meta(get_current_user_id(), '_loomara_address_book_initialized', true)) {
         $legacy['label'] = 'Home';
         $legacy['country'] = 'IN';
         $legacy['phone'] = $legacy['phone'] ?: (string) get_user_meta(get_current_user_id(), 'billing_phone', true);
@@ -67,6 +67,36 @@ function loomara_sync_default_address($address) {
     }
     $customer->save();
 }
+
+/** Delete only an address owned by the current account; never alter past orders. */
+function loomara_delete_saved_address($id) {
+    if (!is_user_logged_in()) { return new WP_Error('login', 'Sign in to manage your addresses.'); }
+    $addresses = loomara_saved_addresses();
+    if (!$id || !isset($addresses[$id])) { return new WP_Error('address', 'This address is not available in your account.'); }
+    $default = loomara_default_address_id($addresses);
+    unset($addresses[$id]);
+    update_user_meta(get_current_user_id(), '_loomara_shipping_addresses', $addresses);
+    update_user_meta(get_current_user_id(), '_loomara_address_book_initialized', '1');
+    if (!$addresses) {
+        delete_user_meta(get_current_user_id(), '_loomara_default_shipping_address');
+        // Clear the native shipping fallback too, so the removed address cannot reappear.
+        loomara_sync_default_address([]);
+    } elseif ($default === $id) {
+        $next = (string) array_key_first($addresses);
+        update_user_meta(get_current_user_id(), '_loomara_default_shipping_address', $next);
+        loomara_sync_default_address($addresses[$next]);
+    }
+    return true;
+}
+add_action('admin_post_loomara_delete_address', function () {
+    if (!is_user_logged_in()) { auth_redirect(); }
+    check_admin_referer('loomara_delete_address');
+    $raw = wp_unslash($_POST['address_id'] ?? '');
+    $result = loomara_delete_saved_address(is_scalar($raw) ? sanitize_key($raw) : '');
+    if (is_wp_error($result)) { wp_die(esc_html($result->get_error_message()), '', ['response' => 403]); }
+    wp_safe_redirect(add_query_arg('address_deleted', '1', wc_get_account_endpoint_url('edit-address')));
+    exit;
+});
 
 add_action('admin_post_loomara_save_address', function () {
     if (!is_user_logged_in()) { auth_redirect(); }
@@ -127,6 +157,7 @@ function loomara_address_book() {
     $editing = isset($_GET['address']) ? sanitize_key(wp_unslash($_GET['address'])) : '';
     echo '<section class="address-book"><div class="address-book-heading"><div><p class="eyebrow">Your familiar places</p><h2>Saved shipping addresses</h2><p>Home, work, or somewhere you feel at home. Choose a saved address at checkout.</p></div><a class="address-add" href="' . esc_url(add_query_arg('address', 'new', wc_get_account_endpoint_url('edit-address'))) . '"><span aria-hidden="true">＋</span> Add address</a></div>';
     if (isset($_GET['address_saved'])) { echo '<p class="woocommerce-message" role="status">Your shipping address is saved.</p>'; }
+    if (isset($_GET['address_deleted'])) { echo '<p class="woocommerce-message" role="status">Address deleted. Your past orders are unchanged.</p>'; }
     if ($editing) {
         if ($editing === 'new' || isset($addresses[$editing])) { loomara_address_form($editing === 'new' ? '' : $editing, $addresses[$editing] ?? []); }
         else { echo '<p role="alert">That address is not available.</p>'; }
@@ -135,7 +166,9 @@ function loomara_address_book() {
     foreach ($addresses as $id => $address) {
         echo '<article class="address-card"><div class="address-card-heading"><h3>' . esc_html($address['label']) . '</h3>' . ($id === $default ? '<span class="address-badge">Default</span>' : '') . '</div><address>' . wp_kses_post(WC()->countries->get_formatted_address($address)) . '</address><p>' . esc_html($address['phone'] ?? '') . '</p><a class="text-link" href="' . esc_url(add_query_arg('address', $id, wc_get_account_endpoint_url('edit-address'))) . '">Edit address →</a>';
         if ($id !== $default) { echo '<form method="post" action="'.esc_url(admin_url('admin-post.php')).'"><input type="hidden" name="action" value="loomara_default_address"><input type="hidden" name="address_id" value="'.esc_attr($id).'">';wp_nonce_field('loomara_default_address');echo '<button class="button" type="submit">Make default</button></form>'; }
-        echo '</article>';
+        echo '<form method="post" action="'.esc_url(admin_url('admin-post.php')).'" data-delete-saved-address><input type="hidden" name="action" value="loomara_delete_address"><input type="hidden" name="address_id" value="'.esc_attr($id).'">';
+        wp_nonce_field('loomara_delete_address');
+        echo '<button class="button address-delete-button" type="submit">Delete address</button></form></article>';
     }
     if (!$addresses) { echo '<div class="address-empty"><span aria-hidden="true">⌂</span><h3>Make room for your first delivery.</h3><p>Add an India shipping address and make your next checkout a little easier.</p></div>'; }
     echo '</div><p class="address-note">Choose a default shipping address. You can use a different billing address at checkout.</p></section>';

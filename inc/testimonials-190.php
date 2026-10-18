@@ -8,6 +8,10 @@ function loomara_testimonial_eligible($id = 0) {
     return false;
 }
 function loomara_testimonial_prompt($context='home') {
+    if(is_user_logged_in() && get_posts(['post_type'=>'loomara_testimonial','post_status'=>'pending','author'=>get_current_user_id(),'numberposts'=>1,'fields'=>'ids'])) {
+        echo '<div class="testimonial-submission-status" role="status"><strong>Your story is safely with us.</strong><p>Your testimonial is awaiting approval. Once published, it can appear among the five latest customer stories.</p></div>';
+        return;
+    }
     echo '<div class="testimonial-prompt"><details><summary>Leave a testimonial</summary><p>Tell us how Loomara feels in your home. Your honest words can help another home find its next layer.</p>';
     if(!is_user_logged_in()){echo '<p><a class="button" href="'.esc_url(wc_get_page_permalink('myaccount')).'">Sign in to share</a></p>';}
     elseif(!loomara_testimonial_eligible()){echo '<p>Testimonials open after a paid purchase. We look forward to hearing your experience.</p>';}
@@ -41,6 +45,6 @@ function loomara_customer_testimonials() {
     $quotes=get_posts(['post_type'=>'loomara_testimonial','post_status'=>'publish','numberposts'=>5,'orderby'=>'date','order'=>'DESC']);
     echo '<section class="testimonials-190" aria-labelledby="customer-testimonial-title" data-customer-testimonials><p class="eyebrow">At home with Loomara</p><h2 id="customer-testimonial-title">Stories from softer spaces.</h2>';
     if(!$quotes){echo '<div class="testimonials-empty"><p>Your everyday rituals are the heart of our story. Be among the first to tell us how a little more comfort feels.</p>';loomara_testimonial_prompt();echo '</div>';}
-    else{echo '<p>A few honest words from the homes we’re grateful to be part of.</p><div class="testimonial-rail" aria-label="Latest customer testimonials">';foreach($quotes as $quote){echo '<figure><blockquote>'.esc_html($quote->post_content).'</blockquote><figcaption>'.esc_html($quote->post_title).' · Loomara customer</figcaption></figure>';}echo '</div>';if(count($quotes)>1)echo '<button type="button" class="button testimonial-pause" data-pause-customer-testimonials>Pause testimonials</button>';loomara_testimonial_prompt();}
+    else{echo '<p>A few honest words from the homes we’re grateful to be part of.</p><div class="testimonial-rail" aria-label="Latest customer testimonials" aria-roledescription="carousel">';foreach($quotes as $quote){echo '<figure><blockquote>'.esc_html($quote->post_content).'</blockquote><figcaption>'.esc_html($quote->post_title).' · Loomara customer</figcaption></figure>';}echo '</div>';if(count($quotes)>1)echo '<div class="testimonial-controls"><button type="button" class="button" data-testimonial-previous aria-label="Previous testimonial">←</button><span data-testimonial-position aria-live="off">1 / '.count($quotes).'</span><button type="button" class="button" data-testimonial-next aria-label="Next testimonial">→</button><button type="button" class="button testimonial-pause" data-pause-customer-testimonials>Pause testimonials</button></div>';loomara_testimonial_prompt();}
     echo '</section>';
 }

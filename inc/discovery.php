@@ -21,7 +21,7 @@ function loomara_header_state() {
     if (WC()->cart) { foreach (WC()->cart->get_cart() as $item) {
         $items[] = ['product' => (int)$item['product_id'], 'variation' => (int)$item['variation_id']];
     } }
-    wp_send_json_success(['signedIn' => is_user_logged_in(), 'count' => loomara_cart_item_count(), 'items' => $items, 'cartUrl' => wc_get_cart_url()]);
+    wp_send_json_success(['signedIn' => is_user_logged_in(), 'count' => loomara_cart_item_count(), 'items' => $items, 'cartUrl' => wc_get_cart_url(), 'wishlistIds' => loomara_wishlist_ids()]);
 }
 add_action('wp_ajax_loomara_header_state', 'loomara_header_state');
 add_action('wp_ajax_nopriv_loomara_header_state', 'loomara_header_state');

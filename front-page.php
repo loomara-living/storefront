@@ -39,12 +39,11 @@
       <div class="home-product-grid"><?php loomara_top_rated_collection(); ?></div>
     </section>
   <?php endif; ?>
-  <?php loomara_testimonial_preview(); ?>
+  <?php loomara_customer_testimonials(); ?>
   <section id="loomara-feeling" class="intro section-grid">
-    <div class="section-number">01</div>
     <div class="intro-heading reveal"><p class="eyebrow">The Loomara feeling</p><h2>Made for the<br><em>rhythm of home.</em></h2></div>
     <div class="intro-copy reveal"><p class="dropcap">Comfort is more than a finishing touch. It is the quiet backdrop to the first cup of tea, the chapter read before sleep, and the unhurried Sunday that asks nothing of you.</p><p>Loomara Living is an invitation to make those everyday rituals feel a little more considered—through calm colour, tactile layers, and details that settle naturally into your space.</p></div>
   </section>
-  <section class="newsletter"><p class="eyebrow">At home in India</p><h2>Something softer,<br><em>for your everyday.</em></h2><p>Thoughtful bedding, delivered across serviceable PIN codes in India.</p><a class="button" href="<?php echo esc_url(home_url('/contact/')); ?>">Let’s talk home</a></section>
+  <section class="newsletter"><p class="eyebrow">At home in India</p><h2>Something softer,<br><em>for your everyday.</em></h2><p>Thoughtful bedding, delivered across serviceable PIN codes in India.</p><div class="home-closing-actions"><a class="button" href="<?php echo esc_url(wc_get_page_permalink('shop')); ?>">Find your next layer</a><a class="button" href="<?php echo esc_url(home_url('/contact/')); ?>">Let’s talk home</a></div></section>
 </main>
 <?php get_footer(); ?>

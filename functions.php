@@ -28,6 +28,10 @@ require_once get_template_directory() . '/inc/billing-address.php';
 require_once get_template_directory() . '/inc/catalogue-186.php';
 require_once get_template_directory() . '/inc/cart-account-187.php';
 require_once get_template_directory() . '/inc/orders-delivery-188.php';
+require_once get_template_directory() . '/inc/experience-190.php';
+require_once get_template_directory() . '/inc/testimonials-190.php';
+require_once get_template_directory() . '/inc/cart-discovery-190.php';
+require_once get_template_directory() . '/inc/catalogue-190.php';
 
 function loomara_setup() {
     add_theme_support('title-tag');

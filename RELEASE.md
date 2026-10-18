@@ -2,6 +2,45 @@
 
 All release details are maintained in this single file, newest first. Historical notes describe the behaviour and policies at the time of each release.
 
+## v1.9.0 — Customer stories, cart discovery and catalogue organisation
+
+- Hero logo moves close to the artwork top; remove the feeling-section 01 and
+  add Find your next layer beside Let’s talk home on desktop/mobile.
+- Likes display only at two or more: homepage hover/focus, product-detail text
+  under the heart, no listing tooltip. Text is “N customers likes this product”.
+  Filled hearts follow the current customer’s wishlist, never aggregate counts.
+- Future order references start OD; existing stored order references are retained.
+- Address label defaults Home with Home/Work/Custom choices; first/last names
+  share a row and phone occupies the next. Desktop filters scroll with the page.
+- Genuine paid customers can submit opt-in testimonials on Orders and Home;
+  submissions are pending until manually approved in Customer testimonials.
+  Homepage shows only the latest five published quotes, with left-to-right
+  rotation, pause/focus/hover/reduced-motion support and a thoughtful empty state.
+  No sample testimonials are deployed. FAQ policies become numbered question 08;
+  unambiguous fuzzy corrections appear in “Showing results for: …”. Shipping
+  debug-zone notices are suppressed without removing real shipping errors.
+- Cart adds compact cover recommendations and exact-SKU matching combos, plus
+  Shiprocket estimates using the default address PIN with manual recheck. The
+  PIN does not change saved addresses. API failures are unavailable estimates,
+  not proof of unserviceability; quotes do not create shipments or payments.
+- Local images now sit Category/Subcategory/Design/SKU; all 27 image hashes
+  verified unchanged. Six disabled local combo draft designs/seven variant
+  examples await owner-confirmed contents, prices, stock and genuine photographs.
+  These drafts are NOT published, imported or included in theme deployment.
+- Explicit administrator-only migration snapshots 28 fixed existing identities,
+  sets bedsheets 500 g, comforters 1 kg, combos 1.5 kg using the configured Woo
+  weight unit, and updates variant folder metadata. Prices, stock, image IDs,
+  sizes and URLs are protected. Sample, legacy Rose and the existing cushion-cover
+  pair are excluded; 500 g is reserved for confirmed six-piece cover packs.
+- Verification: 25 isolated assertions, latest-five moderation checks and mocked
+  courier success/failure cases passed. Desktop/mobile layout checks cover hero,
+  addresses, cart, FAQ and corrected search. No real orders/payments/testimonials
+  created by testing. QA fixtures remain outside the theme.
+- Rollback: restore v1.8.9 theme; retain real orders/customer testimonials. If
+  reverting catalogue weights/folders, restore only those fields from private
+  loomara_catalogue_190_snapshot, never an old database or stock snapshot over
+  subsequent customer transactions. Existing OD references remain immutable.
+
 ## v1.8.9 — Restore native Shiprocket PIN checking
 
 - Owner reports correcting Shiprocket integration and requests its actual

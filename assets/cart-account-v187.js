@@ -26,7 +26,14 @@
       view.href=state.cartUrl;view.hidden=!added;button.hidden=added;
     });
   }
-  document.addEventListener('loomara:cart-state',event=>{state=event.detail;syncCart();});
+  document.addEventListener('loomara:cart-state',event=>{state=event.detail;syncCart();
+    const saved=new Set((state.wishlistIds||[]).map(Number));
+    document.querySelectorAll('.wishlist-button').forEach(button=>{
+      const count=button.querySelector('[data-wishlist-count]');if(!count)return;
+      const id=Number(count.dataset.wishlistCount),heart=button.querySelector('[data-wishlist-heart]')||button.querySelector('[aria-hidden=true]');
+      if(heart)heart.textContent=saved.has(id)?'♥':'♡';
+    });
+  });
   window.jQuery(document.body).on('found_variation reset_data hide_variation',()=>queueMicrotask(syncCart));
   document.querySelectorAll('ul.products').forEach(list=>new MutationObserver(()=>{if(state)syncCart();}).observe(list,{childList:true}));
   // Native title works on hover; the readable description also works on focus/touch.
@@ -34,10 +41,12 @@
     document.querySelectorAll('[data-wishlist-count]').forEach(count=>{
       const button=count.closest('.wishlist-button');if(!button)return;
       const n=Number(count.textContent)||0;
-      const text=`${n} ${n===1?'person likes':'people like'} this product`;
-      button.title=text;if(count.textContent!==String(n))count.textContent=String(n);count.setAttribute('aria-label',text);
-      let tip=button.querySelector('.wishlist-hover-tip');
+      const text=`${n} customers likes this product`;
+      const home=document.body.classList.contains('home'),detail=document.body.classList.contains('single-product')&&!!button.closest('.summary');
+      button.removeAttribute('title');if(count.textContent!==String(n))count.textContent=String(n);count.setAttribute('aria-label',text);
+      let tip=button.querySelector('.wishlist-hover-tip,.wishlist-detail-count');
       if(!tip){tip=document.createElement('span');tip.className='wishlist-hover-tip';button.append(tip);}
+      tip.className=detail?'wishlist-detail-count':'wishlist-hover-tip';tip.hidden=n<2||(!home&&!detail);
       if(tip.textContent!==text)tip.textContent=text;
     });
   }

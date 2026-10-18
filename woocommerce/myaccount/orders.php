@@ -7,6 +7,8 @@ do_action('woocommerce_before_account_orders', $has_orders);
 ?>
 <section class="loomara-orders" aria-labelledby="loomara-orders-title">
   <header class="orders-heading"><p class="eyebrow">Your Loomara collection</p><h2 id="loomara-orders-title">Your orders</h2><p>Follow every piece on its way to your home.</p></header>
+  <?php if(isset($_GET['testimonial'])&&$_GET['testimonial']==='submitted'): ?><p role="status">Thank you. Your testimonial is awaiting review before it appears publicly.</p><?php endif; ?>
+  <div class="testimonial-layout"><div>
   <form method="get" action="<?php echo esc_url(wc_get_account_endpoint_url('orders')); ?>" class="order-status-filter">
     <label for="order-status-filter">Order status</label>
     <select id="order-status-filter" name="order_status">
@@ -51,5 +53,6 @@ do_action('woocommerce_before_account_orders', $has_orders);
   <?php else : ?>
     <div class="orders-empty"><span aria-hidden="true">◇</span><h3>No orders in this view yet.</h3><p>Try another status to find payment attempts, or discover something new for your home.</p><a class="button" href="<?php echo esc_url(wc_get_page_permalink('shop')); ?>">Explore the collection</a></div>
   <?php endif; ?>
+  </div><aside aria-label="Share your Loomara experience"><?php loomara_testimonial_prompt('orders'); ?></aside></div>
 </section>
 <?php do_action('woocommerce_after_account_orders', $has_orders); ?>

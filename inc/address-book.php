@@ -36,6 +36,10 @@ function loomara_default_address_id($addresses = null) {
 }
 
 function loomara_validate_address($raw) {
+    if (isset($raw['label_choice'])) {
+        $choice=is_scalar($raw['label_choice'])?sanitize_text_field($raw['label_choice']):'';
+        $raw['label']=$choice==='Custom'?($raw['label_custom']??''):$choice;
+    }
     $address = ['country' => 'IN'];
     foreach (loomara_address_fields() as $field => $label) {
         $address[$field] = isset($raw[$field]) && is_scalar($raw[$field]) ? sanitize_text_field($raw[$field]) : '';
@@ -101,7 +105,10 @@ function loomara_address_form($id = '', $address = []) {
     foreach (loomara_address_fields() as $field => $label) {
         echo '<p class="address-field address-field-' . esc_attr($field) . '"><label for="address-' . esc_attr($field) . '">' . esc_html($label) . '</label>';
         $value = $address[$field] ?? '';
-        if ($field === 'state') {
+        if ($field === 'label') {
+            $choice=in_array($value,['Home','Work'],true)?$value:($value?'Custom':'Home');
+            echo '<select name="label_choice" id="address-label" data-address-label>';foreach(['Home','Work','Custom'] as $option){echo '<option '.selected($choice,$option,false).'>'.esc_html($option).'</option>';}echo '</select><label class="custom-label-editor"'.($choice==='Custom'?'':' hidden').'>Custom label<input name="label_custom" maxlength="160" value="'.esc_attr($choice==='Custom'?$value:'').'" '.($choice==='Custom'?'required':'disabled').'></label>';
+        } elseif ($field === 'state') {
             echo '<select name="state" id="address-state" required autocomplete="address-level1"><option value="">Choose state / UT</option>';
             foreach (WC()->countries->get_states('IN') as $code => $state) { echo '<option value="' . esc_attr($code) . '" ' . selected($value, $code, false) . '>' . esc_html($state) . '</option>'; }
             echo '</select>';

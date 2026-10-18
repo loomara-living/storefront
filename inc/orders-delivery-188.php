@@ -8,7 +8,7 @@ function loomara_assign_order_reference($id, $order = false) {
     $order = $order instanceof WC_Order ? $order : wc_get_order($id);
     if (!$order || $order->get_meta('_loomara_order_reference')) { return; }
     $date = $order->get_date_created();
-    $reference = 'LM-'.wp_date('Ym', $date ? $date->getTimestamp() : time(), wp_timezone()).'-'.str_pad((string)$order->get_id(), 6, '0', STR_PAD_LEFT);
+    $reference = 'OD-'.wp_date('Ym', $date ? $date->getTimestamp() : time(), wp_timezone()).'-'.str_pad((string)$order->get_id(), 6, '0', STR_PAD_LEFT);
     $order->update_meta_data('_loomara_order_reference', $reference);
     $order->save_meta_data();
 }

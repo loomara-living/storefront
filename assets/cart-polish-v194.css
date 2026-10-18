@@ -1,0 +1,17 @@
+/* Scoped refinements: do not let the heart's size apply to its caption. */
+.woocommerce.single-product .summary .wishlist-button > .wishlist-detail-count{font:400 .78rem/1.5 var(--sans);color:var(--ink-soft);letter-spacing:0;margin-top:.35rem}
+.woocommerce .woocommerce-message{display:flex;align-items:center;gap:.8rem;flex-wrap:wrap;padding:1rem 1.15rem!important;border:0!important;border-left:3px solid var(--gold)!important;border-radius:0 8px 8px 0!important;background:#f4f7f1!important;box-shadow:none!important;color:var(--ink);font:400 .88rem/1.6 var(--sans)}
+.woocommerce .woocommerce-message::before{position:static!important;color:#51734b!important;flex:0 0 auto}
+.woocommerce .woocommerce-message .button{float:none!important;order:2;margin:0 0 0 auto!important;white-space:nowrap}
+.cart-discovery-190>h2{font:500 1.15rem/1.4 var(--serif);margin:0 0 .5rem}
+.cart-discovery-190>.cart-addon-list+h2{margin-top:1.5rem}
+.cart-discovery-190>p{font:400 .85rem/1.6 var(--sans)}
+.cart-addon{max-width:360px;flex:1 1 260px;gap:.9rem;padding:.8rem}
+.cart-addon img{width:88px!important;height:100px!important;flex:0 0 88px;object-fit:cover;border-radius:5px}
+.cart-addon>div{min-width:0}.cart-addon h3{font:500 .94rem/1.4 var(--serif);overflow-wrap:anywhere}
+.loomara-cancel-order{margin-top:1rem;border-top:1px solid var(--line);padding-top:.8rem;font:400 .82rem/1.6 var(--sans)}.loomara-cancel-order summary{cursor:pointer;color:var(--ink);font-weight:600}.loomara-cancel-order p{max-width:600px}.loomara-cancel-order .button{font-size:.75rem}
+.woocommerce-cart table.cart .product-thumbnail{width:120px}
+.woocommerce-cart table.cart .product-thumbnail img{width:100px!important;max-width:100px!important;height:115px!important;object-fit:cover;border-radius:5px}
+.woocommerce-cart .wc-block-cart-item__image{width:120px!important}
+.woocommerce-cart .wc-block-cart-item__image img{width:100px!important;max-width:100%!important;border-radius:5px}
+@media(max-width:700px){.woocommerce-cart table.cart .product-thumbnail img{width:88px!important;height:100px!important}.woocommerce-cart .wc-block-cart-item__image{width:90px!important}.cart-addon img{width:76px!important;height:88px!important;flex-basis:76px}.woocommerce .woocommerce-message{font-size:.82rem}.woocommerce .woocommerce-message .button{margin-left:0!important}}

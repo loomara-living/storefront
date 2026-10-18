@@ -2,6 +2,14 @@
 
 All release details are maintained in this single file, newest first. Historical notes describe the behaviour and policies at the time of each release.
 
+## v1.9.4 — Cart polish and customer order controls
+
+- Compact product likes caption, calmer inline cart-success notice, larger cart/add-on images and smaller discovery headings. Available matching combos precede cover add-ons.
+- Signed-in owners can confirm immediate cancellation of Pending, On hold or Processing orders without recorded shipping/tracking evidence. Ownership, nonce and fresh status are checked on POST; terminal/shipped/tracked orders are rejected. Paid cancellations explicitly require a separate manual refund; no refund API is called.
+- Future authenticated checkouts persist a server-side owner marker. Magic Checkout saves retain that owner and account email, even when Razorpay returns another email; shipping address/mobile continue through normal gateway handling. Redundant gateway account creation is suppressed for authenticated/bound requests without changing stored gateway settings. Unbound historic orders remain unchanged; no email-based claiming or order-privacy bypass.
+- 35 isolated ownership/cancellation assertions plus 33 existing address/timestamp regression assertions passed. Styling fixture checked at 390px and 1366px without overflow. No live cancellation, refund, payment or customer change performed. Full gateway acceptance testing still requires an actual customer checkout.
+- Rollback: restore v1.9.3 theme code. Customer-confirmed cancellations are real order changes and cannot be undone by reverting code; refunds remain manual.
+
 ## v1.9.3 — Cart delivery and customer order details
 
 - My Account order cards show date/time in IST. Successful Magic Checkout shipping addresses auto-save only when the customer's book does not already contain that PIN; existing addresses/defaults are never overwritten. Razorpay full recipient names are preserved when no separate surname is supplied; manual address validation remains unchanged.

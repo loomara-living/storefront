@@ -8,10 +8,12 @@ function loomara_cart_discovery() {
     $matches=[];$inCart=[];
     foreach(WC()->cart->get_cart() as $item){$p=$item['data'];$inCart[]=$p->get_id();$sku=loomara_matching_combo_sku($p->get_sku());if($sku){$id=wc_get_product_id_by_sku($sku);$combo=$id?wc_get_product($id):false;if($combo&&$combo->get_status()==='publish'&&$combo->is_purchasable()&&$combo->is_in_stock())$matches[$id]=$combo;}}
     $covers=wc_get_products(['status'=>'publish','category'=>['cushion-covers'],'limit'=>4]);
-    echo '<section class="cart-discovery-190"><h2>A little extra comfort</h2><p>Add-on covers to finish your space.</p><div class="cart-addon-list">';
+    $matches=array_diff_key($matches,array_flip($inCart));
+    echo '<section class="cart-discovery-190" aria-label="Complete your collection">';
+    if($matches){echo '<h2>Complete the matching set</h2><div class="cart-addon-list">';foreach($matches as $p){loomara_cart_addon($p);}echo '</div>';}
+    echo '<h2>A little extra comfort</h2><p>Add-on covers to finish your space.</p><div class="cart-addon-list">';
     foreach($covers as $p){if(!$p->is_visible()||!$p->is_purchasable()||!$p->is_in_stock()||in_array($p->get_id(),$inCart,true))continue;loomara_cart_addon($p);}
     echo '</div>';
-    if($matches){echo '<h3>Complete the matching set</h3><div class="cart-addon-list">';foreach($matches as $id=>$p){if(!in_array($id,$inCart,true))loomara_cart_addon($p);}echo '</div>';}
     echo '</section>';
 }
 function loomara_cart_addon($p) {

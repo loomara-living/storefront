@@ -39,6 +39,7 @@ do_action('woocommerce_before_account_orders', $has_orders);
         <?php foreach (wc_get_account_orders_actions($order) as $key=>$action) : ?>
           <a href="<?php echo esc_url($action['url']); ?>" class="button <?php echo esc_attr(sanitize_html_class($key)); ?>" aria-label="<?php echo esc_attr($action['name'].' order '.$order->get_order_number()); ?>"><?php echo esc_html($action['name']); ?></a>
         <?php endforeach; ?></nav></footer>
+        <?php loomara_customer_cancel_form($order); ?>
       </article>
     <?php endforeach; ?>
     </div>

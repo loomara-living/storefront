@@ -15,5 +15,6 @@ add_filter('the_content',function($content){
 },60);
 add_action('wp_enqueue_scripts',function(){
     wp_enqueue_style('loomara-experience-190',get_template_directory_uri().'/assets/experience-v190.css',['loomara-orders-delivery'],filemtime(__DIR__.'/../assets/experience-v190.css'));
+    wp_enqueue_style('loomara-cart-polish-194',get_template_directory_uri().'/assets/cart-polish-v194.css',['loomara-experience-190','loomara-store-refinements'],filemtime(__DIR__.'/../assets/cart-polish-v194.css'));
     wp_enqueue_script('loomara-experience-190',get_template_directory_uri().'/assets/experience-v190.js',[],filemtime(__DIR__.'/../assets/experience-v190.js'),true);
 });

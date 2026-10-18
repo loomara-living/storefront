@@ -27,6 +27,7 @@ require_once get_template_directory() . '/inc/verified-ratings.php';
 require_once get_template_directory() . '/inc/billing-address.php';
 require_once get_template_directory() . '/inc/catalogue-186.php';
 require_once get_template_directory() . '/inc/cart-account-187.php';
+require_once get_template_directory() . '/inc/orders-delivery-188.php';
 
 function loomara_setup() {
     add_theme_support('title-tag');

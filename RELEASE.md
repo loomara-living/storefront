@@ -2,6 +2,28 @@
 
 All release details are maintained in this single file, newest first. Historical notes describe the behaviour and policies at the time of each release.
 
+## v1.8.8 — Orders and India PIN feedback
+
+- New native WooCommerce orders receive a persisted LM-YYYYMM-ID reference,
+  with a six-digit-minimum database ID suffix. No sequence-reset races, order
+  ID replacement or historical order-number rewriting. Existing references stay.
+- Customer-only orders default to Processing/Completed (plus registered
+  Shipped/Delivered statuses). A status selector exposes pending, failed and
+  other registered statuses. Native view/pay/cancel actions and pagination remain.
+- Responsive order cards show the actual current status, date, items and total.
+  Completed is not falsely renamed Delivered; no fabricated shipment events.
+- Owner approved replacing the broken Shiprocket product-page checker with
+  local six-digit India PIN-format validation. Live checker was missing merchant
+  integration ID and product weight and mapped every API error to unserviceable.
+  Replacement explicitly does not verify courier coverage or postal existence;
+  free India shipping remains the merchant policy. Shipping/payment settings,
+  Shiprocket account and product weights are not modified or invented.
+- Twelve local assertions passed for uniqueness/immutability, historic numbers,
+  status filters, ownership and PIN validation. Desktop/mobile browser checks
+  passed; 560001 accepted as format, 000000 rejected. No live orders/emails made.
+- Rollback: restore v1.8.7 theme. Persisted new order references remain metadata;
+  do not delete orders or restore an old database over subsequent transactions.
+
 ## v1.8.7 — Cart and checkout accounts
 
 - Replace the purchase button with View cart for items already in the cart;

@@ -52,8 +52,8 @@ add_filter('posts_search', function ($search, $query) {
             $like = '%' . $wpdb->esc_like($variant) . '%';
             $matches[] = $wpdb->prepare("({$wpdb->posts}.post_title LIKE %s OR {$wpdb->posts}.post_excerpt LIKE %s OR {$wpdb->posts}.post_content LIKE %s
                 OR EXISTS (SELECT 1 FROM {$wpdb->term_relationships} sr JOIN {$wpdb->term_taxonomy} st ON st.term_taxonomy_id = sr.term_taxonomy_id JOIN {$wpdb->terms} sn ON sn.term_id = st.term_id WHERE sr.object_id = {$wpdb->posts}.ID AND st.taxonomy IN ('product_cat','product_tag') AND (sn.name LIKE %s OR sn.slug LIKE %s))
-                OR EXISTS (SELECT 1 FROM {$wpdb->postmeta} sm WHERE sm.post_id = {$wpdb->posts}.ID AND sm.meta_key = '_sku' AND sm.meta_value LIKE %s)
-                OR EXISTS (SELECT 1 FROM {$wpdb->posts} sv JOIN {$wpdb->postmeta} vm ON vm.post_id = sv.ID WHERE sv.post_parent = {$wpdb->posts}.ID AND sv.post_type = 'product_variation' AND sv.post_status = 'publish' AND vm.meta_key IN ('_sku','attribute_colour','attribute_size') AND vm.meta_value LIKE %s))", $like, $like, $like, $like, $like, $like, $like);
+                OR EXISTS (SELECT 1 FROM {$wpdb->postmeta} sm WHERE sm.post_id = {$wpdb->posts}.ID AND sm.meta_key IN ('_sku','_loomara_former_design_ids') AND sm.meta_value LIKE %s)
+                OR EXISTS (SELECT 1 FROM {$wpdb->posts} sv JOIN {$wpdb->postmeta} vm ON vm.post_id = sv.ID WHERE sv.post_parent = {$wpdb->posts}.ID AND sv.post_type = 'product_variation' AND sv.post_status = 'publish' AND vm.meta_key IN ('_sku','_loomara_former_skus','attribute_colour','attribute_size') AND vm.meta_value LIKE %s))", $like, $like, $like, $like, $like, $like, $like);
         }
         $clauses[] = '(' . implode(' OR ', $matches) . ')';
     }

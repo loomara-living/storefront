@@ -2,7 +2,7 @@
 
 All release details are maintained in this single file, newest first. Historical notes describe the behaviour and policies at the time of each release.
 
-## Planned v1.8.6 — Subcategories and identity-preserving catalogue update (local review only)
+## v1.8.6 — Subcategories and identity-preserving catalogue update
 
 - Local inventory now uses LM-{CATEGORY}-{SUBCATEGORY}-{DESIGN:5} and
   LM-{CATEGORY}-{SUBCATEGORY}-{COLOR}{DESIGN:5}-{SIZE}; same design numbers,
@@ -13,13 +13,25 @@ All release details are maintained in this single file, newest first. Historical
   all twenty-seven source-image hashes are unchanged.
 - Owner-authorized material defaults: Cotton for missing bedding materials;
   Mixed for cushion covers. Existing explicit material details take priority.
-- Local preview imports the nine designs and style subcategories. A production
-  migration must preflight existing WooCommerce parent/variation IDs and SKU
-  uniqueness, snapshot only affected attributes/categories/SKUs, preserve all
-  live prices/stock, and never recreate products or change slugs/orders/customers.
-- Not published or migrated to production. Reversal must use the saved ID mapping,
-  not a whole-database restore over newer orders. Theme rollback alone does not
-  reverse future WooCommerce metadata changes.
+- Explicit administrator-only, nonce-protected migration preflights existing
+  WooCommerce parent/variation identities, colour/size agreement, extra variations
+  and SKU collisions before any write. No automatic frontend migration.
+- A private snapshot is saved in loomara_catalogue_186_snapshot; protected prices,
+  stock, images, sizes, descriptions, tax data and slugs are verified unchanged.
+  Existing explicit materials, other categories and old SKU aliases are retained.
+- Only the mapped nine parents/twenty-one children are updated. The separate
+  Sample #120 and legacy Rose #14 records are excluded. No product recreation,
+  media upload, order/customer change or payment-setting change is involved.
+- Search includes former SKU aliases, so old product codes remain discoverable.
+- Thirteen local migration assertions passed: wrong identity/collision rejection,
+  all thirty identity-preserving SKU updates, material/category assignment, old
+  aliases, protected data, unrelated-product preservation, snapshot and safe repeat.
+
+Rollback: restore v1.8.5 theme code in a new release. For catalogue metadata,
+an administrator must use the private snapshot to restore only SKUs, affected
+attributes/categories and migration metadata; never restore saved stock/prices
+or a whole database over newer orders. Theme rollback alone does not reverse
+the catalogue migration. Newly created empty style terms may safely remain.
 
 ## v1.8.5 — Storefront, wishlist and account experience
 

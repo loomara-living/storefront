@@ -9,6 +9,6 @@
     </header>
     <?php loomara_shop_discovery(); ?>
   <?php endif; ?>
-  <div class="woocommerce-content"><?php if (is_product_category()) { loomara_category_colour_content(); } else { woocommerce_content(); } ?></div>
+  <div class="woocommerce-content"><?php if (is_shop() || is_product_category()) { loomara_category_colour_content(); } else { woocommerce_content(); } ?></div>
 </main>
 <?php get_footer(); ?>

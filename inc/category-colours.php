@@ -5,7 +5,7 @@ function loomara_category_colour_entries($parents) {
     $entries = [];
     foreach ($parents as $post) {
         $parent = wc_get_product($post->ID);
-        if (!$parent || !$parent->is_visible()) { continue; }
+        if (!$parent || !$parent->is_visible() || $parent->get_meta('_loomara_canonical_product')) { continue; }
         $colours = [];
         if ($parent->is_type('variable')) {
             foreach ($parent->get_available_variations('objects') as $variation) {

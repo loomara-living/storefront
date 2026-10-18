@@ -2,6 +2,14 @@
 
 All release details are maintained in this single file, newest first. Historical notes describe the behaviour and policies at the time of each release.
 
+## v1.9.5 — Private Shiprocket connection setup
+
+- Administrator-only WooCommerce > Shiprocket connection page with nonce-protected submission. Owner enters dedicated API-user credentials directly; fields are never prefilled or echoed back.
+- Credentials are encrypted using AES-256-GCM and the WordPress authentication salt. Successful fixed-endpoint HTTPS authentication and read-only channel access are required before saving. Failed verification preserves previous credentials; raw API errors and bearer tokens are not displayed or stored.
+- Setup only: no shipment lookup, cancellation, automatic refund, payment changes or historical-order updates. Automatic refunds remain disabled pending connection and exact channel/order matching verification.
+- Sixteen isolated security assertions passed, including encryption/tampering, permission/nonce checks, failure preservation and absence of cancellation/refund API calls. No real credentials or live transactions used during QA.
+- Rollback: restore v1.9.4 code. Saved encrypted connection data remains private in WordPress; rotating authentication salts requires reconnecting.
+
 ## v1.9.4 — Cart polish and customer order controls
 
 - Compact product likes caption, calmer inline cart-success notice, larger cart/add-on images and smaller discovery headings. Available matching combos precede cover add-ons.

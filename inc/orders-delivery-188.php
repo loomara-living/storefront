@@ -38,18 +38,19 @@ function loomara_account_order_query($args) {
 }
 add_filter('woocommerce_my_account_my_orders_query', 'loomara_account_order_query', 100);
 
-// Replace only the product-page Shiprocket checker, not shipping methods or
-// checkout configuration. No API request and no invented courier coverage.
-add_action('wp', function () {
-    remove_action('woocommerce_single_product_summary', 'shiprocket_show_check_pincode', 20);
-});
+// Shiprocket owns live courier checks when installed. Do not remove its native
+// callback or override merchant configuration. Format-only fallback is local /
+// plugin-absent only and must never be presented as courier serviceability.
 function loomara_pin_format_valid($pin) {
     return is_scalar($pin) && preg_match('/^[1-9][0-9]{5}$/D', trim((string)$pin)) === 1;
 }
 add_action('woocommerce_single_product_summary', function () {
+    if (function_exists('shiprocket_show_check_pincode')) { return; }
     echo '<section class="delivery-pin" aria-labelledby="delivery-pin-title"><h2 id="delivery-pin-title">Delivery to your door</h2><label for="loomara-delivery-pin">India PIN code</label><div class="delivery-pin-controls"><input id="loomara-delivery-pin" type="text" inputmode="numeric" autocomplete="postal-code" maxlength="6" pattern="[1-9][0-9]{5}" placeholder="e.g. 560001" aria-describedby="delivery-pin-help delivery-pin-result"><button type="button" class="button" data-check-india-pin>Check PIN</button></div><p id="delivery-pin-help">Free shipping across India. This checks the six-digit PIN format, not live courier coverage.</p><p id="delivery-pin-result" role="status" aria-live="polite"></p></section>';
 }, 21);
 add_action('wp_enqueue_scripts', function () {
     wp_enqueue_style('loomara-orders-delivery', get_template_directory_uri().'/assets/orders-delivery-v188.css', ['loomara-cart-account'], filemtime(__DIR__.'/../assets/orders-delivery-v188.css'));
-    wp_enqueue_script('loomara-orders-delivery', get_template_directory_uri().'/assets/orders-delivery-v188.js', [], filemtime(__DIR__.'/../assets/orders-delivery-v188.js'), true);
+    if (!function_exists('shiprocket_show_check_pincode')) {
+        wp_enqueue_script('loomara-orders-delivery', get_template_directory_uri().'/assets/orders-delivery-v188.js', [], filemtime(__DIR__.'/../assets/orders-delivery-v188.js'), true);
+    }
 });

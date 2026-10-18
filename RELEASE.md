@@ -2,6 +2,19 @@
 
 All release details are maintained in this single file, newest first. Historical notes describe the behaviour and policies at the time of each release.
 
+## v1.8.9 — Restore native Shiprocket PIN checking
+
+- Owner reports correcting Shiprocket integration and requests its actual
+  serviceability checker again. Theme no longer removes the native product-page
+  callback. Format-only UI/script is suppressed when Shiprocket is installed;
+  the clearly labelled fallback remains for plugin-absent local previews only.
+- Credentials, merchant settings, product weights, shipping methods, products,
+  orders, payments and v1.8.8 order improvements remain unchanged.
+- Native serviceability result is supplied by Shiprocket, not inferred from PIN
+  format. Live API acceptance is verified separately after deployment.
+- Rollback: restore v1.8.8 to return to the explicit format-only fallback. Do not
+  roll back the database or overwrite owner-updated Shiprocket settings.
+
 ## v1.8.8 — Orders and India PIN feedback
 
 - New native WooCommerce orders receive a persisted LM-YYYYMM-ID reference,

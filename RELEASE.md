@@ -2,6 +2,14 @@
 
 All release details are maintained in this single file, newest first. Historical notes describe the behaviour and policies at the time of each release.
 
+## v1.9.6 — Read-only Shiprocket order matching
+
+- Private administrator preflight matches the exact native/public order reference within the single verified WooCommerce channel. Revalidates Shiprocket order detail and every shipment identity; duplicate, missing, foreign-channel, return/exchange and unknown responses fail closed.
+- Uses saved encrypted credentials only server-side, fixed HTTPS authentication/read endpoints and no redirects. Results contain reference/status identifiers only, not customer contacts or tokens. Administrator/nonce checks and request limits protect the form.
+- Nineteen isolated mocked tests passed. Owner approved a live read-only check for OD-202610-000155, replacing the originally proposed 156.
+- No cancellation/refund APIs or activation controls; existing payment, order, credential and cancellation behaviour unchanged. Automatic refunds remain disabled pending verified live shipment mapping.
+- Rollback: restore v1.9.5 code. No order migration or financial transaction to reverse.
+
 ## v1.9.5 — Private Shiprocket connection setup
 
 - Administrator-only WooCommerce > Shiprocket connection page with nonce-protected submission. Owner enters dedicated API-user credentials directly; fields are never prefilled or echoed back.

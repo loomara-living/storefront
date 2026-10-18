@@ -66,6 +66,7 @@ function loomara_sr_connection_page() {
     echo '<form method="post" action="'.esc_url(admin_url('admin-post.php')).'" autocomplete="off"><input type="hidden" name="action" value="loomara_sr_connect">';
     wp_nonce_field('loomara_sr_connect');
     echo '<table class="form-table"><tr><th><label for="loomara-sr-email">API user email</label></th><td><input type="email" id="loomara-sr-email" name="api_email" class="regular-text" autocomplete="off" required></td></tr><tr><th><label for="loomara-sr-password">API user password</label></th><td><input type="password" id="loomara-sr-password" name="api_password" class="regular-text" autocomplete="new-password" required><p class="description">Enter the dedicated API-user password, not your main Shiprocket login. Neither field is prefilled or returned after submission.</p></td></tr></table><p>Test and save sends these credentials only to Shiprocket’s authentication API. Successful credentials are encrypted in this WordPress database. Existing credentials remain intact if verification fails.</p><button class="button button-primary" type="submit">Test connection &amp; save securely</button></form></div>';
+    do_action('loomara_shiprocket_connection_tools');
 }
 function loomara_sr_save_connection() {
     if(!current_user_can('manage_options')){wp_die('Administrator access required.',403);}

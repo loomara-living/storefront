@@ -30,6 +30,8 @@ function loomara_catalog_matches_size($product) {
 function loomara_catalog_filters() {
     $category = loomara_catalog_category(); $size = loomara_catalog_size();
     $orders = ['menu_order'=>'Recommended','date'=>'Newest first','price'=>'Price: low to high','price-desc'=>'Price: high to low','popularity'=>'Best selling','rating'=>'Highest rated'];
+    $active = (int)($category !== '') + (int)($size !== '');
+    echo '<aside class="catalog-filter-panel" id="catalog-filter-panel" aria-label="Catalogue filters"><div data-filter-content><div class="catalog-filter-heading"><h2 id="catalog-filter-heading">Filters &amp; sorting</h2><a class="catalog-filter-close" data-filter-close href="#catalog-products" aria-label="Close filters">×</a></div>';
     echo '<form class="catalog-filters" method="get" action="'.esc_url(wc_get_page_permalink('shop')).'" aria-label="Filter and sort products">';
     if (is_search()) { echo '<input type="hidden" name="s" value="'.esc_attr(get_search_query()).'"><input type="hidden" name="post_type" value="product">'; }
     if (loomara_collection_selection() !== 'all') { echo '<input type="hidden" name="collection" value="'.esc_attr(loomara_collection_selection()).'">'; }
@@ -40,7 +42,8 @@ function loomara_catalog_filters() {
     foreach (['single'=>'Single','double'=>'Double','queen'=>'Queen','king'=>'King','unspecified'=>'Size not specified'] as $key=>$label) { echo '<option value="'.esc_attr($key).'"'.selected($size,$key,false).'>'.esc_html($label).'</option>'; }
     echo '</select></label><label class="catalog-sort">Sort by<select name="orderby">';
     foreach ($orders as $key=>$label) { echo '<option value="'.esc_attr($key).'"'.selected(loomara_catalog_order(),$key,false).'>'.esc_html($label).'</option>'; }
-    echo '</select></label><button class="button" type="submit">Apply</button><a class="catalog-clear" href="'.esc_url(wc_get_page_permalink('shop')).'">Clear filters</a></form>';
+    echo '</select></label><button class="button" type="submit">Apply filters</button><a class="catalog-clear" href="'.esc_url(wc_get_page_permalink('shop')).'">Clear filters</a></form></div></aside>';
+    echo '<dialog class="catalog-filter-dialog" data-filter-dialog aria-labelledby="catalog-filter-heading"><div data-filter-mount></div></dialog><a class="catalog-filter-toggle" data-filter-toggle href="#catalog-filter-panel" role="button" aria-controls="catalog-filter-panel" aria-expanded="false"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/><circle cx="8" cy="6" r="2" fill="currentColor"/><circle cx="16" cy="12" r="2" fill="currentColor"/><circle cx="10" cy="18" r="2" fill="currentColor"/></svg><span>Filters &amp; sort</span>'.($active ? '<span class="catalog-filter-count">'.esc_html($active).'</span>' : '').'</a>';
 }
 function loomara_catalog_sort_entries($entries) {
     $order = loomara_catalog_order();
@@ -61,6 +64,6 @@ function loomara_catalog_sort_entries($entries) {
 }
 add_action('wp_enqueue_scripts', function () {
     if (function_exists('is_shop') && (is_shop() || is_product_taxonomy() || (is_search() && in_array('product',(array)get_query_var('post_type'),true)))) {
-        wp_enqueue_script('loomara-catalog-browser', get_template_directory_uri().'/assets/catalog-browser-v182.js', [], '1.8.2', true);
+        wp_enqueue_script('loomara-catalog-browser', get_template_directory_uri().'/assets/catalog-browser-v183.js', [], '1.8.3', true);
     }
 });

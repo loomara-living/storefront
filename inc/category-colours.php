@@ -80,9 +80,10 @@ function loomara_category_colour_content() {
     wc_set_loop_prop('total',$total); wc_set_loop_prop('per_page',$per_page);
     wc_set_loop_prop('current_page',$page); wc_set_loop_prop('total_pages',$pages);
     wc_set_loop_prop('columns',4); wc_set_loop_prop('is_paginated',true);
+    echo '<div class="catalog-layout">';
     loomara_catalog_filters();
-    echo '<section class="catalog-results" data-catalog-browser data-total="'.esc_attr($total).'" data-shown="'.esc_attr(min($total,$page*$per_page)).'" aria-label="Product results">';
-    if (!$total) { echo '<p class="catalog-empty">No products match these filters. Try another size or category.</p></section>'; return; }
+    echo '<section class="catalog-results" id="catalog-products" data-catalog-browser data-total="'.esc_attr($total).'" data-shown="'.esc_attr(min($total,$page*$per_page)).'" aria-label="Product results">';
+    if (!$total) { echo '<p class="catalog-empty">No products match these filters. Try another size or category.</p></section></div>'; return; }
     $ordering_priority = has_action('woocommerce_before_shop_loop','woocommerce_catalog_ordering');
     if ($ordering_priority !== false) { remove_action('woocommerce_before_shop_loop','woocommerce_catalog_ordering',$ordering_priority); }
     try { do_action('woocommerce_before_shop_loop'); }
@@ -98,6 +99,6 @@ function loomara_category_colour_content() {
     if ($page < $pages) {
         echo '<label class="catalog-auto" data-catalog-auto hidden><input type="checkbox" checked> Automatically load as I scroll</label><a class="button catalog-more" data-catalog-next href="'.esc_url(add_query_arg('colour_page',$page+1)).'">Load more products</a>';
     }
-    echo '</div></section>';
+    echo '</div></section></div>';
     wp_reset_postdata(); wc_reset_loop(); $product = null;
 }

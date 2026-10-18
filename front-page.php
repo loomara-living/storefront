@@ -16,7 +16,7 @@
     </div>
   </section>
   <section class="marquee" aria-label="Loomara values"><div>RESTFUL BY DESIGN <span>✦</span> SOFTLY LAYERED <span>✦</span> MADE FOR HOME <span>✦</span> RESTFUL BY DESIGN <span>✦</span></div></section>
-  <section class="collection">
+  <section class="collection home-category-section" id="home-categories">
     <div class="section-heading reveal"><div><p class="eyebrow">Shop by category</p><h2>Layers for living</h2></div><?php if (class_exists('WooCommerce')) : ?><a class="text-link" href="<?php echo esc_url(wc_get_page_permalink('shop')); ?>">View the collection <span aria-hidden="true">→</span></a><?php endif; ?></div>
     <div class="category-grid">
       <a class="category-card reveal" href="<?php echo esc_url(loomara_product_category_url('bedsheets')); ?>"><img src="<?php echo esc_url(get_template_directory_uri() . '/assets/products/botanical-whisper-bedsheet-ivory.jpeg'); ?>" alt="Soft botanical bedsheet styled in a calm bedroom"><div class="category-meta"><span>01</span><div><h3>Bedsheets</h3><p>Breathable foundations for unhurried rest.</p></div><b aria-hidden="true">↗</b></div></a>

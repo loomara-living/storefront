@@ -37,6 +37,8 @@ require_once get_template_directory() . '/inc/catalogue-190.php';
 require_once get_template_directory() . '/inc/order-safety-194.php';
 require_once get_template_directory() . '/inc/shiprocket-connection-195.php';
 require_once get_template_directory() . '/inc/shiprocket-status-196.php';
+require_once get_template_directory() . '/inc/pin-autofill-197.php';
+require_once get_template_directory() . '/inc/package-dimensions-197.php';
 
 function loomara_setup() {
     add_theme_support('title-tag');

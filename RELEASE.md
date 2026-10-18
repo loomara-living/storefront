@@ -2,6 +2,15 @@
 
 All release details are maintained in this single file, newest first. Historical notes describe the behaviour and policies at the time of each release.
 
+## v1.9.7 — Parcel dimensions and India PIN autofill
+
+- Explicit, administrator-triggered snapshot migration sets physical products and variations to packed parcel dimensions of 30 × 20 × 5 cm, converted to the configured WooCommerce dimension unit. Preserves weights, prices, stock, images and product identities. No historical orders are edited. Future new physical products default to these dimensions when all three fields are blank.
+- Organised local inventory metadata records package dimensions separately from unconfirmed textile dimensions. Customer-facing dimensions are labelled Packed parcel dimensions.
+- Saved-address and classic checkout PIN fields can suggest city, Indian state/UT and country using a fixed server-side Shiprocket locality endpoint. Only the PIN is sent; credentials are not exposed. Nonce/rate limits, short encrypted token cache, successful-location cache and manual fallback are retained. Conflicting customer-entered values require explicit opt-in before replacement; stale responses are ignored. Razorpay-hosted forms are not modified.
+- Eighteen isolated backend assertions passed; mocked browser Bengaluru/Mumbai autofill, manual-value preservation, explicit replacement and 390px no-overflow checks passed. Live Shiprocket lookup remains part of deployment verification; no customer address saved during QA.
+- No refund automation, shipping-status changes, stock changes or payment changes.
+- Rollback: restore v1.9.6 theme code. Product dimensions require an explicit snapshot-based restoration; code rollback alone does not change saved dimensions. Never restore snapshot prices or stock over newer live values.
+
 ## v1.9.6 — Read-only Shiprocket order matching
 
 - Private administrator preflight matches the exact native/public order reference within the single verified WooCommerce channel. Revalidates Shiprocket order detail and every shipment identity; duplicate, missing, foreign-channel, return/exchange and unknown responses fail closed.

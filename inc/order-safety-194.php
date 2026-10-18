@@ -62,6 +62,27 @@ function loomara_customer_cancel_form($order) {
     wp_nonce_field('loomara_cancel_order_'.$order->get_id());
     echo '<button type="submit" class="button">Confirm cancellation</button></form></details>';
 }
+// admin-post.php does not load WooCommerce's frontend notice functions/session.
+// Carry only an allowlisted outcome to the authenticated customer's next page.
+function loomara_queue_cancel_notice($outcome) {
+    if (get_current_user_id() && in_array($outcome,['blocked','cancelled','paid'],true)) {
+        set_transient('loomara_cancel_notice_'.get_current_user_id(),$outcome,5*MINUTE_IN_SECONDS);
+    }
+}
+function loomara_show_cancel_notice() {
+    if (!get_current_user_id() || !function_exists('is_account_page') || !is_account_page() || !function_exists('wc_add_notice') || !WC()->session) { return; }
+    $key='loomara_cancel_notice_'.get_current_user_id();
+    $outcome=get_transient($key);
+    if (!$outcome) { return; }
+    delete_transient($key);
+    $messages=[
+        'blocked'=>['This order can no longer be cancelled online. Please contact us.','error'],
+        'cancelled'=>['Your order has been cancelled.','success'],
+        'paid'=>['Order cancelled. Our team will arrange your refund separately.','success'],
+    ];
+    if (isset($messages[$outcome])) { wc_add_notice($messages[$outcome][0],$messages[$outcome][1]); }
+}
+add_action('template_redirect','loomara_show_cancel_notice',20);
 function loomara_customer_cancel_order() {
     $id=isset($_POST['order_id'])&&is_scalar($_POST['order_id'])?absint($_POST['order_id']):0;
     if (!get_current_user_id() || !$id) { wp_die('Please sign in to manage your order.',403); }
@@ -71,11 +92,11 @@ function loomara_customer_cancel_order() {
     try {
         $order=wc_get_order($id);
         if (!loomara_order_can_customer_cancel($order,get_current_user_id())) {
-            wc_add_notice('This order can no longer be cancelled online. Please contact us.','error');
+            loomara_queue_cancel_notice('blocked');
         } else {
             $paid=$order->is_paid();
             $order->update_status('cancelled','Customer confirmed cancellation before dispatch. '.($paid?'Paid order: manual refund review required; no automatic refund submitted.':''));
-            wc_add_notice($paid?'Order cancelled. Our team will arrange your refund separately.':'Your order has been cancelled.','success');
+            loomara_queue_cancel_notice($paid?'paid':'cancelled');
         }
     } finally { delete_option($lock); }
     wp_safe_redirect(add_query_arg('order_status','all',wc_get_account_endpoint_url('orders'))); exit;

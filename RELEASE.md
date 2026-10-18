@@ -2,6 +2,13 @@
 
 All release details are maintained in this single file, newest first. Historical notes describe the behaviour and policies at the time of each release.
 
+## v1.9.8 — Cancellation confirmation fatal-error repair
+
+- Fixes the logged undefined wc_add_notice fatal error after customer cancellation through admin-post.php. The admin handler queues only an allowlisted, short-lived, customer-scoped outcome; the account frontend consumes it once using WooCommerce's normal notice/session lifecycle.
+- Existing ownership, nonce, fresh status, tracking and concurrent-request checks remain unchanged. Paid cancellations still require manual refunds; no refund automation or historical order changes.
+- 39 isolated regression assertions passed, including admin requests without frontend notice availability, customer isolation and single-use confirmation. No live cancellation or refund performed during verification.
+- Rollback: restore v1.9.7 theme code. No database migration; expiring confirmation notices require no restoration. Do not retry a previously cancelled order solely because its confirmation failed.
+
 ## v1.9.7 — Parcel dimensions and India PIN autofill
 
 - Explicit, administrator-triggered snapshot migration sets physical products and variations to packed parcel dimensions of 30 × 20 × 5 cm, converted to the configured WooCommerce dimension unit. Preserves weights, prices, stock, images and product identities. No historical orders are edited. Future new physical products default to these dimensions when all three fields are blank.

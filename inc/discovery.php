@@ -37,7 +37,7 @@ add_filter('woocommerce_redirect_single_search_result', '__return_false');
 // each word against those fields too, without bypassing catalog visibility,
 // stock filters, sale filters or native pagination in the enclosing query.
 add_filter('posts_search', function ($search, $query) {
-    if (is_admin() || !$query->is_main_query() || !$query->is_search()
+    if (is_admin() || (!$query->is_main_query() && !$query->get('loomara_catalogue_search')) || !$query->is_search()
         || !in_array('product', (array) $query->get('post_type'), true)) { return $search; }
     global $wpdb;
     $phrase = preg_replace('/\bbed[\s-]+sheets?\b/i', 'bedsheet', (string) $query->get('s'));
@@ -85,6 +85,11 @@ function loomara_shop_discovery() {
     echo '<div class="shop-discovery"><nav class="collection-tabs" aria-label="Product collections">';
     foreach (['all' => 'All pieces', 'best-sellers' => 'Best sellers', 'sale' => 'Sale'] as $key => $label) {
         $args = ['collection' => $key];
+        if (function_exists('loomara_catalog_category')) {
+            if (loomara_catalog_category()) { $args['catalog_category'] = loomara_catalog_category(); }
+            if (loomara_catalog_size()) { $args['catalog_size'] = loomara_catalog_size(); }
+            $args['orderby'] = loomara_catalog_order();
+        }
         if (is_search()) { $args['s'] = get_search_query(); $args['post_type'] = 'product'; }
         $url = add_query_arg($args, is_search() ? home_url('/') : (is_product_taxonomy() ? get_term_link(get_queried_object()) : wc_get_page_permalink('shop')));
         echo '<a href="' . esc_url($url) . '"' . ($selection === $key ? ' aria-current="page"' : '') . '>' . esc_html($label) . '</a>';

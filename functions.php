@@ -12,6 +12,7 @@ require_once get_template_directory() . '/inc/address-book.php';
 require_once get_template_directory() . '/inc/variant-gallery.php';
 require_once get_template_directory() . '/inc/inventory-release.php';
 require_once get_template_directory() . '/inc/category-colours.php';
+require_once get_template_directory() . '/inc/catalog-browser.php';
 require_once get_template_directory() . '/inc/catalog-navigation.php';
 require_once get_template_directory() . '/inc/merchant-schema.php';
 require_once get_template_directory() . '/inc/launch-experience.php';

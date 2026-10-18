@@ -45,12 +45,19 @@ function loomara_catalog_navigation() {
         else { echo '<span aria-current="page"'.(!empty($crumb['product']) ? ' data-breadcrumb-product-code data-default-code="'.esc_attr($code).'"' : '').'>'.esc_html($crumb['label']).'</span>'; }
         echo '</li>';
     }
-    echo '</ol></nav><nav class="catalog-category-links" aria-label="Browse categories"><span class="category-links-label">Explore</span>';
+    echo '</ol></nav>';
+    if (is_product()) { loomara_catalog_category_links('Browse categories', $category); }
+    echo '</div>';
+}
+function loomara_catalog_category_links($label = 'Shop by category', $category = null) {
+    if (!$category && is_product_category()) { $category = get_queried_object(); }
+    if (!$category && function_exists('loomara_catalog_category') && loomara_catalog_category()) { $category = get_term_by('slug',loomara_catalog_category(),'product_cat'); }
+    echo '<nav class="catalog-category-links" aria-label="'.esc_attr($label).'">';
     foreach (['bedsheets','comforters','combo','cushion-covers'] as $slug) {
         $term=get_term_by('slug',$slug,'product_cat'); if (!$term) { continue; }
         $url=get_term_link($term); if (is_wp_error($url)) { continue; }
         $active=$category && ($category->term_id === $term->term_id || term_is_ancestor_of($term,$category,'product_cat'));
         echo '<a'.($active ? ' class="is-active"' : '').($active && is_product_category() && $category->term_id === $term->term_id ? ' aria-current="page"' : '').' href="'.esc_url($url).'">'.esc_html($term->name).'</a>';
     }
-    echo '</nav></div>';
+    echo '</nav>';
 }

@@ -9,9 +9,12 @@ function loomara_category_colour_entries($parents) {
         $colours = [];
         if ($parent->is_type('variable')) {
             foreach ($parent->get_available_variations('objects') as $variation) {
+                if (!loomara_catalog_matches_size($variation)) { continue; }
                 if (loomara_collection_selection() === 'sale' && !$variation->is_on_sale()) { continue; }
+                $has_colour = false;
                 foreach ($variation->get_attributes() as $key => $value) {
                     if (!in_array(strtolower(str_replace('pa_', '', $key)), ['colour','color'], true) || $value === '') { continue; }
+                    $has_colour = true;
                     $label = $value;
                     if (taxonomy_exists($key)) { $term = get_term_by('slug',$value,$key); if ($term) { $label = $term->name; } }
                     $defaults = $parent->get_default_attributes();
@@ -24,10 +27,11 @@ function loomara_category_colour_entries($parents) {
                     }
                     break;
                 }
+                if (!$has_colour && !isset($colours['__no_colour'])) { $colours['__no_colour'] = ['parent'=>$parent,'variation'=>$variation,'colour'=>'']; }
             }
         }
         if ($colours) { $entries = array_merge($entries,array_values($colours)); }
-        elseif (!($parent->is_type('variable') && loomara_collection_selection() === 'sale')) { $entries[] = ['parent'=>$parent,'variation'=>null,'colour'=>'']; }
+        elseif (!$parent->is_type('variable') && loomara_catalog_matches_size($parent)) { $entries[] = ['parent'=>$parent,'variation'=>null,'colour'=>'']; }
     }
     return $entries;
 }
@@ -37,7 +41,7 @@ function loomara_category_colour_card($entry) {
     $variation = $entry['variation'];
     if (!$variation) { wc_get_template_part('content','product'); return; }
     $parent_id = $product->get_id();
-    $name = $product->get_name() . ' — ' . $entry['colour'];
+    $name = $product->get_name() . ($entry['colour'] !== '' ? ' — ' . $entry['colour'] : '');
     $url = $variation->get_permalink();
     $image_id = $variation->get_image_id() ?: $product->get_image_id();
     $price = $variation->get_price_html();
@@ -63,23 +67,26 @@ function loomara_category_colour_content() {
     $args = $wp_query->query_vars;
     $args['posts_per_page'] = -1; $args['nopaging'] = true; $args['paged'] = 1;
     $args['fields'] = 'all'; $args['no_found_rows'] = true;
+    if (is_search()) { $args['loomara_catalogue_search'] = true; }
+    $category = loomara_catalog_category();
+    if ($category) {
+        $args['tax_query'] = ['relation'=>'AND', (array)($args['tax_query'] ?? []), ['taxonomy'=>'product_cat','field'=>'slug','terms'=>[$category]]];
+    }
     $parents = new WP_Query($args);
     $entries = loomara_category_colour_entries($parents->posts);
-    $orderby = sanitize_text_field(wp_unslash($_GET['orderby'] ?? ''));
-    if (in_array($orderby,['price','price-desc'],true)) {
-        usort($entries,function ($a,$b) use ($orderby) {
-            $left=$a['variation'] ?: $a['parent']; $right=$b['variation'] ?: $b['parent'];
-            $result=(float)$left->get_price() <=> (float)$right->get_price();
-            return $orderby === 'price-desc' ? -$result : $result;
-        });
-    }
+    $entries = loomara_catalog_sort_entries($entries);
     $total = count($entries); $per_page = 8; $pages = max(1,(int)ceil($total/$per_page));
-    $page = min($pages,max(1,absint($_GET['colour_page'] ?? 1)));
+    $page = min($pages,max(1,absint(loomara_catalog_value('colour_page'))));
     wc_set_loop_prop('total',$total); wc_set_loop_prop('per_page',$per_page);
     wc_set_loop_prop('current_page',$page); wc_set_loop_prop('total_pages',$pages);
     wc_set_loop_prop('columns',4); wc_set_loop_prop('is_paginated',true);
-    if (!$total) { do_action('woocommerce_no_products_found'); return; }
-    do_action('woocommerce_before_shop_loop');
+    loomara_catalog_filters();
+    echo '<section class="catalog-results" data-catalog-browser data-total="'.esc_attr($total).'" data-shown="'.esc_attr(min($total,$page*$per_page)).'" aria-label="Product results">';
+    if (!$total) { echo '<p class="catalog-empty">No products match these filters. Try another size or category.</p></section>'; return; }
+    $ordering_priority = has_action('woocommerce_before_shop_loop','woocommerce_catalog_ordering');
+    if ($ordering_priority !== false) { remove_action('woocommerce_before_shop_loop','woocommerce_catalog_ordering',$ordering_priority); }
+    try { do_action('woocommerce_before_shop_loop'); }
+    finally { if ($ordering_priority !== false) { add_action('woocommerce_before_shop_loop','woocommerce_catalog_ordering',$ordering_priority); } }
     woocommerce_product_loop_start();
     foreach (array_slice($entries,($page-1)*$per_page,$per_page) as $entry) { loomara_category_colour_card($entry); }
     woocommerce_product_loop_end();
@@ -87,9 +94,10 @@ function loomara_category_colour_content() {
     if ($pagination_priority !== false) { remove_action('woocommerce_after_shop_loop','woocommerce_pagination',$pagination_priority); }
     try { do_action('woocommerce_after_shop_loop'); }
     finally { if ($pagination_priority !== false) { add_action('woocommerce_after_shop_loop','woocommerce_pagination',$pagination_priority); } }
-    if ($pages>1) {
-        $base = str_replace('999999999','%#%',add_query_arg('colour_page',999999999));
-        echo '<nav class="woocommerce-pagination" aria-label="Product pagination">' . wp_kses_post(paginate_links(['base'=>$base,'format'=>'','current'=>$page,'total'=>$pages,'type'=>'list'])) . '</nav>';
+    echo '<div class="catalog-load-more" data-catalog-loader><p data-catalog-status role="status" aria-live="polite">'.esc_html($page < $pages ? 'More pieces below — keep exploring.' : 'You’ve seen all matching products.').'</p>';
+    if ($page < $pages) {
+        echo '<label class="catalog-auto" data-catalog-auto hidden><input type="checkbox" checked> Automatically load as I scroll</label><a class="button catalog-more" data-catalog-next href="'.esc_url(add_query_arg('colour_page',$page+1)).'">Load more products</a>';
     }
+    echo '</div></section>';
     wp_reset_postdata(); wc_reset_loop(); $product = null;
 }

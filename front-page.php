@@ -39,6 +39,7 @@
       <div class="home-product-grid"><?php loomara_top_rated_collection(); ?></div>
     </section>
   <?php endif; ?>
+  <?php loomara_testimonial_preview(); ?>
   <section id="loomara-feeling" class="intro section-grid">
     <div class="section-number">01</div>
     <div class="intro-heading reveal"><p class="eyebrow">The Loomara feeling</p><h2>Made for the<br><em>rhythm of home.</em></h2></div>

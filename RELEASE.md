@@ -1,4 +1,207 @@
-# Loomara Living v1.7.2
+# Loomara Living — Release history
+
+All release details are maintained in this single file, newest first. Historical notes describe the behaviour and policies at the time of each release.
+
+## v1.8.4 — Consolidated release documentation
+
+- Consolidate every separate release-note file into RELEASE.md without dropping its notes.
+- Remove the eleven superseded RELEASE-version.md files.
+- Keep future release notes in this document. Existing GitHub tags/releases remain unchanged.
+- Documentation only; v1.8.3 storefront code and store data are unchanged.
+
+Rollback: restore the release documents from v1.8.3; no database rollback needed.
+
+## v1.8.3 — Responsive category shopping and filters
+
+- Larger desktop homepage category destinations in a two-by-two grid; mobile category layout retained.
+- Desktop catalogue filters in a left sidebar; mobile floating Filters & sort button opens an accessible modal drawer.
+- Preserve category/size filtering, sorting and infinite-scroll/manual fallback.
+- Mobile product colour and size options appear directly below the price, ahead of the short description.
+- Display-only release; no changes to product records, stock, orders, customers or payments. QA fixtures remain local.
+
+Rollback: revert this release commit on main and publish a matching patch release, restoring v1.8.2 theme code. No database rollback is required.
+
+---
+
+## v1.8.2 — Shared Shop/category browsing
+
+- One compact colour-level grid for Shop, categories and product search.
+- Category links (Bedsheets, Comforters, Combo, Cushion Covers) inside the
+  catalogue heading, with active-category indication and mobile-friendly layout.
+- Server-side category/size filters and deterministic sorting: recommended,
+  newest, price ascending/descending, best selling and highest rated.
+- Filter individual size variants before grouping colours. Product links open
+  the matching selected colour and size; stock/catalogue visibility stays native.
+- Infinite scroll appends eight cards at a time, retaining all active filters
+  and sort. Accessible load-more, pause-auto-load, retry and normal-link fallback
+  remain available. No numbered pagination; no duplicate cards.
+- Fresh versioned CSS avoids stale combined-asset URLs; bounded images/icons,
+  four desktop columns / two mobile columns, aligned titles/prices/actions.
+
+Local validation: PHP/JS syntax, size-filtered variation selection, variable
+  price sorting, 16-card scroll completion with no duplicates, 390px/1366px
+  responsive checks and zero overflow. Live verification follows deployment.
+
+No products, price/stock records, orders, customers or payment settings change.
+QA fixtures/importers remain local and are excluded from deployment.
+
+Rollback: restore the v1.8.1 theme tree (e1c95826e449e642edc091ec2e95c8d24c02dc74)
+in a new main commit, publish a matching patch release and purge generated caches.
+The WooCommerce product-route conflict repair remains included.
+
+---
+
+## v1.8.1 — WooCommerce product URL conflict
+
+Live diagnostics identified Hostinger Ecommerce (Beta) 1.0.7 registering
+`^product/([^/]+)/?$` as `hostinger_product_id`, ahead of WooCommerce's route.
+Its separate catalogue does not contain WooCommerce products and forces a 404.
+
+Replace only that conflicting generated rule with WooCommerce's native
+`product` query variable, leaving public URLs, plugin activation/settings,
+products, prices, stock, orders, customers and payment configuration unchanged.
+Regenerate rules once. v1.8.0 responsive catalogue fixes remain included.
+
+Rollback: restore v1.7.9 in a new main commit and refresh permalink rules and
+generated caches. Reverting just to v1.8.0 restores the plugin routing conflict.
+
+---
+
+## v1.8.0 — Product routing and responsive catalogue
+
+- Rebuild generated WordPress product permalink rules once, after WooCommerce registers its routes. This is a soft flush; no product, order, customer or .htaccess changes.
+- Use the same colour-level catalogue on Shop and category pages, excluding migrated canonical duplicate records.
+- Bound product cards and thumbnails to a four-column desktop / two-column mobile grid, with aligned titles and actions.
+- Show four compact home category cards on desktop and fix mobile descriptions occupying the hidden number column.
+- Provide an explicit not-found page instead of misleading homepage-like fallback content.
+
+Validation: PHP syntax parsing and whitespace checks; responsive browser and live product-link checks during deployment.
+
+Rollback: restore the theme tree at v1.7.9 (af075cece9d4493df5734ecee2b7f581d81e6cbe) in a new main commit, publish a matching patch release, and clear generated caches. The regenerated permalink rules are safe to keep. No inventory or customer data migration is included.
+
+---
+
+## v1.7.9 — Remaining reviewed website updates
+
+- Adds the FAQ footer link and an editable WordPress FAQ page with seven questions. Creates the page only if /faqs/ does not exist; existing page content is never overwritten. The native page can appear in the WordPress sitemap.
+- Adds an Instagram icon and @loomara.living under Say hello in the footer.
+- Publishes the remaining launch presentation assets with a strict localhost-only testimonial preview. No placeholder testimonials or QA fixtures appear on production.
+- Uses a release-named refinement stylesheet to avoid stale optimized hero-logo CSS, retaining the mobile logo placement and desktop refinements.
+- Keeps the responsive offer banner, signup OTP, Google login, account profile, checkout rules, product data and payments unchanged.
+- Excludes unused large image copies, backups, credentials and all local QA files.
+
+Validation: all 27 PHP files parsed successfully; launch JavaScript syntax and
+diff whitespace checks passed. Local FAQ returned HTTP 200, seven expandable
+questions, correct title, no noindex tag and no horizontal overflow at 390px.
+Instagram placement verified under Say hello. Hero placement was previously
+checked at 390px and 1366px; live release checks are performed after publishing.
+
+Rollback: restore v1.7.8 (f3c2a3c7bb85fa7e12fb61a35e746a084a9f4bfa)
+using a new revert commit on main. The editable FAQ page remains in WordPress;
+customer accounts, orders and inventory are not deleted.
+
+---
+
+## v1.7.8 — Unclipped hero logo
+
+- Moves the hero logo slightly left and down on desktop.
+- Gives mobile its own vertical offset so the logo stays inside the artwork rather than being cropped above it.
+- Keeps the header text wordmark and artwork caption unchanged.
+- Local bounds checks passed at 390px mobile and 1366px desktop; mobile logo has 20px top clearance.
+- Other pending local homepage/footer/FAQ/testimonial changes are excluded.
+
+Rollback: restore v1.7.7 (f4acc4d8225f35934fea6e06a66a00066204b0c8)
+with a new revert commit on main. No customer, inventory or order data changes.
+
+---
+
+## v1.7.7 — Responsive launch offer
+
+- Publishes the launch offer strip on desktop and mobile, with WELCOME10 and dispatch within 24 hours.
+- Uses a reserved 44px strip, seamless text scrolling, pause control and static wrapping for reduced-motion preferences.
+- Supports a 10% first-order WELCOME10 virtual fallback if no merchant-managed coupon exists; existing coupons are not overwritten.
+- Requires sign-in and checks customer ID and billing/account email history; previous non-cancelled/non-failed orders prevent reuse.
+- Aligns shipping policy, product text and structured-data dispatch handling to the owner-confirmed 24-hour promise; delivery remains 5–10 business days after dispatch.
+- Other pending homepage/footer/FAQ changes and placeholder testimonials stay local.
+
+Local checks passed at 1366px and 390px, including full-width visibility and pause.
+Ten offer/schema integration assertions passed using local fixtures only.
+No live test orders or payments were submitted.
+
+Rollback: restore v1.7.6 (0b3399f9752df45753d15e23b240cc03cfc7faca)
+with a new revert commit on main. Existing merchant-managed coupon records are unchanged.
+
+---
+
+## v1.7.6 — Signup and customer profile
+
+- Mobile is optional at signup and may be shared across accounts; email remains unique.
+- Checkout still requires a valid Indian mobile number.
+- Shared numbers do not select an account for mobile login; use email or username.
+- Signup errors are displayed without replacing the form, retaining entered passwords in the current page only, never browser storage.
+- Adds show/hide password controls, reusing native WooCommerce controls where present.
+- Dashboard displays customer name, mobile and registered email.
+- Adds ten selectable local vector avatars (five male, five female) and an initials fallback, saved privately per customer.
+- Email OTP, Google login, orders, inventory and payment settings remain unchanged.
+- Unrelated pending local launch changes and all QA fixtures are excluded.
+
+Validation: ten local PHP integration assertions passed; browser checks covered
+OTP-error feedback, password visibility, dashboard data and avatar save/reload.
+
+Rollback: restore v1.7.5 (caf248f1e1cd41ad2763ca778bc33025c3380fb5)
+using a new revert commit on main. Existing customer and avatar metadata remain.
+
+---
+
+## v1.7.5 — Email OTP for normal signup
+
+- Adds six-digit email verification to normal My Account registration.
+- No account is created until server-side code validation succeeds.
+- Codes expire after 10 minutes and are single-use, with five attempts.
+- Resend cooldown of 60 seconds; five email requests and twenty IP requests per hour.
+- Stores keyed digests, binds challenges to the submitted email, and serializes rate counters and consumption.
+- Sends through the existing WordPress/SMTP mail path, without credential changes.
+- Google login, existing customers, password recovery and checkout account creation are unchanged.
+- Other local launch changes and all QA fixtures are excluded.
+
+Seventeen local tests passed with outgoing mail suppressed. Live email receipt
+must be confirmed by the recipient; mail acceptance alone is not delivery proof.
+
+Rollback: restore v1.7.4 (638120b7e7779962d4a244182169ce1991f6c9d1)
+using a new revert commit on main. Existing accounts, stock and orders remain.
+
+---
+
+## v1.7.4 — Account mobile number
+
+- Adds Mobile number to My Account → Account details using the WooCommerce billing phone.
+- Saves the contact in the account and synchronizes the existing mobile-login lookup.
+- Validates Indian mobile numbers, with optional +91 prefix.
+- Requires a valid mobile contact at classic and block checkout, including Google-created accounts.
+- A saved mobile contact is reused by existing checkout prefill; customers can edit it.
+- No OTP verification is claimed. No Google or SMTP credentials are changed.
+- Other pending local launch changes remain excluded.
+
+Rollback: restore v1.7.3 with a new revert commit on main. Saved phone values remain in WooCommerce.
+
+---
+
+## v1.7.3 — Google customer login
+
+- Adds the enabled Nextend Google provider to WooCommerce login and registration.
+- Uses the provider's branded Google icon and full-width Continue with Google button.
+- Returns customers to My Account after authentication.
+- Keeps OAuth credentials in WordPress plugin settings, outside Git.
+- Existing password login, SMTP, stock, orders and payment configuration unchanged.
+- Other local launch changes are not part of this release.
+
+Requires Nextend Social Login with its Google provider configured and enabled.
+Rollback: restore the v1.7.2 theme commit on main using a new revert commit.
+Disable the Google provider in Nextend to stop social login without removing accounts.
+
+---
+
+## Earlier release history (previous RELEASE.md)
 
 ## v1.7.2 — confirmed merchant terms and product schema
 

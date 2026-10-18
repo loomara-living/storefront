@@ -22,6 +22,11 @@ function loomara_order_status_selection() {
     $value = is_scalar($raw) ? sanitize_key(wp_unslash($raw)) : '';
     return in_array($value, ['successful','all'], true) || isset(wc_get_order_statuses()['wc-'.$value]) ? $value : 'successful';
 }
+
+function loomara_order_created_datetime($date) {
+    return $date ? wp_date('d M Y · g:i a', $date->getTimestamp(), new DateTimeZone('Asia/Kolkata')) . ' IST' : '';
+}
+
 function loomara_successful_order_statuses() {
     $statuses = wc_get_is_paid_statuses();
     foreach (['shipped','delivered'] as $status) {

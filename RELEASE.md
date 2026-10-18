@@ -2,6 +2,14 @@
 
 All release details are maintained in this single file, newest first. Historical notes describe the behaviour and policies at the time of each release.
 
+## v1.9.3 — Cart delivery and customer order details
+
+- My Account order cards show date/time in IST. Successful Magic Checkout shipping addresses auto-save only when the customer's book does not already contain that PIN; existing addresses/defaults are never overwritten. Razorpay full recipient names are preserved when no separate surname is supplied; manual address validation remains unchanged.
+- Read the delivery form action attribute explicitly, avoiding a named action input shadowing the form property. Keep same-origin POST, session cookies and server nonce validation.
+- Explain expired checks and non-JSON/server responses; always release the retry button. Preserve backend missing-weight/courier messages.
+- Six isolated frontend scenarios and 33 isolated PHP assertions passed. Product-page checker, merchant/payment settings, login rules and historical orders remain unchanged. No real payment or customer-address mutation performed during QA.
+- Rollback: restore v1.9.2 code; no database migration. Addresses saved through future paid orders remain customer-editable and are not automatically deleted.
+
 ## v1.9.2 — Saved addresses and polished customer stories
 
 - Customer stories show one full-width testimonial at a time rather than cards. Multiple published stories rotate right with looping, touch swipes, previous/next and pause; one quote stays still. Reduced motion disables autoplay. All quotes share a reserved grid row to avoid height shifts.

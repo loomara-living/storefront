@@ -46,7 +46,15 @@
   document.querySelectorAll('[data-cart-delivery]').forEach(form=>{
     const result=form.parentElement.querySelector('[data-cart-delivery-result]'),button=form.querySelector('button');
     form.addEventListener('submit',async event=>{event.preventDefault();if(button.disabled)return;button.disabled=true;result.textContent='Checking courier estimate…';
-      try{const response=await fetch(form.action,{method:'POST',credentials:'same-origin',body:new FormData(form),cache:'no-store'}),payload=await response.json();result.textContent=payload.data?.message||'Courier estimate unavailable. Please try again.';}catch{result.textContent='Courier estimate unavailable. Please check your connection and try again.';}finally{button.disabled=false;}
+      try{
+        // A named input called "action" can shadow HTMLFormElement.action.
+        const target=new URL(form.getAttribute('action'),location.href);
+        if(target.origin!==location.origin)throw new Error('Unexpected endpoint');
+        const response=await fetch(target.href,{method:'POST',credentials:'same-origin',body:new FormData(form),cache:'no-store'});
+        if(!response.headers.get('content-type')?.includes('application/json')){result.textContent='The delivery service could not respond correctly. Refresh this page and try again.';return;}
+        const payload=await response.json();
+        result.textContent=payload===-1?'This delivery check has expired. Refresh the page and try again.':payload?.data?.message||'Courier estimate unavailable. Please try again.';
+      }catch{result.textContent='Courier estimate unavailable. Please check your connection and try again.';}finally{button.disabled=false;}
     });
     if(form.querySelector('[name=pin]').value)form.requestSubmit();
   });

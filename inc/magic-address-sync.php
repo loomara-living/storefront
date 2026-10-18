@@ -26,7 +26,9 @@ function loomara_save_magic_order_address($order_or_id) {
         $raw[$key] = is_callable([$order, $getter]) ? $order->$getter() : '';
     }
     $raw['phone'] = $raw['phone'] ?: $order->get_billing_phone();
-    $address = loomara_validate_address($raw);
+    // Razorpay may supply the full recipient name in first_name, without last_name.
+    // Preserve it faithfully instead of inventing a surname or rejecting the address.
+    $address = loomara_validate_address($raw, true);
     if (is_wp_error($address)) { return; } // Retry naturally if the plugin saves a complete address later.
     $fingerprint = loomara_magic_address_key($address);
     if ($order->get_meta('_loomara_magic_address_saved') === $fingerprint) { return; }
@@ -49,13 +51,15 @@ function loomara_save_magic_order_address($order_or_id) {
             }
             $legacy['phone'] = $legacy['phone'] ?: (string) get_user_meta($user_id, 'billing_phone', true);
             if ($legacy['country'] === 'IN') {
-                $valid = loomara_validate_address($legacy);
+                $valid = loomara_validate_address($legacy, true);
                 if (!is_wp_error($valid)) { $addresses['primary'] = $valid; }
             }
         }
         $found = '';
         foreach ($addresses as $id => $existing) {
-            if (loomara_magic_address_key($existing) === $fingerprint) { $found = $id; break; }
+            // Owner-requested policy: one auto-saved address per India PIN.
+            // Keep the existing recipient/street/default even if this order uses another street.
+            if (trim((string)($existing['postcode'] ?? '')) === $address['postcode']) { $found = $id; break; }
         }
         if (!$found) {
             if (count($addresses) >= 20) { return; }

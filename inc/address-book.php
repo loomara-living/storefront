@@ -35,7 +35,7 @@ function loomara_default_address_id($addresses = null) {
     return isset($addresses[$default]) ? $default : (string) array_key_first($addresses);
 }
 
-function loomara_validate_address($raw) {
+function loomara_validate_address($raw, $allow_single_name = false) {
     if (isset($raw['label_choice'])) {
         $choice=is_scalar($raw['label_choice'])?sanitize_text_field($raw['label_choice']):'';
         $raw['label']=$choice==='Custom'?($raw['label_custom']??''):$choice;
@@ -47,6 +47,7 @@ function loomara_validate_address($raw) {
     }
     $errors = new WP_Error();
     foreach (['label', 'first_name', 'last_name', 'address_1', 'city', 'state', 'postcode', 'phone'] as $field) {
+        if ($field === 'last_name' && $allow_single_name) { continue; }
         if (!$address[$field]) { $errors->add($field, loomara_address_fields()[$field] . ' is required.'); }
     }
     $states = WC()->countries->get_states('IN');

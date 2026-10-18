@@ -24,6 +24,20 @@ add_action('woocommerce_created_customer', function ($id) {
         update_user_meta($id, '_loomara_checkout_setup_pending', 'yes');
     }
 }, 1);
+// Guard BEFORE trigger(): even a disabled native email regenerates its reset key.
+function loomara_checkout_native_account_notification($id, $data = [], $generated = false) {
+    if (get_user_meta($id, '_loomara_checkout_setup_pending', true) === 'yes'
+        || get_user_meta($id, '_loomara_checkout_setup_claimed', true)) { return; }
+    WC()->mailer()->customer_new_account($id, $data, $generated);
+}
+function loomara_checkout_guard_native_mailer($mailer) {
+    remove_action('woocommerce_created_customer_notification', [$mailer, 'customer_new_account'], 10);
+    add_action('woocommerce_created_customer_notification', 'loomara_checkout_native_account_notification', 10, 3);
+}
+add_action('woocommerce_email', 'loomara_checkout_guard_native_mailer', 30);
+add_action('init', function () {
+    if (function_exists('WC')) { loomara_checkout_guard_native_mailer(WC()->mailer()); }
+}, 100);
 add_filter('woocommerce_email_enabled_customer_new_account', function ($enabled, $user) {
     $id = is_object($user) ? ($user->ID ?? 0) : 0;
     if ($id && ($GLOBALS['loomara_checkout_setup_sending'] ?? 0) !== $id

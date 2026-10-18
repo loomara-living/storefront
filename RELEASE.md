@@ -14,7 +14,8 @@ All release details are maintained in this single file, newest first. Historical
   order belonging to another customer or trust a checkout email as authentication.
 - Hide visible wishlist counters; show readable like counts on hover/focus.
 - Highlight FAQ Contact us as a touch-friendly button.
-- Twelve isolated local assertions passed with all email intercepted. Mobile
+- Thirteen isolated local assertions passed with all email intercepted, including
+  preservation of the sent setup key across delayed native notifications. Mobile
   390px checkout has no password field/overflow; simple-product cart replacement
   and variable-colour switching tested. Live deployment does not place orders
   or send verification emails; inbox receipt remains a customer acceptance check.

@@ -52,8 +52,8 @@ function loomara_category_colour_card($entry) {
         'woocommerce_product_get_image_id' => function ($value,$p) use ($parent_id,$image_id) { return $p->get_id() === $parent_id ? $image_id : $value; },
         'woocommerce_get_price_html' => function ($value,$p) use ($parent_id,$price) { return $p->get_id() === $parent_id ? $price : $value; },
         'woocommerce_loop_product_link' => function ($value,$p) use ($parent_id,$url) { return $p->get_id() === $parent_id ? $url : $value; },
-        'woocommerce_loop_add_to_cart_link' => function ($value,$p) use ($parent_id,$url,$name) {
-            return $p->get_id() === $parent_id ? '<a class="button product_type_variable" href="' . esc_url($url) . '" aria-label="' . esc_attr('Choose options for ' . $name) . '">Choose options</a>' : $value;
+        'woocommerce_loop_add_to_cart_link' => function ($value,$p) use ($parent_id,$url,$name,$variation) {
+            return $p->get_id() === $parent_id ? '<a data-cart-variation="'.absint($variation->get_id()).'" class="button product_type_variable" href="' . esc_url($url) . '" aria-label="' . esc_attr('Choose options for ' . $name) . '">Choose options</a>' : $value;
         },
     ];
     foreach ($filters as $hook=>$callback) { add_filter($hook,$callback,99,2); }

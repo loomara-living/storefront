@@ -2,6 +2,24 @@
 
 All release details are maintained in this single file, newest first. Historical notes describe the behaviour and policies at the time of each release.
 
+## v1.8.7 — Cart and checkout accounts
+
+- Replace the purchase button with View cart for items already in the cart;
+  colour-card and selected product-variation state remain distinct.
+- Optional checkout accounts require no password entry. Native secure password
+  setup email is deferred until an accepted order (processing, completed or
+  on-hold), with duplicate notification guards. Failed/pending orders do not send.
+- Link matching guest orders after authenticated password or Google sign-in,
+  using WooCommerce's native customer-order association; never overwrite an
+  order belonging to another customer or trust a checkout email as authentication.
+- Hide visible wishlist counters; show readable like counts on hover/focus.
+- Highlight FAQ Contact us as a touch-friendly button.
+- Twelve isolated local assertions passed with all email intercepted. Mobile
+  390px checkout has no password field/overflow; simple-product cart replacement
+  and variable-colour switching tested. Live deployment does not place orders
+  or send verification emails; inbox receipt remains a customer acceptance check.
+- Rollback: revert this theme update; no inventory/schema migration required.
+
 ## v1.8.6 — Subcategories and identity-preserving catalogue update
 
 - Local inventory now uses LM-{CATEGORY}-{SUBCATEGORY}-{DESIGN:5} and

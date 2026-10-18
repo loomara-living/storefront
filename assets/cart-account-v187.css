@@ -1,0 +1,11 @@
+.wishlist-button .wishlist-total{display:none!important}
+.wishlist-button{position:relative}
+.wishlist-hover-tip{position:absolute;right:0;bottom:calc(100% + 8px);z-index:30;width:max-content;max-width:220px;padding:.6rem .8rem;border-radius:6px;background:var(--navy,#152b49);color:#fff;font:400 .75rem/1.4 var(--sans);opacity:0;visibility:hidden;pointer-events:none;transition:opacity .15s}
+.wishlist-button:hover .wishlist-hover-tip,.wishlist-button:focus-visible .wishlist-hover-tip{opacity:1;visibility:visible}
+.loomara-page-faqs .entry-content a[href*="/contact/"]{display:inline-flex;align-items:center;justify-content:center;padding:.7rem 1.15rem;margin:.4rem;border-radius:6px;background:var(--navy,#152b49);color:#fff!important;text-decoration:none!important;font:500 .85rem/1.4 var(--sans);min-height:44px}
+.loomara-page-faqs .entry-content a[href*="/contact/"]:hover{background:#a87937}
+.single-view-cart[hidden],.single_add_to_cart_button[hidden]{display:none!important}
+.single-view-cart{min-height:48px;text-align:center}
+.woocommerce ul.products .loop-cart-status a{display:none!important}
+.checkout-account-tip{font-size:.85rem;line-height:1.6;color:var(--navy,#152b49)}
+@media(prefers-reduced-motion:reduce){.wishlist-hover-tip{transition:none}}

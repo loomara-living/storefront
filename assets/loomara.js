@@ -31,6 +31,7 @@ async function refreshHeaderState() {
     if (!response.ok) return;
     const payload = await response.json();
     if (!payload.success) return;
+    document.dispatchEvent(new CustomEvent('loomara:cart-state', {detail:payload.data}));
     const account = document.querySelector('.header-account');
     if (account) {
       const label = payload.data.signedIn ? 'My account' : 'Sign in or create an account';

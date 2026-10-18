@@ -2,6 +2,15 @@
 
 All release details are maintained in this single file, newest first. Historical notes describe the behaviour and policies at the time of each release.
 
+## v1.9.1 — Magic Checkout saved addresses
+
+- Save a complete India shipping address from a paid Razorpay Magic Checkout WooCommerce order into that order owner's private address book.
+- Never identify or merge customers by submitted email/phone; guest and unpaid orders do not create account addresses.
+- Deduplicate normalized addresses, preserve chosen defaults/native shipping fields and the 20-address limit. Repeated gateway callbacks are idempotent; concurrent writes are deferred.
+- No payment/gateway configuration changes, historic order backfill, credentials or new Razorpay API calls.
+- Seventeen isolated PHP assertions passed with fake orders/customers only. A real successful customer checkout remains the end-to-end acceptance test; no payment made during QA.
+- Rollback: revert this release's include and `inc/magic-address-sync.php`; already saved addresses remain editable in My Account and are not deleted.
+
 ## v1.9.0 — Customer stories, cart discovery and catalogue organisation
 
 - Hero logo moves close to the artwork top; remove the feeling-section 01 and

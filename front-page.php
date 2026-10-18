@@ -11,7 +11,7 @@
       </div>
     </div>
     <div class="hero-art reveal" aria-label="An abstract arrangement inspired by layered bed linen" role="img">
-      <div class="sun-disc"></div><div class="bed-frame"><span class="hero-brand brand-image"><img src="<?php echo esc_url(get_template_directory_uri() . '/assets/loomara-logo-transparent.png'); ?>" alt="Loomara Living" width="1536" height="1024"></span><div class="pillow pillow-one"></div><div class="pillow pillow-two"></div><div class="duvet"></div><div class="gold-thread"></div></div>
+      <span class="hero-brand brand-image"><img src="<?php echo esc_url(get_template_directory_uri() . '/assets/loomara-logo-transparent.png'); ?>" alt="Loomara Living" width="1536" height="1024"></span><div class="sun-disc"></div><div class="bed-frame"><div class="pillow pillow-one"></div><div class="pillow pillow-two"></div><div class="duvet"></div><div class="gold-thread"></div></div>
       <span class="art-note">Rest, considered.</span>
     </div>
   </section>

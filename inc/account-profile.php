@@ -29,7 +29,7 @@ add_action('woocommerce_account_dashboard', function () {
     echo '<section class="loomara-profile"><div class="profile-heading"><div class="profile-current-avatar">';
     echo loomara_profile_avatar($avatar) ?: '<span aria-hidden="true">'.esc_html(mb_substr($name, 0, 1)).'</span>';
     echo '</div><div><p class="eyebrow">Your Loomara profile</p><h2>'.esc_html($name).'</h2><a href="'.esc_url(wc_get_account_endpoint_url('edit-account')).'">Edit account details</a></div></div><dl class="profile-facts"><div><dt>Customer name</dt><dd>'.esc_html($name).'</dd></div><div><dt>Mobile number</dt><dd>'.esc_html($mobile ?: 'Not added yet').'</dd></div><div><dt>Registered email</dt><dd>'.esc_html($user->user_email).'</dd></div></dl>';
-    echo '<form method="post" action="'.esc_url(admin_url('admin-post.php')).'" class="profile-avatar-form"><input type="hidden" name="action" value="loomara_save_avatar">';
+    echo '<details class="profile-avatar-editor"'.($avatar ? '' : ' open').'><summary>'.($avatar ? 'Change avatar' : 'Choose your avatar').'</summary><form method="post" action="'.esc_url(admin_url('admin-post.php')).'" class="profile-avatar-form"><input type="hidden" name="action" value="loomara_save_avatar">';
     wp_nonce_field('loomara_save_avatar', 'loomara_avatar_nonce');
     echo '<h3>Make yourself at home</h3><p>Choose any avatar you like. Your choice is private to your account.</p>';
     foreach (['male' => 'Male avatars', 'female' => 'Female avatars'] as $group => $label) {
@@ -40,7 +40,7 @@ add_action('woocommerce_account_dashboard', function () {
         }
         echo '</div></fieldset>';
     }
-    echo '<label class="avatar-initials"><input type="radio" name="avatar" value="initials" '.checked(!isset(loomara_avatar_choices()[$avatar]), true, false).'> Use my initial instead</label><p><button class="button" type="submit">Save avatar</button></p></form></section>';
+    echo '<label class="avatar-initials"><input type="radio" name="avatar" value="initials" '.checked(!isset(loomara_avatar_choices()[$avatar]), true, false).'> Use my initial instead</label><p><button class="button" type="submit">Save avatar</button></p></form></details></section>';
 });
 add_action('admin_post_loomara_save_avatar', function () {
     if (!is_user_logged_in()) { wp_safe_redirect(wc_get_page_permalink('myaccount')); exit; }

@@ -41,6 +41,7 @@ add_filter('preprocess_comment', function ($data) {
     if (!is_scalar($rating) || !preg_match('/^[1-5]$/', (string) $rating)) {
         wp_die('Please choose a rating from 1 to 5 stars.', '', ['response' => 400]);
     }
+    if (!loomara_can_rate_product($id)) { wp_die('Only customers with a completed, paid purchase of this item may rate it.', '', ['response'=>403]); }
     if (get_comments(['post_id' => $id, 'user_id' => get_current_user_id(), 'status' => 'all', 'type' => 'review', 'number' => 1])) {
         wp_die('You have already reviewed this piece. Contact support if you would like to update your review.', '', ['response' => 400]);
     }
@@ -52,8 +53,9 @@ add_filter('pre_comment_approved', function ($approved, $data) {
     return get_post_type(absint($data['comment_post_ID'] ?? 0)) === 'product' && !is_wp_error($approved) ? 0 : $approved;
 }, 99, 2);
 add_filter('woocommerce_product_review_comment_form_args', function ($args) {
-    if (!is_user_logged_in()) {
-        $args['comment_notes_before'] = '<p>Please <a href="' . esc_url(wc_get_page_permalink('myaccount')) . '">sign in</a> to rate this piece.</p>';
+    global $product;
+    if (!is_user_logged_in() || !$product || !loomara_can_rate_product($product->get_id())) {
+        $args['comment_notes_before'] = '<p>Ratings are available after a completed, paid purchase of this piece. <a href="' . esc_url(wc_get_page_permalink('myaccount')) . '">View your account</a>.</p>';
         $args['must_log_in'] = '<p>Please <a href="' . esc_url(wc_get_page_permalink('myaccount')) . '">sign in</a> to rate this piece.</p>';
         $args['comment_field'] = '';
         $args['fields'] = [];

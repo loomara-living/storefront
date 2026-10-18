@@ -2,6 +2,57 @@
 
 All release details are maintained in this single file, newest first. Historical notes describe the behaviour and policies at the time of each release.
 
+## Planned v1.8.6 — Subcategories and identity-preserving catalogue update (local review only)
+
+- Local inventory now uses LM-{CATEGORY}-{SUBCATEGORY}-{DESIGN:5} and
+  LM-{CATEGORY}-{SUBCATEGORY}-{COLOR}{DESIGN:5}-{SIZE}; same design numbers,
+  old-ID aliases, confirmed sizes and original photographs are preserved.
+- Visual-style codes: FL Floral, PL Plain, PT Patterned, GE Geometric,
+  CT Coordinated. No unsupported block-print/weaving-process claims.
+- Nine design folders and twenty-one variant folders reorganised locally;
+  all twenty-seven source-image hashes are unchanged.
+- Owner-authorized material defaults: Cotton for missing bedding materials;
+  Mixed for cushion covers. Existing explicit material details take priority.
+- Local preview imports the nine designs and style subcategories. A production
+  migration must preflight existing WooCommerce parent/variation IDs and SKU
+  uniqueness, snapshot only affected attributes/categories/SKUs, preserve all
+  live prices/stock, and never recreate products or change slugs/orders/customers.
+- Not published or migrated to production. Reversal must use the saved ID mapping,
+  not a whole-database restore over newer orders. Theme rollback alone does not
+  reverse future WooCommerce metadata changes.
+
+## v1.8.5 — Storefront, wishlist and account experience
+
+- Price-range, material and style filters with responsive sidebar/drawer;
+  preserve filters in collection tabs, and Sale when switching categories.
+- Larger, less panoramic desktop category cards; aligned right-indented category
+  intro, top-left hero logo on mobile/desktop, consistent filter/policy fonts.
+- Rounded cart notices, removal of newsletter signup controls, compact Contact
+  cards (email/call/WhatsApp/Instagram), numbered compact FAQs with Contact link,
+  corrected FAQ size guidance and bounded typo-tolerant product search.
+- AJAX wishlist actions retain the current page and show feedback with a wishlist
+  link; image-corner hearts show aggregate saved-user counts, refreshed outside cache.
+- Homepage star interactions and a rating dialog only for completed paid purchases
+  with unrefunded quantity. Server validation, CSRF protection, duplicate protection
+  and moderation apply; no fake or automatically published ratings.
+- Profile-first dashboard; selected avatar hidden behind Change avatar; default
+  address action; optional distinct saved/manual billing address, optional saving
+  after order creation, India/mobile validation and unchanged shipping destination.
+- Branded in-page logout confirmation and reduced-motion-aware styling for the
+  existing in-document payment-processing message. No gateway logic is intercepted.
+- Validation: all PHP parsed, JS syntax and whitespace checks passed; fourteen
+  isolated local assertions passed. Browser checks cover desktop/mobile filters,
+  category/intro/hero geometry, no overflow, wishlist without navigation, collapsed
+  avatar, default-address switching, separate billing picker and a moderated rating.
+- Owner authorized theme/main/release publication on 18 October 2026, keeping
+  the v1.8.6 inventory migration local. No product migration, order, email or
+  payment is submitted by deployment. The
+  payment-provider-specific processing screen still needs verification after an
+  authorized deployment; third-party hosted gateway pages are outside theme styling.
+
+Rollback: restore the v1.8.4 theme tree in a new release. Wishlist, address and
+review submissions must be preserved, not deleted. No database schema migration.
+
 ## v1.8.4 — Consolidated release documentation
 
 - Consolidate every separate release-note file into RELEASE.md without dropping its notes.

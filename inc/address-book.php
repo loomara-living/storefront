@@ -126,10 +126,12 @@ function loomara_address_book() {
     }
     echo '<div class="address-card-grid">';
     foreach ($addresses as $id => $address) {
-        echo '<article class="address-card"><div class="address-card-heading"><h3>' . esc_html($address['label']) . '</h3>' . ($id === $default ? '<span class="address-badge">Default</span>' : '') . '</div><address>' . wp_kses_post(WC()->countries->get_formatted_address($address)) . '</address><p>' . esc_html($address['phone'] ?? '') . '</p><a class="text-link" href="' . esc_url(add_query_arg('address', $id, wc_get_account_endpoint_url('edit-address'))) . '">Edit address →</a></article>';
+        echo '<article class="address-card"><div class="address-card-heading"><h3>' . esc_html($address['label']) . '</h3>' . ($id === $default ? '<span class="address-badge">Default</span>' : '') . '</div><address>' . wp_kses_post(WC()->countries->get_formatted_address($address)) . '</address><p>' . esc_html($address['phone'] ?? '') . '</p><a class="text-link" href="' . esc_url(add_query_arg('address', $id, wc_get_account_endpoint_url('edit-address'))) . '">Edit address →</a>';
+        if ($id !== $default) { echo '<form method="post" action="'.esc_url(admin_url('admin-post.php')).'"><input type="hidden" name="action" value="loomara_default_address"><input type="hidden" name="address_id" value="'.esc_attr($id).'">';wp_nonce_field('loomara_default_address');echo '<button class="button" type="submit">Make default</button></form>'; }
+        echo '</article>';
     }
     if (!$addresses) { echo '<div class="address-empty"><span aria-hidden="true">⌂</span><h3>Make room for your first delivery.</h3><p>Add an India shipping address and make your next checkout a little easier.</p></div>'; }
-    echo '</div><p class="address-note">One delivery address, less to fill in. Billing uses the same address at checkout.</p></section>';
+    echo '</div><p class="address-note">Choose a default shipping address. You can use a different billing address at checkout.</p></section>';
 }
 
 // Intercept only this account endpoint, preserving WooCommerce authentication.
@@ -146,7 +148,8 @@ add_filter('render_block', function ($content, $block) {
     }
     return $content;
 }, 10, 2);
-add_filter('option_woocommerce_ship_to_destination', function () { return 'billing'; });
+add_filter('option_woocommerce_ship_to_destination', function () { return 'shipping'; });
+add_filter('woocommerce_cart_needs_shipping_address', '__return_false');
 add_filter('woocommerce_ship_to_different_address_checked', '__return_false');
 
 add_action('woocommerce_checkout_before_customer_details', function () {
@@ -182,13 +185,25 @@ add_filter('woocommerce_checkout_posted_data', function ($data) {
         }
     }
     $data['billing_country'] = $data['shipping_country'] = 'IN';
-    $data['ship_to_different_address'] = false;
+    // The main form is the delivery/contact address. Copy it before changing billing.
+    foreach (['first_name','last_name','address_1','address_2','city','state','postcode','country','phone'] as $key) { $data['shipping_'.$key] = $data['billing_'.$key] ?? ''; }
+    if (empty($_POST['loomara_billing_same'])) {
+        $billing_id = sanitize_key(wp_unslash($_POST['loomara_billing_address_id'] ?? ''));
+        $addresses = loomara_saved_addresses();
+        $billing = $billing_id && isset($addresses[$billing_id]) ? $addresses[$billing_id] : [];
+        if ($billing_id && !isset($addresses[$billing_id])) { wc_add_notice('Choose one of your own saved billing addresses.', 'error'); }
+        foreach (['first_name','last_name','address_1','address_2','city','state','postcode','phone'] as $key) {
+            $raw = $_POST['loomara_billing_'.$key] ?? '';
+            $data['billing_'.$key] = $billing[$key] ?? (is_scalar($raw) ? sanitize_text_field(wp_unslash($raw)) : '');
+        }
+    }
+    $data['ship_to_different_address'] = true;
     return $data;
 });
 add_action('woocommerce_after_checkout_validation', function ($data, $errors) {
     $raw = ['label' => 'Shipping address'];
     foreach (loomara_address_fields() as $key => $label) {
-        if ($key !== 'label') { $raw[$key] = $data['billing_' . $key] ?? ''; }
+        if ($key !== 'label') { $raw[$key] = $data['shipping_' . $key] ?? ''; }
     }
     $result = loomara_validate_address($raw);
     if (is_wp_error($result)) {
@@ -198,7 +213,7 @@ add_action('woocommerce_after_checkout_validation', function ($data, $errors) {
 add_action('woocommerce_checkout_order_processed', function ($order_id, $data, $order) {
     if (!is_user_logged_in() || empty($_POST['loomara_save_new_address']) || !empty($_POST['loomara_address_id'])) { return; }
     $raw = ['label' => 'Delivery ' . wp_date('d M Y')];
-    foreach (loomara_address_fields() as $key => $label) { if ($key !== 'label') { $raw[$key] = $data['billing_' . $key] ?? ''; } }
+    foreach (loomara_address_fields() as $key => $label) { if ($key !== 'label') { $raw[$key] = $data['shipping_' . $key] ?? ''; } }
     $address = loomara_validate_address($raw);
     if (is_wp_error($address)) { return; }
     $addresses = loomara_saved_addresses();

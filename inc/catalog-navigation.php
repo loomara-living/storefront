@@ -56,8 +56,18 @@ function loomara_catalog_category_links($label = 'Shop by category', $category =
     foreach (['bedsheets','comforters','combo','cushion-covers'] as $slug) {
         $term=get_term_by('slug',$slug,'product_cat'); if (!$term) { continue; }
         $url=get_term_link($term); if (is_wp_error($url)) { continue; }
+        if (function_exists('loomara_collection_selection') && loomara_collection_selection() !== 'all') { $url = add_query_arg('collection', loomara_collection_selection(), $url); }
         $active=$category && ($category->term_id === $term->term_id || term_is_ancestor_of($term,$category,'product_cat'));
         echo '<a'.($active ? ' class="is-active"' : '').($active && is_product_category() && $category->term_id === $term->term_id ? ' aria-current="page"' : '').' href="'.esc_url($url).'">'.esc_html($term->name).'</a>';
     }
     echo '</nav>';
+    if (!is_product() && function_exists('loomara_catalog_category') && loomara_catalog_category()) {
+        $root=get_term_by('slug',loomara_catalog_category(),'product_cat');
+        $children=get_terms(['taxonomy'=>'product_cat','parent'=>$root->term_id,'hide_empty'=>true]);
+        if(!is_wp_error($children)&&$children){
+            echo '<nav class="catalog-style-links" aria-label="Shop by style">';
+            foreach($children as $child){$url=get_term_link($child);if(is_wp_error($url))continue;if(loomara_collection_selection()!=='all')$url=add_query_arg('collection',loomara_collection_selection(),$url);echo '<a href="'.esc_url($url).'"'.(loomara_catalog_subcategory()===$child->slug?' aria-current="page"':'').'>'.esc_html($child->name).'</a>';}
+            echo '</nav>';
+        }
+    }
 }

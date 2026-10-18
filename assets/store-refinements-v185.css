@@ -1,0 +1,38 @@
+/* Shared responsive polish; no checkout or payment state is hidden. */
+.catalog-filter-heading h2{font-family:var(--serif);font-weight:500;letter-spacing:normal}
+.catalog-style-links{grid-column:1/-1;display:flex;gap:.5rem;flex-wrap:wrap;margin:.5rem 0}.catalog-style-links a{font:.8rem var(--sans);padding:.6rem 1rem;border-radius:999px;border:1px solid var(--line);text-decoration:none;color:var(--ink)}.catalog-style-links a[aria-current]{background:var(--ink);color:white}
+.separate-billing{margin:1.5rem 0;padding:1.25rem;border:1px solid var(--line);border-radius:10px}.separate-billing label{display:block;margin:.75rem 0}.separate-billing input:not([type=checkbox]),.separate-billing select{width:100%;font:inherit;padding:.65rem;background:var(--paper);border:1px solid var(--line)}[data-separate-billing][hidden],[data-manual-billing][hidden]{display:none!important}
+.catalog-filters input[type=number]{width:100%;min-height:44px;padding:.65rem;border:1px solid var(--line);background:var(--paper);font:inherit;color:var(--ink)}
+.hero-art>.hero-brand{top:1.25rem;left:1.5rem;translate:none;width:130px;height:86px;z-index:3}
+.hero-art>.hero-brand img{position:static;width:100%;height:100%;object-fit:contain}
+.woocommerce-message,.woocommerce-info{border-radius:12px!important;border:1px solid #b9873f40!important;background:#faf6ed!important;box-shadow:0 3px 14px #102a4808;color:var(--ink)!important;line-height:1.65}
+.woocommerce-message .button{border-radius:6px!important;margin-left:1rem!important}
+.page-id-placeholder{display:block}
+body:has(.contact-hub) .page-hero,body:has(.loomara-faqs) .page-hero{padding:2.5rem 0 1.25rem;min-height:0;display:block}
+body:has(.contact-hub) .page-hero h1,body:has(.loomara-faqs) .page-hero h1{font:500 clamp(2.2rem,5vw,4rem)/1.12 var(--serif);margin:.5rem 0}
+.loomara-page-privacy-policy .page-hero h1{font-family:var(--serif);font-weight:500}
+.contact-hub{max-width:1000px;margin:0 auto 3rem}
+.contact-channel-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;margin:1.75rem 0}
+.contact-channel-grid>a{border:1px solid var(--line);border-radius:12px;padding:1.5rem;text-decoration:none;color:var(--ink);background:var(--cream)}
+.contact-channel-grid>a>span{font-size:2rem}.contact-channel-grid h2{font-size:1.5rem;margin:.65rem 0}.contact-channel-grid p{overflow-wrap:anywhere;margin:0}
+.loomara-faqs{counter-reset:faq}.loomara-faqs details{counter-increment:faq}.loomara-faqs summary:before{content:counter(faq,decimal-leading-zero) "  ";color:var(--gold);margin-right:.5rem}
+.faq-contact{padding:1.25rem;border-radius:8px;background:var(--cream)}
+.store-feedback{position:fixed;top:110px;right:20px;max-width:min(420px,calc(100vw - 32px));z-index:150;padding:1rem 1.25rem;background:var(--paper);color:var(--ink);border:1px solid var(--gold);box-shadow:0 6px 26px #102a4826;border-radius:10px}.store-feedback a{display:inline-block;margin:.3rem .5rem 0 0}.store-feedback button{float:right;min-width:40px;min-height:40px;background:none;border:0;font:inherit}
+.woocommerce ul.products li.product{position:relative}
+.woocommerce ul.products li.product>.wishlist-form,.woocommerce ul.products li.product>.wishlist-button{position:absolute!important;grid-area:auto!important;inset:8px 8px auto auto!important;align-self:start;z-index:4;width:auto!important;margin:0!important}
+.woocommerce ul.products li.product .wishlist-button{background:#fffef8ed!important;border:1px solid #102a4826!important;border-radius:999px;min-height:42px;min-width:48px;display:inline-flex;align-items:center;justify-content:center;gap:5px;padding:8px!important;font-size:.8rem!important}
+.wishlist-button .wishlist-word{display:none}.wishlist-total{font:500 .7rem var(--sans)}
+.quick-rating{display:flex;gap:4px;margin:.4rem 0;flex-wrap:wrap}.quick-rating button{background:none;border:0;color:var(--gold);font-size:1.35rem;min-width:30px;min-height:36px;cursor:pointer}.quick-rating button:focus-visible{outline:2px solid var(--gold)}
+.quick-rating-dialog{max-width:min(480px,calc(100vw - 32px));max-height:85dvh;overflow:auto;border:1px solid var(--gold);border-radius:14px;background:var(--paper);padding:1.5rem;color:var(--ink)}.quick-rating-dialog::backdrop{background:#102a4877}.quick-rating-dialog label{display:block;margin:1rem 0}.quick-rating-dialog select,.quick-rating-dialog textarea{display:block;width:100%;font:inherit;padding:.65rem}.quick-rating-dialog button.button{font:500 .8rem var(--sans);background:var(--ink);color:white;padding:.7rem 1rem}
+.woocommerce-MyAccount-content:has(.loomara-profile){display:flex;flex-direction:column}.woocommerce-MyAccount-content>.loomara-profile{order:-2}.profile-avatar-editor>summary{cursor:pointer;display:inline-flex;min-height:44px;align-items:center;border:1px solid var(--gold);border-radius:6px;padding:.5rem 1rem;margin-bottom:1rem}
+.payment-processing-note{padding:1.5rem!important;border-radius:14px!important;background:var(--cream)!important;border:1px solid var(--line)!important;box-shadow:0 6px 24px #102a4818;color:var(--ink)!important;text-align:center;line-height:1.8}
+.payment-processing-note:before{content:''!important;display:block!important;position:static!important;width:24px;height:24px;margin:0 auto 12px;border:2px solid #b9873f44;border-top-color:var(--gold);border-radius:50%}
+@media(prefers-reduced-motion:no-preference){.payment-processing-note:before{animation:loomara-processing 1s linear infinite}@keyframes loomara-processing{to{transform:rotate(360deg)}}}
+.logout-confirm-dialog{max-width:min(460px,calc(100vw - 32px));padding:1.5rem;border:1px solid var(--gold);border-radius:14px;background:var(--paper);color:var(--ink)}.logout-confirm-dialog::backdrop{background:#102a4877}.logout-confirm-dialog h2{font-size:2rem}.logout-confirm-dialog button{margin:.5rem .5rem 0 0}
+@media(min-width:901px){
+.home-category-section .category-card{height:clamp(290px,30vw,420px)}
+.home-category-section .category-card img{object-fit:cover;object-position:center}
+.shop-heading{align-items:start}.shop-heading .eyebrow{grid-column:1;grid-row:1}.shop-heading h1{grid-column:1;grid-row:2}.shop-heading .shop-intro{grid-column:2;grid-row:1/3;align-self:start;text-align:right;margin:0 0 0 auto;max-width:440px;padding-right:1rem;font-size:1rem}
+}
+@media(max-width:900px){.hero-art>.hero-brand{left:1rem;top:.85rem;width:96px;height:64px}.contact-channel-grid{grid-template-columns:1fr}.store-feedback{top:85px;right:16px}.catalog-filters input{font-size:16px}}
+@media(prefers-reduced-motion:no-preference){.contact-channel-grid>a{transition:transform .2s ease,box-shadow .2s ease}.contact-channel-grid>a:hover{transform:translateY(-2px);box-shadow:0 6px 18px #102a4814}}

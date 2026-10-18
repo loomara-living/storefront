@@ -10,6 +10,7 @@ function loomara_category_colour_entries($parents) {
         if ($parent->is_type('variable')) {
             foreach ($parent->get_available_variations('objects') as $variation) {
                 if (!loomara_catalog_matches_size($variation)) { continue; }
+                if (!loomara_catalog_matches_details(['parent'=>$parent,'variation'=>$variation])) { continue; }
                 if (loomara_collection_selection() === 'sale' && !$variation->is_on_sale()) { continue; }
                 $has_colour = false;
                 foreach ($variation->get_attributes() as $key => $value) {
@@ -72,8 +73,10 @@ function loomara_category_colour_content() {
     if ($category) {
         $args['tax_query'] = ['relation'=>'AND', (array)($args['tax_query'] ?? []), ['taxonomy'=>'product_cat','field'=>'slug','terms'=>[$category]]];
     }
+    if (loomara_catalog_subcategory()) { $args['tax_query']=['relation'=>'AND',(array)($args['tax_query']??[]),['taxonomy'=>'product_cat','field'=>'slug','terms'=>[loomara_catalog_subcategory()]]]; }
     $parents = new WP_Query($args);
     $entries = loomara_category_colour_entries($parents->posts);
+    $entries = array_values(array_filter($entries, 'loomara_catalog_matches_details'));
     $entries = loomara_catalog_sort_entries($entries);
     $total = count($entries); $per_page = 8; $pages = max(1,(int)ceil($total/$per_page));
     $page = min($pages,max(1,absint(loomara_catalog_value('colour_page'))));

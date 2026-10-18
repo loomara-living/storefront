@@ -64,13 +64,13 @@ function loomara_wishlist_button() {
     }
     $saved = in_array($product->get_id(), loomara_wishlist_ids(), true);
     if (!is_user_logged_in()) {
-        echo '<a class="wishlist-button" href="' . esc_url(wc_get_page_permalink('myaccount')) . '"><span aria-hidden="true">♡</span> Sign in to save</a>';
+        echo '<a class="wishlist-button" aria-label="Sign in to save '.esc_attr($product->get_name()).'" href="' . esc_url(wc_get_page_permalink('myaccount')) . '"><span aria-hidden="true">♡</span><span class="wishlist-total" data-wishlist-count="'.absint($product->get_id()).'">'.absint(loomara_wishlist_total($product->get_id())).'</span><span class="wishlist-word"> Sign in to save</span></a>';
         return;
     }
     echo '<form class="wishlist-form" method="post" action="' . esc_url(admin_url('admin-post.php')) . '">';
     wp_nonce_field('loomara_wishlist', 'loomara_wishlist_nonce');
     echo '<input type="hidden" name="action" value="loomara_wishlist"><input type="hidden" name="product_id" value="' . absint($product->get_id()) . '">';
-    echo '<button class="wishlist-button" type="submit" aria-label="' . esc_attr(($saved ? 'Remove from wishlist: ' : 'Save to wishlist: ') . $product->get_name()) . '"><span aria-hidden="true">' . ($saved ? '♥' : '♡') . '</span> ' . ($saved ? 'Saved · remove' : 'Save to wishlist') . '</button></form>';
+    echo '<button class="wishlist-button" type="submit" aria-label="' . esc_attr(($saved ? 'Remove from wishlist: ' : 'Save to wishlist: ') . $product->get_name()) . '"><span data-wishlist-heart aria-hidden="true">' . ($saved ? '♥' : '♡') . '</span><span class="wishlist-total" data-wishlist-count="'.absint($product->get_id()).'">'.absint(loomara_wishlist_total($product->get_id())).'</span><span class="wishlist-word"> ' . ($saved ? 'Saved · remove' : 'Save to wishlist') . '</span></button></form>';
 }
 add_action('woocommerce_after_shop_loop_item', 'loomara_wishlist_button', 20);
 add_action('woocommerce_single_product_summary', 'loomara_wishlist_button', 35);
@@ -93,7 +93,7 @@ add_action('admin_post_loomara_wishlist', function () {
     // admin-post.php does not load WooCommerce's frontend notice functions.
     // The returned page renders the saved state from account metadata directly.
     $account_url = get_permalink(get_option('woocommerce_myaccount_page_id')) ?: home_url('/my-account/');
-    wp_safe_redirect(wp_get_referer() ?: trailingslashit($account_url) . 'wishlist/');
+    wp_safe_redirect(add_query_arg('wishlist_updated', $saved ? 'removed' : 'saved', wp_get_referer() ?: trailingslashit($account_url) . 'wishlist/'));
     exit;
 });
 

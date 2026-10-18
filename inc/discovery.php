@@ -7,6 +7,7 @@ function loomara_icon($name) {
         'user' => '<circle cx="12" cy="7" r="4.5"/><path d="M3.5 22v-2c0-4 3.8-6 8.5-6s8.5 2 8.5 6v2"/>',
         'heart' => '<path d="M20.5 4.8a5.5 5.5 0 0 0-8.5 1 5.5 5.5 0 0 0-8.5-1c-3.2 3.4-.9 7.5 2 10.3L12 21l6.5-5.9c2.9-2.8 5.2-6.9 2-10.3Z"/>',
         'cart' => '<path d="M5 7h14c2 0 2.7 1.5 2.4 3.5l-1 8c-.2 1.8-1.4 2.5-3.4 2.5H7c-2 0-3.2-.7-3.4-2.5l-1-8C2.3 8.5 3 7 5 7Z"/><path d="M8 7V5a4 4 0 0 1 8 0v2"/>',
+        'instagram' => '<rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/>',
     ];
     return '<svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">' . ($paths[$name] ?? '') . '</svg>';
 }
@@ -45,7 +46,7 @@ add_filter('posts_search', function ($search, $query) {
     if (!$tokens) { return $search; }
     $clauses = [];
     foreach ($tokens as $token) {
-        $variants = preg_match('/^bedsheets?$/i', $token) ? ['bedsheet', 'bed sheet', 'bed-sheet'] : [$token];
+        $variants = loomara_search_variants($token);
         $matches = [];
         foreach ($variants as $variant) {
             $like = '%' . $wpdb->esc_like($variant) . '%';
@@ -89,6 +90,8 @@ function loomara_shop_discovery() {
             if (loomara_catalog_category()) { $args['catalog_category'] = loomara_catalog_category(); }
             if (loomara_catalog_size()) { $args['catalog_size'] = loomara_catalog_size(); }
             $args['orderby'] = loomara_catalog_order();
+            foreach (['catalog_material','min_price','max_price'] as $filter) { if (loomara_catalog_value($filter) !== '') { $args[$filter] = loomara_catalog_value($filter); } }
+            if (loomara_catalog_subcategory()) { $args['catalog_subcategory']=loomara_catalog_subcategory(); }
         }
         if (is_search()) { $args['s'] = get_search_query(); $args['post_type'] = 'product'; }
         $url = add_query_arg($args, is_search() ? home_url('/') : (is_product_taxonomy() ? get_term_link(get_queried_object()) : wc_get_page_permalink('shop')));

@@ -22,6 +22,9 @@ require_once get_template_directory() . '/inc/email-otp.php';
 require_once get_template_directory() . '/inc/account-profile.php';
 require_once get_template_directory() . '/inc/offer-banner.php';
 require_once get_template_directory() . '/inc/catalog-repair.php';
+require_once get_template_directory() . '/inc/store-refinements.php';
+require_once get_template_directory() . '/inc/verified-ratings.php';
+require_once get_template_directory() . '/inc/billing-address.php';
 
 function loomara_setup() {
     add_theme_support('title-tag');

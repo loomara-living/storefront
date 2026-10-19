@@ -57,7 +57,8 @@ function loomara_sr_connection_page() {
     $configured=(bool)loomara_sr_credentials();
     $channels=get_option('loomara_shiprocket_channels',[]);
     echo '<div class="wrap"><h1>Loomara Shiprocket connection</h1><p>Connect a dedicated Shiprocket API user. Credentials are encrypted server-side and never included in GitHub or public pages. Changing WordPress authentication salts requires reconnecting.</p>';
-    echo '<div class="notice notice-warning inline"><p><strong>Automatic refunds are not enabled.</strong> This setup page only verifies API authentication and reads integrated channel names. It never cancels shipments or refunds payments.</p></div>';
+    $refunds_enabled=function_exists('loomara_ar_enabled')&&loomara_ar_enabled();
+    echo '<div class="notice notice-warning inline"><p><strong>'.($refunds_enabled?'Automatic cancellation refunds are enabled.':'Automatic refunds are not enabled.').'</strong> This connection form only verifies authentication and reads channel names. Manage refund automation separately under WooCommerce → Automatic refunds.</p></div>';
     if(isset($_GET['connected'])&&$_GET['connected']==='1'){echo '<div class="notice notice-success"><p>Connection verified and encrypted credentials saved.</p></div>';}
     $error=get_transient('loomara_sr_setup_error_'.get_current_user_id());
     if($error){delete_transient('loomara_sr_setup_error_'.get_current_user_id());echo '<div class="notice notice-error"><p>'.esc_html($error).'</p></div>';}

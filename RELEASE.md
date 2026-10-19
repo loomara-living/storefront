@@ -2,6 +2,16 @@
 
 All release details are maintained in this single file, newest first. Historical notes describe the behaviour and policies at the time of each release.
 
+## v1.10.0 — Verified automatic cancellation refunds
+
+- Explicit administrator activation applies to future Cancelled transitions only, including customers, team and external integrations. No historical scan/backfill. Existing customer Processing cancellation remains owner/nonce/tracking/status protected; Ready to ship/Shipped/Delivered cancellation eligibility is not broadened.
+- Durable per-order intent and non-expiring concurrent-worker lock; background WP-Cron verification uses exact native/public reference, verified WooCommerce channel, fresh order AND shipment statuses. Dispatch/unknown/missing/ambiguous matches fail closed. Shiprocket cancellation acknowledgement is not final confirmation; cancellation is submitted once then independently polled before any payment refund.
+- Razorpay captured INR payment must match the saved transaction ID, gateway order ID, amount and optional native-order notes. Existing processed partial refunds must reconcile with WooCommerce. Unknown/pending/refund balance conflicts require review. Only the remaining amount is submitted as a normal original-method refund with a stable receipt/body and X-Refund-Idempotency.
+- Uncertain submission is reconciled GET-only, never blindly resubmitted. Only a verified processed refund creates the WooCommerce ledger without another gateway refund or restock. Stable reason/refund ID and native Razorpay refund_from_website note prevent duplicate bookkeeping. Pending refunds are polled; failed/unknown/expired cases require manual review in order notes.
+- Feature is off until explicitly enabled on WooCommerce → Automatic refunds. Master off stops workers but retains durable intent for review. A crash-held lock must be investigated, not automatically stolen. No refunds/cancellations/real payment transactions are made during deployment verification.
+- 58 isolated automatic-refund assertions plus 39 cancellation, 20 fulfilment-status, 19 Shiprocket-matching and 16 secure-connection assertions passed using fake orders/HTTP only. Installed Razorpay 4.8.8 source confirms dynamic order metadata and the native refund_from_website webhook duplicate guard. Real end-to-end money movement is not performed during QA.
+- Rollback: disable automation first and reconcile every submitted/pending intent against Razorpay before reverting code. Do not delete job/lock metadata or retry money movements blindly. v1.9.10 restores previous manual-refund behaviour but does not reverse refunds already submitted.
+
 ## v1.9.10 — Ready to ship status
 
 - Registers wc-ready-to-ship between Processing and Shipped for native administration, REST updates and customer order filters. Includes it in the account's accepted/fulfilment view without treating readiness alone as proof of payment; recorded payment dates remain required for paid-purchase eligibility.

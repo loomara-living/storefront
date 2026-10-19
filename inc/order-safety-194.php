@@ -57,7 +57,8 @@ function loomara_order_can_customer_cancel($order,$user_id) {
 }
 function loomara_customer_cancel_form($order) {
     if (!loomara_order_can_customer_cancel($order,get_current_user_id())) { return; }
-    echo '<details class="loomara-cancel-order"><summary>Cancel order</summary><p>Cancel this order before dispatch? If you have paid, our team will arrange your refund separately. Cancellation does not instantly refund your payment.</p><form method="post" action="'.esc_url(admin_url('admin-post.php')).'">';
+    $automatic=function_exists('loomara_ar_enabled')&&loomara_ar_enabled();
+    echo '<details class="loomara-cancel-order"><summary>Cancel order</summary><p>'.($automatic?'Cancel this order before dispatch? Refund eligibility will be verified against Shiprocket and Razorpay. A refund is not confirmed until these checks pass; exceptions need manual review.':'Cancel this order before dispatch? If you have paid, our team will arrange your refund separately. Cancellation does not instantly refund your payment.').'</p><form method="post" action="'.esc_url(admin_url('admin-post.php')).'">';
     echo '<input type="hidden" name="action" value="loomara_cancel_order"><input type="hidden" name="order_id" value="'.absint($order->get_id()).'">';
     wp_nonce_field('loomara_cancel_order_'.$order->get_id());
     echo '<button type="submit" class="button">Confirm cancellation</button></form></details>';
@@ -80,6 +81,7 @@ function loomara_show_cancel_notice() {
         'cancelled'=>['Your order has been cancelled.','success'],
         'paid'=>['Order cancelled. Our team will arrange your refund separately.','success'],
     ];
+    if(function_exists('loomara_ar_enabled')&&loomara_ar_enabled()){$messages['paid']=['Cancellation recorded. Your refund eligibility is being verified. Check this order for updates; exceptions need manual review.','success'];}
     if (isset($messages[$outcome])) { wc_add_notice($messages[$outcome][0],$messages[$outcome][1]); }
 }
 add_action('template_redirect','loomara_show_cancel_notice',20);
@@ -95,7 +97,8 @@ function loomara_customer_cancel_order() {
             loomara_queue_cancel_notice('blocked');
         } else {
             $paid=$order->is_paid();
-            $order->update_status('cancelled','Customer confirmed cancellation before dispatch. '.($paid?'Paid order: manual refund review required; no automatic refund submitted.':''));
+            $automatic=function_exists('loomara_ar_enabled')&&loomara_ar_enabled();
+            $order->update_status('cancelled','Customer confirmed cancellation before dispatch. '.($automatic?'Automatic refund verification will run in the background; no refund is confirmed yet.':($paid?'Paid order: manual refund review required; no automatic refund submitted.':'')));
             loomara_queue_cancel_notice($paid?'paid':'cancelled');
         }
     } finally { delete_option($lock); }

@@ -5,6 +5,7 @@ defined('ABSPATH') || exit;
 function loomara_google_login_option() {
     if (is_user_logged_in() || !shortcode_exists('nextend_social_login')) { return; }
     $redirect = wc_get_page_permalink('myaccount');
+    if (isset($_GET['checkout-login']) && $_GET['checkout-login'] === '1' && function_exists('loomara_checkout_resume_url_117')) { $redirect = loomara_checkout_resume_url_117(); }
     $button = do_shortcode('[nextend_social_login provider="google" style="fullwidth" link="0" unlink="0" customlabel="Continue with Google" redirect="'.esc_url($redirect).'"]');
     // The provider only renders when enabled. Never fake an active OAuth button.
     if (strpos($button, 'data-provider="google"') === false) { return; }

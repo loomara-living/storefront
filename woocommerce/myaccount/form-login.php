@@ -3,6 +3,9 @@
 defined('ABSPATH') || exit;
 $register = loomara_registration_mode() && get_option('woocommerce_enable_myaccount_registration') === 'yes';
 $account_url = wc_get_page_permalink('myaccount');
+if (isset($_GET['checkout-login']) && $_GET['checkout-login'] === '1' && function_exists('loomara_checkout_login_url_117')) {
+    $account_url = loomara_checkout_login_url_117();
+}
 do_action('woocommerce_before_customer_login_form');
 ?>
 <div class="account-experience">

@@ -1,0 +1,6 @@
+.loomara-checkout-identity{padding:1.2rem;margin:0 0 1.2rem;border:1px solid #d9c5a4;border-radius:14px;background:#faf5ec;color:#102b4c;overflow-wrap:anywhere}
+.loomara-checkout-identity h3{font:inherit;font-size:1.08rem;font-weight:600;margin:0 0 .5rem}
+.loomara-checkout-identity p{font-size:.9rem;line-height:1.5;margin:0 0 1rem}
+.loomara-checkout-identity .nsl-container{padding:0!important}
+.loomara-checkout-account{display:inline-flex;align-items:center;min-height:44px;margin-top:.6rem;font-size:.9rem;text-underline-offset:4px}
+.loomara-checkout-account:focus-visible{outline:2px solid #b88739;outline-offset:4px}

@@ -2,6 +2,15 @@
 
 All release details are maintained in this single file, newest first. Historical notes describe the behaviour and policies at the time of each release.
 
+## v1.11.7 — Account-linked Magic Checkout
+
+- The cart action reads Continue to payment. Signed-out customers sign in with Google or their Loomara account first; a successful checkout-intent login/signup returns to the cart and automatically invokes the installed Magic Checkout handler once, without a second checkout click. Ordinary logins do not auto-launch payment. Navigation trigger removal and per-tab consumed markers prevent reload/back replay; empty carts, unavailable buttons/storage retain a manual fallback. Opening the gateway does not submit or capture payment.
+- Standard checkout still accepts guests with a mandatory email field placed first.
+- The exact native POST `/1cc/v1/order/create` endpoint has a server-side authenticated-account/email gate before order creation, independently of the browser prompt. Native permission and nonce validation remain intact. New Magic orders capture their owner and billing email from the authenticated account, never submitted email/mobile, and retain the existing gateway ownership protection.
+- Shipping/coupon services, payment callbacks/webhooks and existing order access are not gated or reassigned. No historical account merging, numbering changes, payment/refund requests, timer enrolment or cron restoration. Existing password/OTP login and Google credentials remain unchanged.
+- 32 isolated identity checks plus ownership, refund, tracking, coupon, history, address and timestamp regressions passed. Mobile 390px and desktop 1366px simulated sign-in automatically opened one placeholder payment window without overflow; refresh did not reopen it. This local demo is not a real OAuth/payment test. Actual new-user Google-to-paid-order flow requires owner acceptance testing; QA creates no real customer/order or payment.
+- Rollback: restore the preceding theme release; no data migration or historical repair is performed by this change.
+
 ## v1.11.6 — Retire unpaid-order timers and simplify order history
 
 - Removes the custom pending-payment enrolment, reminder email registration, gateway timeout checks and automatic Failed transition. No new pending timer jobs are created and the retired hook has no worker. Cart coupon notice remains. The dormant old email source/settings and all previous email/expiry/lock/snapshot markers are retained for audit, not loaded into active email settings.

@@ -2,6 +2,12 @@
 
 All release details are maintained in this single file, newest first. Historical notes describe the behaviour and policies at the time of each release.
 
+## v1.11.1 — Independent fulfilment-email settings
+
+- Gives Shipped and Delivered notifications separate concrete WooCommerce email classes so their management links and preview selectors resolve independently. Sending, deduplication, return holds and seven-day completion rules remain unchanged.
+- All 41 isolated lifecycle/email assertions pass. No customer email or real order transition is used for deployment verification.
+- Rollback: v1.11.0 retains lifecycle behaviour but its two email-management links/previews are ambiguous; prefer v1.11.1 for administration.
+
 ## v1.11.0 — Shipped/Delivered emails and seven-day completion
 
 - Adds native WooCommerce customer Shipped and Delivered email settings/notifications through the transactional email dispatcher. Uses the existing WooCommerce mail transport and branding. Includes order reference, account link and saved tracking numbers only; no fabricated tracking links. Delivered email explains eligible seven-calendar-day returns and links the policy/contact pages.

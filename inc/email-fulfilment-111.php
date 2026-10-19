@@ -65,3 +65,10 @@ class Loomara_Email_Fulfilment_111 extends WC_Email {
         do_action('woocommerce_email_footer',$this);return ob_get_clean();
     }
 }
+// WooCommerce settings and previews identify emails by concrete class name.
+class Loomara_Email_Shipped extends Loomara_Email_Fulfilment_111 {
+    public function __construct(){parent::__construct('shipped');}
+}
+class Loomara_Email_Delivered extends Loomara_Email_Fulfilment_111 {
+    public function __construct(){parent::__construct('delivered');}
+}

@@ -4,8 +4,8 @@ defined('ABSPATH') || exit;
 add_filter('woocommerce_email_actions',function($actions){return array_values(array_unique(array_merge($actions,['woocommerce_order_status_shipped','woocommerce_order_status_delivered'])));});
 add_filter('woocommerce_email_classes',function($emails){
     require_once __DIR__.'/email-fulfilment-111.php';
-    $emails['Loomara_Email_Shipped']=new Loomara_Email_Fulfilment_111('shipped');
-    $emails['Loomara_Email_Delivered']=new Loomara_Email_Fulfilment_111('delivered');
+    $emails['Loomara_Email_Shipped']=new Loomara_Email_Shipped();
+    $emails['Loomara_Email_Delivered']=new Loomara_Email_Delivered();
     return $emails;
 });
 function loomara_delivery_deadline_111($order) {

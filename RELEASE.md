@@ -2,6 +2,15 @@
 
 All release details are maintained in this single file, newest first. Historical notes describe the behaviour and policies at the time of each release.
 
+## v1.11.2 — Shiprocket tracking in Shipped email
+
+- Future Shipped notifications queue a read-only tracking lookup before sending. Exact WooCommerce channel/order mapping and shipment ownership are verified using the existing preflight; no email/address matching or historic email resend.
+- Adds verified AWB, courier name and a Track your order button to HTML, with tracking links in plain text. Only HTTPS Shiprocket-domain URLs returned for the matching AWB are accepted; no invented URLs, remote redirects or fetching response-supplied links. Multiple shipments retain their separate links.
+- Checks after approximately 1, 3, 8 and 18 minutes (WP-Cron can run later). If details remain unavailable, sends the normal Shipped email with available verified tracking and adds an internal note. Never sends a second automatic email when details later arrive. Delivered/cancelled/refunded/completed orders skip stale Shipped notifications.
+- Durable existing email markers and a per-order worker lock protect duplicate callbacks/concurrent workers. Crashed/uncertain workers require review, not blind replay. Email settings, delivery completion, orders, shipment states and financial behaviour remain unchanged.
+- 72 isolated assertions passed (41 lifecycle regressions plus 31 tracking/queue/URL/identity checks); HTTP, credentials, orders and email are mocked. No real customer email or live Shiprocket lookup performed during preparation.
+- Rollback to v1.11.1 removes tracking enrichment. Retain mail/job/lock markers; review queued jobs before replay to avoid duplicate notifications.
+
 ## v1.11.1 — Independent fulfilment-email settings
 
 - Gives Shipped and Delivered notifications separate concrete WooCommerce email classes so their management links and preview selectors resolve independently. Sending, deduplication, return holds and seven-day completion rules remain unchanged.

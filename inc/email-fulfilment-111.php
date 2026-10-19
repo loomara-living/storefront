@@ -23,7 +23,7 @@ class Loomara_Email_Fulfilment_111 extends WC_Email {
             'email_type'=>['title'=>'Email type','type'=>'select','default'=>'html','options'=>['plain'=>'Plain text','html'=>'HTML']],
         ];
     }
-    public function trigger($id,$order=false){
+    public function trigger($id,$order=false,$tracking_ready=false){
         $this->object=$order instanceof WC_Order?$order:wc_get_order($id);
         if(!$this->object||$this->object->get_status()!==$this->fulfilment_status){return;}
         if($this->fulfilment_status==='shipped'&&$this->object->get_meta('_loomara_delivered_at_111')){return;}
@@ -31,6 +31,7 @@ class Loomara_Email_Fulfilment_111 extends WC_Email {
         $this->placeholders['{order_number}']=$this->object->get_order_number();
         $this->placeholders['{order_date}']=$this->object->get_date_created()?$this->object->get_date_created()->date_i18n('d M Y'):'';
         if(!$this->is_enabled()||!$this->get_recipient()||!is_email($this->recipient)){return;}
+        if($this->fulfilment_status==='shipped'&&!$tracking_ready&&function_exists('loomara_tracking_queue_112')){loomara_tracking_queue_112($this->object);return;}
         $key='loomara_email_111_'.$this->fulfilment_status.'_'.$this->object->get_id();
         // Durable at-most-once automatic send; uncertain SMTP acceptance needs review.
         if(!add_option($key,'sending','','no')){return;}
@@ -44,15 +45,26 @@ class Loomara_Email_Fulfilment_111 extends WC_Email {
     }
     protected function tracking_numbers(){
         $numbers=[];
+        foreach($this->verified_tracking() as $row){$numbers[]=$row['awb'];}
         foreach(['_shiprocket_awb_code','awb_code','_tracking_number'] as $k){$n=$this->object->get_meta($k);if(is_scalar($n)&&trim((string)$n)!==''){$numbers[]=sanitize_text_field(substr((string)$n,0,100));}}
         $items=$this->object->get_meta('_wc_shipment_tracking_items');
         if(is_array($items)){foreach($items as $item){if(is_array($item)&&is_scalar($item['tracking_number']??null)){$numbers[]=sanitize_text_field(substr((string)$item['tracking_number'],0,100));}}}
         return array_values(array_unique(array_filter($numbers)));
     }
+    protected function verified_tracking(){
+        $rows=$this->object->get_meta('_loomara_verified_tracking_112');
+        if(!is_array($rows)){return [];}
+        return array_values(array_filter($rows,function($r){return is_array($r)&&is_string($r['awb']??null)&&preg_match('/^[A-Za-z0-9-]{3,100}$/D',$r['awb']);}));
+    }
     public function get_content_plain(){
         $o=$this->object;$text=$this->get_heading()."\n\nOrder: ".$o->get_order_number()."\n";
         $text.=$this->fulfilment_status==='shipped'?"Your order has been marked Shipped. Follow the courier's tracking for updates.\n":"Your order has been marked Delivered. Eligible returns can be requested within 7 calendar days of delivery, subject to our returns policy.\n";
         $numbers=$this->tracking_numbers();if($numbers){$text.='Tracking / AWB: '.implode(', ',$numbers)."\n";}
+        foreach($this->verified_tracking() as $row){
+            if(!empty($row['courier'])){$text.='Courier: '.sanitize_text_field($row['courier'])."\n";}
+            $url=function_exists('loomara_tracking_url_112')?loomara_tracking_url_112($row['url']??''):'';
+            if($url){$text.='Track your order ('.$row['awb'].'): '.$url."\n";}
+        }
         return $text."\nView order: ".$o->get_view_order_url()."\nReturns policy: ".home_url('/returns-refunds/')."\nQuestions? ".home_url('/contact/')."\nLoomara Living · India\n";
     }
     public function get_content_html(){
@@ -60,6 +72,11 @@ class Loomara_Email_Fulfilment_111 extends WC_Email {
         echo '<p>'.esc_html($this->fulfilment_status==='shipped'?'Your Loomara order has been marked Shipped. A little comfort is on its way.':'Your Loomara order has been marked Delivered. We hope it feels right at home.').'</p><p><strong>Order '.esc_html($o->get_order_number()).'</strong></p>';
         if($this->fulfilment_status==='delivered'){echo '<p>Eligible returns can be requested within 7 calendar days of delivery, subject to our <a href="'.esc_url(home_url('/returns-refunds/')).'">returns policy</a>. If there is an issue, please contact us before the window closes.</p>';}
         $numbers=$this->tracking_numbers();if($numbers){echo '<p><strong>Tracking / AWB:</strong> '.esc_html(implode(', ',$numbers)).'</p>';}
+        foreach($this->verified_tracking() as $row){
+            if(!empty($row['courier'])){echo '<p><strong>Courier:</strong> '.esc_html($row['courier']).'</p>';}
+            $url=function_exists('loomara_tracking_url_112')?loomara_tracking_url_112($row['url']??''):'';
+            if($url){echo '<p><a href="'.esc_url($url).'" style="display:inline-block;background:#102c4c;color:#ffffff;padding:12px 22px;border-radius:6px;text-decoration:none;font-weight:600">Track your order</a><br><small>'.esc_html($row['awb']).'</small></p>';}
+        }
         echo '<p><a href="'.esc_url($o->get_view_order_url()).'">View your order</a> · <a href="'.esc_url(home_url('/contact/')).'">Contact Loomara Living</a></p>';
         do_action('woocommerce_email_order_details',$o,false,false,$this);
         do_action('woocommerce_email_footer',$this);return ob_get_clean();

@@ -2,6 +2,16 @@
 
 All release details are maintained in this single file, newest first. Historical notes describe the behaviour and policies at the time of each release.
 
+## v1.11.0 — Shipped/Delivered emails and seven-day completion
+
+- Adds native WooCommerce customer Shipped and Delivered email settings/notifications through the transactional email dispatcher. Uses the existing WooCommerce mail transport and branding. Includes order reference, account link and saved tracking numbers only; no fabricated tracking links. Delivered email explains eligible seven-calendar-day returns and links the policy/contact pages.
+- Durable per-order/status at-most-once automatic email markers suppress duplicate courier callbacks. Failed/uncertain mail transport is noted for review, not blindly retried. Late Shipped messages are skipped after a recorded delivery. Actual inbox receipt is not claimed from SMTP acceptance or isolated tests.
+- First future Delivered transition records its observation time and schedules WP-Cron completion after seven calendar days. Duplicate delivery callbacks cannot extend the deadline. No historical delivery dates, retroactive emails or order backfill. Jobs may run after the deadline on the next cron opportunity, never intentionally before it.
+- Completion rechecks Delivered status, recorded payment (unless zero total), refund records, administrator return/dispute hold and integration hold filter. Order admin exposes a hold checkbox; return requests arriving via email/external systems must be marked on hold there. Clearing a hold reschedules a check. No refund/payment/shipping changes are made by this lifecycle job.
+- Automatic post-delivery completion suppresses the native Completed/shipped email to avoid misleading customers seven days later. Manual/native completion email behaviour remains unchanged for orders without the auto-completion marker.
+- 41 isolated lifecycle/email assertions passed with fake orders and intercepted mail; earlier cancellation/refund/status/security suites remain regression checks. Deployment verification does not send real customer emails or transition real orders.
+- Rollback: v1.10.0 code stops the lifecycle/email handlers; retained timestamp/mail markers prevent invented delivery dates or blind resend on reactivation. Retain hold/timestamp metadata and review any scheduled completion before re-enabling. Already completed orders are not automatically reverted.
+
 ## v1.10.0 — Verified automatic cancellation refunds
 
 - Explicit administrator activation applies to future Cancelled transitions only, including customers, team and external integrations. No historical scan/backfill. Existing customer Processing cancellation remains owner/nonce/tracking/status protected; Ready to ship/Shipped/Delivered cancellation eligibility is not broadened.

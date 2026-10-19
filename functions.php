@@ -41,6 +41,7 @@ require_once get_template_directory() . '/inc/pin-autofill-197.php';
 require_once get_template_directory() . '/inc/package-dimensions-197.php';
 require_once get_template_directory() . '/inc/fulfilment-statuses-199.php';
 require_once get_template_directory() . '/inc/automatic-refunds-110.php';
+require_once get_template_directory() . '/inc/delivery-lifecycle-111.php';
 
 function loomara_setup() {
     add_theme_support('title-tag');

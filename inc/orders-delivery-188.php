@@ -96,6 +96,23 @@ function loomara_customer_order_status_label($status,$order=null){
     return in_array($status,['checkout-draft','draft'],true)?'Payment attempted':wc_get_order_status_name($status);
 }
 
+function loomara_customer_refund_message($order){
+    if (!$order instanceof WC_Order || !get_current_user_id() || (int)$order->get_customer_id()!==get_current_user_id()) { return ''; }
+    $amount=(float)$order->get_total_refunded();
+    if ($order->get_status()==='refunded') {
+        return 'Your order is marked as Refunded. Please check your refund email for the amount and further details. Bank processing times may vary. If you have not received the email, please contact us.';
+    }
+    if ($amount>0 && count($order->get_refunds())) {
+        return 'A refund has been recorded for this order. Please check your refund email for the refunded amount and further details. This may be a partial refund; the order status remains unchanged. Bank processing times may vary.';
+    }
+    return '';
+}
+function loomara_customer_refund_notice($order){
+    $message=loomara_customer_refund_message($order);
+    if ($message) { echo '<p class="woocommerce-info order-refund-note" role="status">'.esc_html($message).'</p>'; }
+}
+add_action('woocommerce_order_details_after_order_table','loomara_customer_refund_notice',15);
+
 // Shiprocket owns live courier checks when installed. Do not remove its native
 // callback or override merchant configuration. Format-only fallback is local /
 // plugin-absent only and must never be presented as courier serviceability.

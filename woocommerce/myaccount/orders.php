@@ -31,6 +31,7 @@ do_action('woocommerce_before_account_orders', $has_orders);
       <article class="customer-order-card">
         <header><div><span class="order-card-label">Order reference</span><h3><a href="<?php echo esc_url($order->get_view_order_url()); ?>"><?php echo esc_html($order->get_order_number()); ?></a></h3><?php if ($date) : ?><time datetime="<?php echo esc_attr($date->date('c')); ?>"><?php echo esc_html(loomara_order_created_datetime($date)); ?></time><?php endif; ?></div><span class="order-status-badge status-<?php echo esc_attr(sanitize_html_class($status)); ?>"><?php echo esc_html(loomara_customer_order_status_label($status,$order)); ?></span></header>
         <?php if (function_exists('loomara_cr_panel')) { loomara_cr_panel($order); } ?>
+        <?php if (function_exists('loomara_customer_refund_notice')) { loomara_customer_refund_notice($order); } ?>
         <ul class="order-card-items">
           <?php foreach ($order->get_items() as $item) : ?>
             <li><span><?php echo esc_html($item->get_name()); ?></span><span class="order-item-qty">× <?php echo absint($item->get_quantity()); ?></span></li>

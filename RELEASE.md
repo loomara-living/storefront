@@ -2,6 +2,14 @@
 
 All release details are maintained in this single file, newest first. Historical notes describe the behaviour and policies at the time of each release.
 
+## v1.12.5 — Visible refund guidance in customer orders
+
+- Retains native **Refunded** status badges, the Refunded filter and refunded orders under All orders. Adds owner-only guidance on order cards and order details: check the refund email for the amount and further details; bank processing times may vary, and contact us if the email is missing.
+- A positive recorded refund ledger on an otherwise active/cancelled order shows **refund recorded**, explicitly noting it may be partial, without rewriting its status or claiming a full refund. Cancellation requests, queued refunds and Cancelled status alone never display a completed-refund claim. Foreign/guest records do not receive account refund guidance.
+- Suppresses only the duplicate completed-automatic-refund detail message when the shared recorded-refund notice already applies. Pending/manual-review messages remain intact. No refund email is generated or resent, and no order/payment/refund ledger/status, historical reference or numbering changes.
+- Twelve new isolated display/filter/ownership/partial-refund checks passed along with existing cancellation/refund/history/email regressions. QA uses mocked orders; no actual email, cancellation, payment or refund submitted. Real customer inbox delivery is not verified by these display checks.
+- Rollback: restore the three presentation files and style/version/release notes from v1.12.4. Preserve v1.12.4 cancellation-request workers, durable request/mail markers and all financial intent/lock records. No data migration or financial replay is needed.
+
 ## v1.12.4 — Customer cancellation requests before carrier confirmation
 
 - Future owner/nonce-confirmed, recorded-paid Razorpay cancellations now record a durable **Cancellation requested** marker, owner/payment/amount identity and request timestamp. Native Processing/on-hold/pending status is retained for existing Shiprocket import; no immediate cancellation, restock, cancellation email or refund. Unpaid cancellation behaviour and team/external transitions remain unchanged. Existing/bookmarked native paid one-click cancellation links cannot bypass this workflow.

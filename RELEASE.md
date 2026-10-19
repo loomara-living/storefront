@@ -2,6 +2,14 @@
 
 All release details are maintained in this single file, newest first. Historical notes describe the behaviour and policies at the time of each release.
 
+## v1.12.1 — Hide unpaid checkout timeouts from customer history
+
+- Customer order history now excludes unpaid Cancelled attempts only when an internal WooCommerce system note explicitly identifies the native “Unpaid order cancelled - time limit reached” reason. The rule applies before pagination and in the defensive card renderer, including the Cancelled filter. It works for existing records such as OD-202610-000174 without migrating or changing them.
+- Manual/unknown cancellations remain visible. Recorded paid dates, refund totals/refund records or a saved gateway transaction protect cancellation records from hiding. Verified Payment failed records and their same-order Retry payment controls remain unchanged. Notes are read only for unpaid cancelled candidates, with a request-local classification cache.
+- This is display-only: no order/status/note deletion or mutation, payment/refund request, stock change, email-setting change, reminder/cron restoration or renumbering. The native 60-minute hold-stock cancellation remains configured and can still release unpaid stock; existing administrator records/direct authorised access remain intact.
+- 553 isolated backend/regression assertions passed, including 16 new timeout/manual/paid/refunded/ownership/pagination cases and the existing payment-failure, identity, refund, cancellation, tracking, coupon and address checks. No live cancellation, payment, refund or email is submitted for QA.
+- Rollback: restore v1.12.0 to restore the previous customer-list visibility. There is no data migration to undo; do not alter the dedicated v1.12.0 failure webhook or order numbering.
+
 ## v1.12.0 — Verified payment failures and secure retries
 
 - Adds a separate signed `payment.failed` receiver and explicit administrator connection page. A server-generated secret is encrypted using WordPress authentication salts; existing native success/refund webhooks and vendor plugin files are not changed. Registration saves intent before its one POST and reconciles uncertain responses read-only rather than submitting duplicates. Credential/salt changes require manual connection review.

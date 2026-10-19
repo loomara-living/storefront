@@ -47,14 +47,32 @@ function loomara_account_order_query($args) {
 add_filter('woocommerce_my_account_my_orders_query', 'loomara_account_order_query', 100);
 function loomara_customer_order_hidden($o){
     if(function_exists('loomara_pf_visible_120') && loomara_pf_visible_120($o)){return false;}
+    if($o instanceof WC_Order && $o->get_status()==='cancelled' && !$o->get_date_paid() && !(float)$o->get_total_refunded() && !count($o->get_refunds())){
+        return loomara_unpaid_timeout_cancelled_121($o);
+    }
     return $o instanceof WC_Order&&in_array($o->get_status(),['pending','checkout-draft','draft','failed'],true)&&!$o->get_date_paid()&&!(float)$o->get_total_refunded()&&!count($o->get_refunds());
+}
+/** Display-only classification. Unknown/manual cancellations remain visible. */
+function loomara_unpaid_timeout_cancelled_121($o){
+    if(!function_exists('wc_get_order_notes') || (method_exists($o,'get_transaction_id') && $o->get_transaction_id())){return false;}
+    static $cache=[];$id=$o->get_id();if(isset($cache[$id])){return $cache[$id];}
+    $normalise=static function($text){return trim(str_replace(['–','—'], '-', wp_strip_all_tags((string)$text)));};
+    $messages=array_unique(['Unpaid order cancelled - time limit reached.',__('Unpaid order cancelled - time limit reached.','woocommerce')]);
+    foreach($messages as $message){
+        // Native note text is stored before wptexturize; search avoids loading unrelated notes.
+        $notes=wc_get_order_notes(['order_id'=>$id,'type'=>'internal','search'=>$message,'limit'=>20]);
+        foreach($notes as $note){
+            if(($note->added_by??'')==='system' && empty($note->customer_note) && (int)($note->order_id??0)===$id && strpos($normalise($note->content??''),$normalise($message))===0){return $cache[$id]=true;}
+        }
+    }
+    return $cache[$id]=false;
 }
 function loomara_hidden_unpaid_order_ids(){
     static $cache=[];$customer=get_current_user_id();if(!$customer){return [];}
     if(isset($cache[$customer])){return $cache[$customer];}
     $ids=[];
     // Native Woo CRUD query works with both classic order storage and HPOS.
-    foreach(wc_get_orders(['customer'=>$customer,'status'=>['pending','checkout-draft','failed'],'limit'=>-1,'return'=>'objects']) as $o){
+    foreach(wc_get_orders(['customer'=>$customer,'status'=>['pending','checkout-draft','failed','cancelled'],'limit'=>-1,'return'=>'objects']) as $o){
         if((int)$o->get_customer_id()===$customer&&loomara_customer_order_hidden($o)){$ids[]=$o->get_id();}
     }
     return $cache[$customer]=$ids;

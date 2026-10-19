@@ -23,7 +23,8 @@ function loomara_checkout_resume_url_117($intent = '') {
 
 /** Only the browser's new-order endpoint, never gateway callbacks/services. */
 function loomara_magic_identity_gate_117($result, $server, $request) {
-    if ($request->get_route() !== '/1cc/v1/order/create' || $request->get_method() !== 'POST') { return $result; }
+    $route = rtrim(strtolower($request->get_route()), '/');
+    if ($route !== '/1cc/v1/order/create' || strtoupper($request->get_method()) !== 'POST') { return $result; }
     if ($result !== null) { return $result; }
     $user = wp_get_current_user();
     if (!$user->ID || !is_email($user->user_email)) {

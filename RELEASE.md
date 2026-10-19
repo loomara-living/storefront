@@ -2,6 +2,12 @@
 
 All release details are maintained in this single file, newest first. Historical notes describe the behaviour and policies at the time of each release.
 
+## v1.11.8 — Checkout route matching hardening
+
+- Final deployment verification hardens the v1.11.7 new-order sign-in gate to normalize route case and trailing slashes, matching WordPress REST route handling. Equivalent endpoint spellings cannot bypass the identity check. Only the new Magic Checkout order-creation endpoint is affected; gateway callbacks, shipping/coupon services and historical orders remain untouched.
+- 35 isolated identity assertions passed, including three equivalent-route cases, alongside the previously passed ownership/payment-safety regressions. No actual payment or customer order was created for QA. All v1.11.7 login-before-payment and one-time automatic handoff behaviour remains included.
+- Rollback: restore v1.11.6 to remove the complete checkout change. No order/customer migration, account merging, refund-setting change, timer restoration or renumbering occurs.
+
 ## v1.11.7 — Account-linked Magic Checkout
 
 - The cart action reads Continue to payment. Signed-out customers sign in with Google or their Loomara account first; a successful checkout-intent login/signup returns to the cart and automatically invokes the installed Magic Checkout handler once, without a second checkout click. Ordinary logins do not auto-launch payment. Navigation trigger removal and per-tab consumed markers prevent reload/back replay; empty carts, unavailable buttons/storage retain a manual fallback. Opening the gateway does not submit or capture payment.

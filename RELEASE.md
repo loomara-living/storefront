@@ -2,6 +2,13 @@
 
 All release details are maintained in this single file, newest first. Historical notes describe the behaviour and policies at the time of each release.
 
+## v1.12.2 — No customer email for unpaid stock timeouts
+
+- Suppresses the native customer Cancelled order email only while the order is Cancelled, has no recorded paid date or refund ledger, and has an internal WooCommerce system note explicitly identifying the unpaid hold-stock timeout. It does not globally disable customer cancellation emails. Manual/customer/team cancellations, paid/refunded records, administrator emails and refund/shipping/payment notifications keep their existing settings.
+- Reuses the v1.12.1 read-only native timeout-note classifier. A failed transaction reference does not cause an unpaid timeout email to send; v1.12.1's conservative transaction-protected history visibility remains unchanged. Preview/missing-order and unknown-reason cases keep the original email setting. Existing notes/emails are not deleted or resent.
+- 569 isolated backend/regression assertions passed, including 16 new email-suppression cases and the prior 553 order/history/payment/refund checks. The installed native WooCommerce source confirms the enabled filter runs before transport. No actual customer email, cancellation, payment, refund or historical status is changed for QA.
+- Native stock-release scheduling and the 60-minute setting, customer order records, payment-failure retries, numbering and all other email settings remain unchanged. Rollback to v1.12.1 restores the previous cancellation-email behaviour; there is no data migration or webhook change.
+
 ## v1.12.1 — Hide unpaid checkout timeouts from customer history
 
 - Customer order history now excludes unpaid Cancelled attempts only when an internal WooCommerce system note explicitly identifies the native “Unpaid order cancelled - time limit reached” reason. The rule applies before pagination and in the defensive card renderer, including the Cancelled filter. It works for existing records such as OD-202610-000174 without migrating or changing them.

@@ -54,7 +54,11 @@ function loomara_customer_order_hidden($o){
 }
 /** Display-only classification. Unknown/manual cancellations remain visible. */
 function loomara_unpaid_timeout_cancelled_121($o){
-    if(!function_exists('wc_get_order_notes') || (method_exists($o,'get_transaction_id') && $o->get_transaction_id())){return false;}
+    if(method_exists($o,'get_transaction_id') && $o->get_transaction_id()){return false;}
+    return loomara_has_stock_timeout_note_121($o);
+}
+function loomara_has_stock_timeout_note_121($o){
+    if(!function_exists('wc_get_order_notes')){return false;}
     static $cache=[];$id=$o->get_id();if(isset($cache[$id])){return $cache[$id];}
     $normalise=static function($text){return trim(str_replace(['–','—'], '-', wp_strip_all_tags((string)$text)));};
     $messages=array_unique(['Unpaid order cancelled - time limit reached.',__('Unpaid order cancelled - time limit reached.','woocommerce')]);
@@ -67,6 +71,12 @@ function loomara_unpaid_timeout_cancelled_121($o){
     }
     return $cache[$id]=false;
 }
+/** Suppress only the customer notice for an explicitly identified unpaid timeout. */
+function loomara_stock_timeout_customer_email_122($enabled,$o){
+    if($o instanceof WC_Order && $o->get_status()==='cancelled' && !$o->get_date_paid() && !(float)$o->get_total_refunded() && !count($o->get_refunds()) && loomara_has_stock_timeout_note_121($o)){return false;}
+    return $enabled;
+}
+add_filter('woocommerce_email_enabled_customer_cancelled_order','loomara_stock_timeout_customer_email_122',100,2);
 function loomara_hidden_unpaid_order_ids(){
     static $cache=[];$customer=get_current_user_id();if(!$customer){return [];}
     if(isset($cache[$customer])){return $cache[$customer];}

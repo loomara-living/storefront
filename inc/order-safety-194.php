@@ -47,6 +47,7 @@ add_filter('update_user_metadata',function($check,$id,$key,$value){
 },10,4);
 
 function loomara_order_can_customer_cancel($order,$user_id) {
+    if (function_exists('loomara_cr_job') && loomara_cr_job($order)) { return false; }
     if (!$order instanceof WC_Order || !$user_id || (int)$order->get_customer_id()!==(int)$user_id ||
         !in_array($order->get_status(),['pending','on-hold','processing'],true)) { return false; }
     // Fail closed once a tracking/shipping record exists, even if status lags.
@@ -58,6 +59,10 @@ function loomara_order_can_customer_cancel($order,$user_id) {
 function loomara_customer_cancel_form($order) {
     if (!loomara_order_can_customer_cancel($order,get_current_user_id())) { return; }
     $automatic=function_exists('loomara_ar_enabled')&&loomara_ar_enabled();
+    if (function_exists('loomara_cr_request') && $order->get_date_paid()) {
+        echo '<details class="loomara-cancel-order"><summary>Cancel order</summary><p>Request cancellation before dispatch? Please check back in 15–30 minutes. Cancellation depends on shipping confirmation; any refund is subject to payment verification.</p><form method="post" action="'.esc_url(admin_url('admin-post.php')).'"><input type="hidden" name="action" value="loomara_cancel_order"><input type="hidden" name="order_id" value="'.absint($order->get_id()).'">';
+        wp_nonce_field('loomara_cancel_order_'.$order->get_id());echo '<button type="submit" class="button">Request cancellation</button></form></details>';return;
+    }
     echo '<details class="loomara-cancel-order"><summary>Cancel order</summary><p>'.($automatic?'Cancel this order before dispatch? Refund eligibility will be verified against Shiprocket and Razorpay. A refund is not confirmed until these checks pass; exceptions need manual review.':'Cancel this order before dispatch? If you have paid, our team will arrange your refund separately. Cancellation does not instantly refund your payment.').'</p><form method="post" action="'.esc_url(admin_url('admin-post.php')).'">';
     echo '<input type="hidden" name="action" value="loomara_cancel_order"><input type="hidden" name="order_id" value="'.absint($order->get_id()).'">';
     wp_nonce_field('loomara_cancel_order_'.$order->get_id());
@@ -66,7 +71,7 @@ function loomara_customer_cancel_form($order) {
 // admin-post.php does not load WooCommerce's frontend notice functions/session.
 // Carry only an allowlisted outcome to the authenticated customer's next page.
 function loomara_queue_cancel_notice($outcome) {
-    if (get_current_user_id() && in_array($outcome,['blocked','cancelled','paid'],true)) {
+    if (get_current_user_id() && in_array($outcome,['blocked','cancelled','paid','requested'],true)) {
         set_transient('loomara_cancel_notice_'.get_current_user_id(),$outcome,5*MINUTE_IN_SECONDS);
     }
 }
@@ -77,6 +82,7 @@ function loomara_show_cancel_notice() {
     if (!$outcome) { return; }
     delete_transient($key);
     $messages=[
+        'requested'=>[function_exists('loomara_cr_message')?loomara_cr_message():'Cancellation requested. Please check back in 15–30 minutes.','success'],
         'blocked'=>['This order can no longer be cancelled online. Please contact us.','error'],
         'cancelled'=>['Your order has been cancelled.','success'],
         'paid'=>['Order cancelled. Our team will arrange your refund separately.','success'],
@@ -97,9 +103,13 @@ function loomara_customer_cancel_order() {
             loomara_queue_cancel_notice('blocked');
         } else {
             $paid=$order->is_paid();
+            if (function_exists('loomara_cr_request') && $order->get_date_paid()) {
+                loomara_queue_cancel_notice(loomara_cr_request($order)?'requested':'blocked');
+            } else {
             $automatic=function_exists('loomara_ar_enabled')&&loomara_ar_enabled();
             $order->update_status('cancelled','Customer confirmed cancellation before dispatch. '.($automatic?'Automatic refund verification will run in the background; no refund is confirmed yet.':($paid?'Paid order: manual refund review required; no automatic refund submitted.':'')));
             loomara_queue_cancel_notice($paid?'paid':'cancelled');
+            }
         }
     } finally { delete_option($lock); }
     wp_safe_redirect(add_query_arg('order_status','all',wc_get_account_endpoint_url('orders'))); exit;
@@ -112,5 +122,7 @@ add_filter('woocommerce_my_account_my_orders_actions',function($actions,$order){
     return $actions;
 },100,2);
 add_filter('woocommerce_valid_order_statuses_for_cancel',function($statuses,$order){
+    // Old/bookmarked native one-click links must not bypass the paid request workflow.
+    if (function_exists('loomara_cr_request') && $order instanceof WC_Order && $order->get_date_paid()) { return []; }
     return loomara_order_can_customer_cancel($order,get_current_user_id()) ? $statuses : [];
 },100,2);

@@ -89,7 +89,12 @@ function loomara_hidden_unpaid_order_ids(){
 }
 // Preserve the native pending key: payment gateways and stock-release hooks depend on it.
 add_filter('wc_order_statuses',function($statuses){if(isset($statuses['wc-pending'])){$statuses['wc-pending']='Payment attempted';}return $statuses;},100);
-function loomara_customer_order_status_label($status){return in_array($status,['checkout-draft','draft'],true)?'Payment attempted':wc_get_order_status_name($status);}
+function loomara_customer_order_status_label($status,$order=null){
+    if (function_exists('loomara_cr_job') && $order instanceof WC_Order && in_array($status,['pending','on-hold','processing'],true)) {
+        $job=loomara_cr_job($order);if (in_array($job['stage']??'',['requested','shipping_wait','review'],true)) { return 'Cancellation requested'; }
+    }
+    return in_array($status,['checkout-draft','draft'],true)?'Payment attempted':wc_get_order_status_name($status);
+}
 
 // Shiprocket owns live courier checks when installed. Do not remove its native
 // callback or override merchant configuration. Format-only fallback is local /

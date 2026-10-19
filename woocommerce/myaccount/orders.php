@@ -12,24 +12,24 @@ do_action('woocommerce_before_account_orders', $has_orders);
   <form method="get" action="<?php echo esc_url(wc_get_account_endpoint_url('orders')); ?>" class="order-status-filter">
     <label for="order-status-filter">Order status</label>
     <select id="order-status-filter" name="order_status">
-      <option value="successful" <?php selected($selection,'successful'); ?>>Successful orders</option>
       <option value="all" <?php selected($selection,'all'); ?>>All orders</option>
-      <?php foreach (wc_get_order_statuses() as $key=>$label) : $value=preg_replace('/^wc-/', '', $key); ?>
+      <option value="successful" <?php selected($selection,'successful'); ?>>Successful orders</option>
+      <?php foreach (wc_get_order_statuses() as $key=>$label) : $value=preg_replace('/^wc-/', '', $key); if(in_array($value,['checkout-draft','draft'],true)){continue;} ?>
         <option value="<?php echo esc_attr($value); ?>" <?php selected($selection,$value); ?>><?php echo esc_html($label); ?></option>
       <?php endforeach; ?>
     </select>
     <?php do_action('loomara_orders_filter_fields'); ?>
     <button class="button" type="submit">Apply filter</button>
   </form>
-  <p class="orders-filter-note"><?php echo $selection === 'successful' ? 'Showing paid/accepted orders in Processing or Completed status, plus recorded Shipped/Delivered statuses when available. Pending payment and failed attempts are available in the filter.' : 'Showing '.esc_html($selection === 'all' ? 'all order statuses' : wc_get_order_status_name($selection)).'.'; ?></p>
+  <p class="orders-filter-note"><?php echo $selection === 'successful' ? 'Showing paid/accepted orders. Unpaid failed attempts are hidden.' : ($selection==='pending'?'Showing pending payment orders, including unfinished checkout drafts.': 'Showing '.esc_html($selection === 'all' ? 'all orders, excluding unpaid failed attempts' : loomara_customer_order_status_label($selection)).'.'); ?></p>
   <?php if ($has_orders) : ?>
     <div class="order-card-list">
     <?php foreach ($customer_orders->orders as $entry) :
         $order=wc_get_order($entry);
-        if (!$order || (int)$order->get_customer_id() !== get_current_user_id()) { continue; }
+        if (!$order || (int)$order->get_customer_id() !== get_current_user_id() || loomara_customer_order_hidden($order)) { continue; }
         $date=$order->get_date_created();$status=$order->get_status(); ?>
       <article class="customer-order-card">
-        <header><div><span class="order-card-label">Order reference</span><h3><a href="<?php echo esc_url($order->get_view_order_url()); ?>"><?php echo esc_html($order->get_order_number()); ?></a></h3><?php if ($date) : ?><time datetime="<?php echo esc_attr($date->date('c')); ?>"><?php echo esc_html(loomara_order_created_datetime($date)); ?></time><?php endif; ?></div><span class="order-status-badge status-<?php echo esc_attr(sanitize_html_class($status)); ?>"><?php echo esc_html(wc_get_order_status_name($status)); ?></span></header>
+        <header><div><span class="order-card-label">Order reference</span><h3><a href="<?php echo esc_url($order->get_view_order_url()); ?>"><?php echo esc_html($order->get_order_number()); ?></a></h3><?php if ($date) : ?><time datetime="<?php echo esc_attr($date->date('c')); ?>"><?php echo esc_html(loomara_order_created_datetime($date)); ?></time><?php endif; ?></div><span class="order-status-badge status-<?php echo esc_attr(sanitize_html_class($status)); ?>"><?php echo esc_html(loomara_customer_order_status_label($status)); ?></span></header>
         <ul class="order-card-items">
           <?php foreach ($order->get_items() as $item) : ?>
             <li><span><?php echo esc_html($item->get_name()); ?></span><span class="order-item-qty">× <?php echo absint($item->get_quantity()); ?></span></li>

@@ -76,6 +76,4 @@ function loomara_confirmed_policy_copy($content) {
     return $content;
 }
 add_filter('the_content','loomara_confirmed_policy_copy',20);
-add_action('woocommerce_single_product_summary',function () {
-    echo '<p class="product-delivery-terms">Free India shipping · Dispatch within 24 hours · Delivery in 5–10 business days after dispatch. <a href="'.esc_url(home_url('/returns-refunds/')).'">Free eligible returns within 7 days of delivery.</a></p>';
-},25);
+// Product details use the destination-specific delivery panel, not a repeated policy line.

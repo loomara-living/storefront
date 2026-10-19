@@ -4,7 +4,8 @@ defined('ABSPATH') || exit;
 add_action('init',function(){register_post_type('loomara_testimonial',['labels'=>['name'=>'Customer testimonials','singular_name'=>'Customer testimonial'],'public'=>false,'show_ui'=>true,'show_in_menu'=>true,'show_in_rest'=>false,'supports'=>['title','editor','author'],'capability_type'=>'post','map_meta_cap'=>true,'menu_icon'=>'dashicons-format-quote']);});
 function loomara_testimonial_eligible($id = 0) {
     $id=$id?:get_current_user_id();if(!$id)return false;
-    foreach(wc_get_orders(['customer_id'=>$id,'status'=>wc_get_is_paid_statuses(),'limit'=>20,'orderby'=>'date','order'=>'DESC']) as $order){if($order->is_paid())return true;}
+    $statuses=function_exists('loomara_purchase_statuses')?loomara_purchase_statuses():wc_get_is_paid_statuses();
+    foreach(wc_get_orders(['customer_id'=>$id,'status'=>$statuses,'limit'=>20,'orderby'=>'date','order'=>'DESC']) as $order){if($order->is_paid())return true;}
     return false;
 }
 function loomara_testimonial_prompt($context='home') {

@@ -2,6 +2,14 @@
 
 All release details are maintained in this single file, newest first. Historical notes describe the behaviour and policies at the time of each release.
 
+## v1.9.9 — Separate Shipped and Delivered statuses
+
+- Registers native wc-shipped and wc-delivered statuses for WooCommerce admin, REST updates and customer order filters, without relabelling Completed or migrating historical orders.
+- Shipping is not proof of payment: these statuses preserve is_paid only when a payment date was already recorded. They are not added to global paid-status lists. Paid delivered purchases remain eligible for ratings; testimonial queries include shipping states and still verify payment.
+- Approved Shiprocket channel 12607102 mapping: Shipped, In Transit and Out for Delivery to shipped; Delivered to delivered. All other mappings/settings, including disabled inventory sync, remain unchanged. Configuration acceptance and live-source checks are performed after publication; actual courier transitions require future events.
+- Seventeen isolated status assertions passed. Existing customer cancellation rejects Shipped/Delivered; no live order transition, payment, refund or testimonial submitted during QA.
+- Rollback: restore the saved Shiprocket mapping before code rollback. Orders already using custom statuses must retain their registration or be explicitly reviewed; never bulk-relabel them Completed or infer delivery/payment from old status values. No stock or order-number migration.
+
 ## v1.9.8 — Cancellation confirmation fatal-error repair
 
 - Fixes the logged undefined wc_add_notice fatal error after customer cancellation through admin-post.php. The admin handler queues only an allowlisted, short-lived, customer-scoped outcome; the account frontend consumes it once using WooCommerce's normal notice/session lifecycle.

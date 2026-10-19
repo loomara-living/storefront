@@ -6,7 +6,7 @@ function loomara_can_rate_product($id) {
     static $by_user=[];$uid=get_current_user_id();
     if (!isset($by_user[$uid])) {
         $by_user[$uid]=[];
-        foreach (wc_get_orders(['customer_id'=>get_current_user_id(),'status'=>['completed'],'limit'=>-1]) as $order) {
+        foreach (wc_get_orders(['customer_id'=>get_current_user_id(),'status'=>['completed','delivered'],'limit'=>-1]) as $order) {
             if (!$order->is_paid()) { continue; }
             foreach ($order->get_items() as $item_id=>$item) {
                 if ($item->get_quantity() + $order->get_qty_refunded_for_item($item_id) > 0) { $by_user[$uid][(int)$item->get_product_id()]=true; }

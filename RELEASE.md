@@ -2,6 +2,16 @@
 
 All release details are maintained in this single file, newest first. Historical notes describe the behaviour and policies at the time of each release.
 
+## v1.11.6 — Retire unpaid-order timers and simplify order history
+
+- Removes the custom pending-payment enrolment, reminder email registration, gateway timeout checks and automatic Failed transition. No new pending timer jobs are created and the retired hook has no worker. Cart coupon notice remains. The dormant old email source/settings and all previous email/expiry/lock/snapshot markers are retained for audit, not loaded into active email settings.
+- Explicit admin cleanup clears only `loomara_pending_check_114` events. No order record, payment, refund or customer data is deleted. Previously enrolled orders retain the existing native hold-stock cancellation guard so retirement itself does not expose them to an unexpected cancellation. Native policy for untracked orders remains unchanged.
+- Removes only Hostinger server cron job EqNoZQjZuj on account u384983524, after owner confirmation. Configuration is recorded in the previous release/agent notes and can be recreated. Core traffic-triggered WordPress cron remains enabled for existing refunds, fulfilment notifications and delivery completion. No unrelated scheduled hook is removed.
+- Unpaid Pending payment, checkout Draft and Failed attempts are excluded from all customer order-list queries before pagination, with a defensive template guard. Pending/Draft filter options are removed; old filter URLs resolve to All orders. Recorded paid/refunded records and accepted offline/COD statuses remain visible. WooCommerce admin records and authorised direct order access are unchanged.
+- Orders now use a filled navy View order button and an outlined Cancel order control with an explicit confirmation panel. Existing owner/nonce/pre-dispatch checks, native order URLs, cancellation and refund behaviour remain unchanged. Keyboard focus, minimum 44px targets and reduced-motion styles retained.
+- 396 isolated backend/regression checks and six native-template assertions passed (402 total). Synthetic mobile 390px and desktop 1366px checks include confirmation-panel layout; no live cancellation, payment, refund or email performed during QA. No order renumbering.
+- Rollback: review retained timer/email markers and removed cron configuration before restoring v1.11.5. Never automatically replay reminders, expiry events or financial jobs. Restoring theme code alone does not recreate the deleted server cron job or cleaned timer events.
+
 ## v1.11.5 — Five-minute reminders and clearer order history
 
 - Revises enrolled Pending Razorpay deadlines to first-pending +5 minutes for the single customer reminder and +30 minutes for a verified-unpaid Failed transition. Preserves existing gateway identity/payment checks, at-most-once email/expiry markers, locks and callbacks. Missing/ambiguous payment confirmation still pauses for review; no capture/refund/cancellation call is added. No stale reminder after 30 minutes. Scheduling/inbox delays can occur; no five-minute inbox guarantee.

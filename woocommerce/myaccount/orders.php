@@ -14,14 +14,14 @@ do_action('woocommerce_before_account_orders', $has_orders);
     <select id="order-status-filter" name="order_status">
       <option value="all" <?php selected($selection,'all'); ?>>All orders</option>
       <option value="successful" <?php selected($selection,'successful'); ?>>Successful orders</option>
-      <?php foreach (wc_get_order_statuses() as $key=>$label) : $value=preg_replace('/^wc-/', '', $key); if(in_array($value,['checkout-draft','draft'],true)){continue;} ?>
+      <?php foreach (wc_get_order_statuses() as $key=>$label) : $value=preg_replace('/^wc-/', '', $key); if(in_array($value,['pending','checkout-draft','draft'],true)){continue;} ?>
         <option value="<?php echo esc_attr($value); ?>" <?php selected($selection,$value); ?>><?php echo esc_html($label); ?></option>
       <?php endforeach; ?>
     </select>
     <?php do_action('loomara_orders_filter_fields'); ?>
     <button class="button" type="submit">Apply filter</button>
   </form>
-  <p class="orders-filter-note"><?php echo $selection === 'successful' ? 'Showing paid/accepted orders. Unpaid failed attempts are hidden.' : ($selection==='pending'?'Showing pending payment orders, including unfinished checkout drafts.': 'Showing '.esc_html($selection === 'all' ? 'all orders, excluding unpaid failed attempts' : loomara_customer_order_status_label($selection)).'.'); ?></p>
+  <p class="orders-filter-note"><?php echo $selection === 'successful' ? 'Showing paid/accepted orders. Unfinished and unpaid failed checkout attempts are hidden.' : 'Showing '.esc_html($selection === 'all' ? 'all placed orders; unfinished and unpaid failed checkout attempts are hidden' : loomara_customer_order_status_label($selection)).'.'; ?></p>
   <?php if ($has_orders) : ?>
     <div class="order-card-list">
     <?php foreach ($customer_orders->orders as $entry) :
@@ -35,11 +35,11 @@ do_action('woocommerce_before_account_orders', $has_orders);
             <li><span><?php echo esc_html($item->get_name()); ?></span><span class="order-item-qty">× <?php echo absint($item->get_quantity()); ?></span></li>
           <?php endforeach; ?>
         </ul>
-        <footer><div><span class="order-card-label">Order total</span><strong><?php echo wp_kses_post($order->get_formatted_order_total()); ?></strong></div><nav aria-label="<?php echo esc_attr('Actions for order '.$order->get_order_number()); ?>">
+        <footer><div><span class="order-card-label">Order total</span><strong><?php echo wp_kses_post($order->get_formatted_order_total()); ?></strong></div><nav class="loomara-order-actions" aria-label="<?php echo esc_attr('Actions for order '.$order->get_order_number()); ?>">
         <?php foreach (wc_get_account_orders_actions($order) as $key=>$action) : ?>
-          <a href="<?php echo esc_url($action['url']); ?>" class="button <?php echo esc_attr(sanitize_html_class($key)); ?>" aria-label="<?php echo esc_attr($action['name'].' order '.$order->get_order_number()); ?>"><?php echo esc_html($action['name']); ?></a>
-        <?php endforeach; ?></nav></footer>
-        <?php loomara_customer_cancel_form($order); ?>
+          <?php $action_label=$key==='view'?'View order':$action['name']; ?>
+          <a href="<?php echo esc_url($action['url']); ?>" class="button order-action-button <?php echo esc_attr(sanitize_html_class($key)); ?>" aria-label="<?php echo esc_attr($action_label.' '.$order->get_order_number()); ?>"><?php echo esc_html($action_label); ?></a>
+        <?php endforeach; ?><?php loomara_customer_cancel_form($order); ?></nav></footer>
       </article>
     <?php endforeach; ?>
     </div>
@@ -52,7 +52,7 @@ do_action('woocommerce_before_account_orders', $has_orders);
       </nav>
     <?php endif; ?>
   <?php else : ?>
-    <div class="orders-empty"><span aria-hidden="true">◇</span><h3>No orders in this view yet.</h3><p>Try another status to find payment attempts, or discover something new for your home.</p><a class="button" href="<?php echo esc_url(wc_get_page_permalink('shop')); ?>">Explore the collection</a></div>
+    <div class="orders-empty"><span aria-hidden="true">◇</span><h3>No orders in this view yet.</h3><p>Your placed orders will appear here. Discover something new for your home.</p><a class="button" href="<?php echo esc_url(wc_get_page_permalink('shop')); ?>">Explore the collection</a></div>
   <?php endif; ?>
   </div><aside aria-label="Share your Loomara experience"><?php loomara_testimonial_prompt('orders'); ?></aside></div>
 </section>

@@ -2,6 +2,9 @@
 .woocommerce-account .customer-order-card .loomara-order-actions{display:flex;align-items:flex-start;justify-content:flex-end;gap:10px;flex-wrap:wrap;min-width:0;max-width:100%}
 .woocommerce-account .customer-order-card .order-action-button,.woocommerce-account .customer-order-card .loomara-cancel-order summary{display:inline-flex;align-items:center;justify-content:center;gap:9px;min-height:44px;padding:11px 18px;border:1px solid #102c4c;border-radius:8px;background:#102c4c;color:#fff;font:600 .8rem/1.4 var(--sans);text-transform:none;letter-spacing:.015em;text-decoration:none;cursor:pointer;box-sizing:border-box;transition:background .18s ease,box-shadow .18s ease}
 .woocommerce-account .customer-order-card .order-action-button.view:after{content:'↗';font-size:1rem}
+.woocommerce-account .customer-order-card .order-action-button.pay{background:#a37731;border-color:#a37731;color:#fff}
+.woocommerce-account .customer-order-card .order-action-button.pay:after{content:'↻';font-size:1rem}
+.order-payment-failure-note{margin:0!important;padding:.9rem 1.2rem;background:#fff5ed;color:#713e2d;font-size:.82rem;line-height:1.65;border-bottom:1px solid #e9e1d4}
 .woocommerce-account .customer-order-card .order-action-button:hover{background:#234666;box-shadow:0 3px 10px #102c4c18}
 .woocommerce-account .customer-order-card .loomara-cancel-order{margin:0;padding:0;border:0;max-width:100%}
 .woocommerce-account .customer-order-card .loomara-cancel-order summary{list-style:none;background:transparent;color:#8b3f32;border-color:#c59b91}

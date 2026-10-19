@@ -46,6 +46,7 @@ function loomara_account_order_query($args) {
 }
 add_filter('woocommerce_my_account_my_orders_query', 'loomara_account_order_query', 100);
 function loomara_customer_order_hidden($o){
+    if(function_exists('loomara_pf_visible_120') && loomara_pf_visible_120($o)){return false;}
     return $o instanceof WC_Order&&in_array($o->get_status(),['pending','checkout-draft','draft','failed'],true)&&!$o->get_date_paid()&&!(float)$o->get_total_refunded()&&!count($o->get_refunds());
 }
 function loomara_hidden_unpaid_order_ids(){

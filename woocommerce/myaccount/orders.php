@@ -21,7 +21,7 @@ do_action('woocommerce_before_account_orders', $has_orders);
     <?php do_action('loomara_orders_filter_fields'); ?>
     <button class="button" type="submit">Apply filter</button>
   </form>
-  <p class="orders-filter-note"><?php echo $selection === 'successful' ? 'Showing paid/accepted orders. Unfinished and unpaid failed checkout attempts are hidden.' : 'Showing '.esc_html($selection === 'all' ? 'all placed orders; unfinished and unpaid failed checkout attempts are hidden' : loomara_customer_order_status_label($selection)).'.'; ?></p>
+  <p class="orders-filter-note"><?php echo $selection === 'successful' ? 'Showing paid/accepted orders.' : 'Showing '.esc_html($selection === 'all' ? 'all placed orders, including verified payment failures' : loomara_customer_order_status_label($selection)).'.'; ?> Unfinished checkout attempts remain hidden.</p>
   <?php if ($has_orders) : ?>
     <div class="order-card-list">
     <?php foreach ($customer_orders->orders as $entry) :
@@ -35,6 +35,7 @@ do_action('woocommerce_before_account_orders', $has_orders);
             <li><span><?php echo esc_html($item->get_name()); ?></span><span class="order-item-qty">× <?php echo absint($item->get_quantity()); ?></span></li>
           <?php endforeach; ?>
         </ul>
+        <?php if (function_exists('loomara_pf_visible_120') && loomara_pf_visible_120($order)) : ?><p class="order-payment-failure-note">Your payment was unsuccessful. You can retry securely on this same order. If your bank shows a debit or a payment is still processing, contact us before paying again.</p><?php endif; ?>
         <footer><div><span class="order-card-label">Order total</span><strong><?php echo wp_kses_post($order->get_formatted_order_total()); ?></strong></div><nav class="loomara-order-actions" aria-label="<?php echo esc_attr('Actions for order '.$order->get_order_number()); ?>">
         <?php foreach (wc_get_account_orders_actions($order) as $key=>$action) : ?>
           <?php $action_label=$key==='view'?'View order':$action['name']; ?>

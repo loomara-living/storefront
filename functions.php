@@ -45,6 +45,7 @@ require_once get_template_directory() . '/inc/delivery-lifecycle-111.php';
 require_once get_template_directory() . '/inc/shipped-tracking-112.php';
 require_once get_template_directory() . '/inc/checkout-offers-113.php';
 require_once get_template_directory() . '/inc/product-delivery-113.php';
+require_once get_template_directory() . '/inc/pending-payment-114.php';
 
 function loomara_setup() {
     add_theme_support('title-tag');

@@ -2,6 +2,14 @@
 
 All release details are maintained in this single file, newest first. Historical notes describe the behaviour and policies at the time of each release.
 
+## v1.12.6 — Compact cancellation and refund details
+
+- Replaces long always-visible customer cancellation/refund messages on account order cards/details with compact **Cancellation details** / **Refund details** information controls. The status badge and full existing explanatory copy remain unchanged. Manual-review and partial-refund guidance retain their existing conditions; no order, job or financial logic changes.
+- Desktop fine-pointer users can hover or focus the control to open a popover; clicking pins/unpins it. Mobile/coarse-pointer users tap to expand inline and tap again to close. Escape and outside click dismiss; native details/summary remains keyboard/touch usable without JavaScript. Contact links stay accessible. Desktop open popovers can escape the order-card clipping boundary; mobile content remains in normal flow.
+- Tiny account-page-only interaction script; existing order stylesheet handles both layouts. Fifteen isolated JavaScript interaction checks passed, plus collapsed-control backend checks and prior refund/cancellation/history/payment/email regressions. Synthetic actual 390px tap-open/close and 1366px keyboard-open popover checks show no horizontal overflow. No real email, cancellation, payment or refund submitted for QA.
+- This is presentation only. The 15–30 minute estimated check-back copy, bounded cancellation checks, Shiprocket confirmation, Razorpay refund guards, email recipients, stored statuses, order records and numbering remain unchanged.
+- Rollback: restore the changed presentation PHP/CSS and version/release notes from v1.12.5 and remove the unused account help script. Preserve cancellation/refund workers, all durable request/mail/financial intent/lock markers and current records. No migration, scheduler change or financial replay.
+
 ## v1.12.5 — Visible refund guidance in customer orders
 
 - Retains native **Refunded** status badges, the Refunded filter and refunded orders under All orders. Adds owner-only guidance on order cards and order details: check the refund email for the amount and further details; bank processing times may vary, and contact us if the email is missing.

@@ -109,9 +109,16 @@ function loomara_customer_refund_message($order){
 }
 function loomara_customer_refund_notice($order){
     $message=loomara_customer_refund_message($order);
-    if ($message) { echo '<p class="woocommerce-info order-refund-note" role="status">'.esc_html($message).'</p>'; }
+    if ($message) { loomara_order_status_help('Refund details','Refund information',$message); }
 }
 add_action('woocommerce_order_details_after_order_table','loomara_customer_refund_notice',15);
+
+function loomara_order_status_help($label,$heading,$message,$contact=false){
+    // Native details is keyboard/touch accessible and remains usable without JavaScript.
+    echo '<details class="order-status-help"><summary>'.esc_html($label).' <span class="order-status-help-icon" aria-hidden="true">i</span></summary><div class="order-status-help-content" role="status"><strong>'.esc_html($heading).'</strong><p>'.esc_html($message).'</p>';
+    if ($contact) { echo '<a href="'.esc_url(home_url('/contact/')).'">Contact us</a>'; }
+    echo '</div></details>';
+}
 
 // Shiprocket owns live courier checks when installed. Do not remove its native
 // callback or override merchant configuration. Format-only fallback is local /
@@ -125,6 +132,9 @@ add_action('woocommerce_single_product_summary', function () {
 }, 21);
 add_action('wp_enqueue_scripts', function () {
     wp_enqueue_style('loomara-orders-delivery', get_template_directory_uri().'/assets/orders-delivery-v188.css', ['loomara-cart-account'], filemtime(__DIR__.'/../assets/orders-delivery-v188.css'));
+    if (function_exists('is_account_page') && is_account_page()) {
+        wp_enqueue_script('loomara-order-status-help',get_template_directory_uri().'/assets/order-status-help.js',[],filemtime(__DIR__.'/../assets/order-status-help.js'),true);
+    }
     if (!function_exists('shiprocket_show_check_pincode')) {
         wp_enqueue_script('loomara-orders-delivery', get_template_directory_uri().'/assets/orders-delivery-v188.js', [], filemtime(__DIR__.'/../assets/orders-delivery-v188.js'), true);
     }

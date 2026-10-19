@@ -17,3 +17,14 @@
 .woocommerce-account .customer-order-card .order-action-button:focus-visible,.woocommerce-account .customer-order-card .loomara-cancel-order summary:focus-visible{outline:3px solid #b58c47;outline-offset:3px}
 @media(max-width:600px){.woocommerce-account .customer-order-card .loomara-order-actions{justify-content:flex-start;width:100%}.woocommerce-account .customer-order-card .order-action-button,.woocommerce-account .customer-order-card .loomara-cancel-order summary{padding:11px 15px}}
 @media(prefers-reduced-motion:reduce){.woocommerce-account .customer-order-card .order-action-button,.woocommerce-account .customer-order-card .loomara-cancel-order summary{transition:none}}
+.order-status-help{position:relative;max-width:100%;margin:.35rem 1.2rem .7rem;border:0;padding:0;color:#102c4c}
+.order-status-help>summary{display:inline-flex;align-items:center;gap:.55rem;min-height:44px;padding:.4rem .1rem;cursor:pointer;list-style:none;font:500 .8rem/1.4 var(--sans, sans-serif);color:#34516a;text-decoration:underline;text-decoration-style:dotted;text-underline-offset:4px}
+.order-status-help>summary::-webkit-details-marker{display:none}
+.order-status-help-icon{display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;flex:none;border:1px solid currentColor;border-radius:50%;font:600 12px/1 Georgia,serif;text-decoration:none}
+.order-status-help>summary:focus-visible{outline:3px solid #b58c47;outline-offset:4px;border-radius:3px}
+.order-status-help-content{max-width:100%;padding:16px 18px;border:1px solid #ded5c5;border-radius:10px;background:#fffdf8;color:#102c4c;box-shadow:0 6px 22px #102c4c12;font:400 .82rem/1.65 var(--sans,sans-serif);overflow-wrap:anywhere}
+.order-status-help-content p{margin:.45rem 0!important;font:inherit!important}
+.order-status-help-content strong{font-weight:600}
+.order-status-help-content a{display:inline-block;margin-top:.25rem;min-height:32px;font-weight:600;text-underline-offset:3px}
+@media(min-width:768px) and (hover:hover) and (pointer:fine){.order-status-help-content{position:absolute;inset-inline-start:0;top:100%;width:min(360px,calc(100vw - 80px));z-index:20}.customer-order-card:has(.order-status-help[open]){overflow:visible;position:relative;z-index:3}}
+@media(max-width:600px){.order-status-help{margin:.25rem 1rem .6rem}.order-status-help-content{padding:14px 16px;box-shadow:none}}

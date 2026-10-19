@@ -127,7 +127,7 @@ function loomara_cr_send_mail($id,$audience) {
 add_action('loomara_cancel_request_mail_124','loomara_cr_mail');
 function loomara_cr_panel($order) {
     $job=loomara_cr_job($order);if (!$job || !in_array($job['stage']??'',['requested','shipping_wait','review'],true)) { return; }
-    echo '<div class="woocommerce-info" role="status"><strong>Cancellation requested</strong><p>'.esc_html($job['stage']==='review'?'Your cancellation request needs our team’s review. Cancellation and refund are not yet confirmed. Please contact us for an update.':loomara_cr_message()).'</p><a class="button" href="'.esc_url(home_url('/contact/')).'">Contact us</a></div>';
+    loomara_order_status_help('Cancellation details','Cancellation requested',$job['stage']==='review'?'Your cancellation request needs our team’s review. Cancellation and refund are not yet confirmed. Please contact us for an update.':loomara_cr_message(),true);
 }
 add_action('woocommerce_order_details_before_order_table','loomara_cr_panel',15);
 add_action('woocommerce_admin_order_data_after_order_details',function($order){

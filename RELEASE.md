@@ -2,6 +2,13 @@
 
 All release details are maintained in this single file, newest first. Historical notes describe the behaviour and policies at the time of each release.
 
+## v1.9.10 — Ready to ship status
+
+- Registers wc-ready-to-ship between Processing and Shipped for native administration, REST updates and customer order filters. Includes it in the account's accepted/fulfilment view without treating readiness alone as proof of payment; recorded payment dates remain required for paid-purchase eligibility.
+- Approved Shiprocket channel 12607102 Ready to Ship mapping becomes ready-to-ship. Prior shipped/delivered mappings and all other channel settings remain unchanged. No historical order backfill, payment or stock migration. Existing cancellation rules remain unchanged, including rejection of the new fulfilment state.
+- Twenty isolated status assertions plus cancellation regressions cover payment independence and existing status preservation. No live order transitions, cancellation or refunds during verification; actual status push awaits future courier events.
+- Rollback: restore Ready to Ship mapping to its previous Ready to Ship value before code rollback; retain registration if orders already use the new status. Never bulk-relabel existing orders.
+
 ## v1.9.9 — Separate Shipped and Delivered statuses
 
 - Registers native wc-shipped and wc-delivered statuses for WooCommerce admin, REST updates and customer order filters, without relabelling Completed or migrating historical orders.

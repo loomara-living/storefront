@@ -29,7 +29,7 @@ function loomara_order_created_datetime($date) {
 
 function loomara_successful_order_statuses() {
     $statuses = wc_get_is_paid_statuses();
-    foreach (['shipped','delivered'] as $status) {
+    foreach (['ready-to-ship','shipped','delivered'] as $status) {
         if (isset(wc_get_order_statuses()['wc-'.$status])) { $statuses[] = $status; }
     }
     return array_values(array_unique($statuses));

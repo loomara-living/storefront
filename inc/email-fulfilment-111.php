@@ -3,12 +3,13 @@ defined('ABSPATH') || exit;
 /** Native WooCommerce email settings/templates/transport; no direct SMTP credentials. */
 class Loomara_Email_Fulfilment_111 extends WC_Email {
     protected $fulfilment_status;
+    protected $tracking_preview_123=false;
     public function __construct($status) {
         $this->fulfilment_status=$status==='delivered'?'delivered':'shipped';
         $this->id='loomara_customer_'.$this->fulfilment_status;
         $this->customer_email=true;
         $this->title=$this->fulfilment_status==='shipped'?'Loomara — Shipped order':'Loomara — Delivered order';
-        $this->description='Customer notification when an order first enters '.$this->fulfilment_status.'. Duplicate automatic notifications are suppressed.';
+        $this->description='Customer notification when an order first enters '.$this->fulfilment_status.'. Duplicate automatic notifications are suppressed.'.($this->fulfilment_status==='shipped'?' Tracking / AWB, courier and a Track your order button are inserted automatically when verified tracking is available; no subject placeholder is required. The settings preview uses a clearly labelled example, not a real shipment.':'');
         $this->placeholders=['{order_number}'=>'','{order_date}'=>''];
         add_action('woocommerce_order_status_'.$this->fulfilment_status.'_notification',[$this,'trigger'],10,2);
         parent::__construct();
@@ -24,6 +25,8 @@ class Loomara_Email_Fulfilment_111 extends WC_Email {
         ];
     }
     public function trigger($id,$order=false,$tracking_ready=false){
+        // Preview state must never leak into a real transactional notification.
+        $this->tracking_preview_123=false;
         $this->object=$order instanceof WC_Order?$order:wc_get_order($id);
         if(!$this->object||$this->object->get_status()!==$this->fulfilment_status){return;}
         if($this->fulfilment_status==='shipped'&&$this->object->get_meta('_loomara_delivered_at_111')){return;}
@@ -56,10 +59,13 @@ class Loomara_Email_Fulfilment_111 extends WC_Email {
         if(!is_array($rows)){return [];}
         return array_values(array_filter($rows,function($r){return is_array($r)&&is_string($r['awb']??null)&&preg_match('/^[A-Za-z0-9-]{3,100}$/D',$r['awb']);}));
     }
+    public function enable_tracking_preview_123(){if($this->fulfilment_status==='shipped'){$this->tracking_preview_123=true;}return $this;}
+    protected function show_tracking_preview_123(){return $this->tracking_preview_123 && $this->fulfilment_status==='shipped' && !$this->tracking_numbers();}
     public function get_content_plain(){
         $o=$this->object;$text=$this->get_heading()."\n\nOrder: ".$o->get_order_number()."\n";
         $text.=$this->fulfilment_status==='shipped'?"Your order has been marked Shipped. Follow the courier's tracking for updates.\n":"Your order has been marked Delivered. Eligible returns can be requested within 7 calendar days of delivery, subject to our returns policy.\n";
         $numbers=$this->tracking_numbers();if($numbers){$text.='Tracking / AWB: '.implode(', ',$numbers)."\n";}
+        if($this->show_tracking_preview_123()){$text.="Tracking example — preview only, not a real shipment\nTracking / AWB: EXAMPLE-AWB-123456\nCourier: Example courier\nA Track your order button appears when a verified tracking link is available.\n";}
         foreach($this->verified_tracking() as $row){
             if(!empty($row['courier'])){$text.='Courier: '.sanitize_text_field($row['courier'])."\n";}
             $url=function_exists('loomara_tracking_url_112')?loomara_tracking_url_112($row['url']??''):'';
@@ -72,6 +78,7 @@ class Loomara_Email_Fulfilment_111 extends WC_Email {
         echo '<p>'.esc_html($this->fulfilment_status==='shipped'?'Your Loomara order has been marked Shipped. A little comfort is on its way.':'Your Loomara order has been marked Delivered. We hope it feels right at home.').'</p><p><strong>Order '.esc_html($o->get_order_number()).'</strong></p>';
         if($this->fulfilment_status==='delivered'){echo '<p>Eligible returns can be requested within 7 calendar days of delivery, subject to our <a href="'.esc_url(home_url('/returns-refunds/')).'">returns policy</a>. If there is an issue, please contact us before the window closes.</p>';}
         $numbers=$this->tracking_numbers();if($numbers){echo '<p><strong>Tracking / AWB:</strong> '.esc_html(implode(', ',$numbers)).'</p>';}
+        if($this->show_tracking_preview_123()){echo '<div style="padding:16px 20px;margin:20px 0;border:1px solid #e1d2b8;border-radius:8px;background:#fffaf3"><p style="margin:0 0 10px"><strong>Tracking example — preview only</strong><br><small>Not a real shipment</small></p><p><strong>Tracking / AWB:</strong> EXAMPLE-AWB-123456<br><strong>Courier:</strong> Example courier</p><p style="margin:0">A <strong>Track your order</strong> button appears here when a verified tracking link is available.</p></div>';}
         foreach($this->verified_tracking() as $row){
             if(!empty($row['courier'])){echo '<p><strong>Courier:</strong> '.esc_html($row['courier']).'</p>';}
             $url=function_exists('loomara_tracking_url_112')?loomara_tracking_url_112($row['url']??''):'';
@@ -89,3 +96,5 @@ class Loomara_Email_Shipped extends Loomara_Email_Fulfilment_111 {
 class Loomara_Email_Delivered extends Loomara_Email_Fulfilment_111 {
     public function __construct(){parent::__construct('delivered');}
 }
+// Official WooCommerce preview hook: no order metadata is changed or saved.
+add_filter('woocommerce_prepare_email_for_preview',function($email){return $email instanceof Loomara_Email_Shipped?$email->enable_tracking_preview_123():$email;});

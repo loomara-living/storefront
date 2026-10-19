@@ -2,6 +2,15 @@
 
 All release details are maintained in this single file, newest first. Historical notes describe the behaviour and policies at the time of each release.
 
+## v1.12.3 — Payment-attempt label and visible tracking preview
+
+- Relabels native Pending payment as **Payment attempted** through WooCommerce's status-label filter. Internal `pending` keys and gateway/stock/retry hooks remain unchanged, so existing records receive the new label without a database migration. Hidden draft presentation uses the same wording. Verified failures retain **Payment failed**, and unpaid checkout attempts remain hidden from customers.
+- The native **Loomara — Shipped order** settings preview now shows a clearly labelled example AWB/courier block when its dummy order has no tracking. Uses WooCommerce's official preview hook without saving fake order metadata or fetching a shipment. Real saved tracking takes precedence; every real transactional trigger clears preview state. HTML and plain text supported; no invented tracking URL is shown.
+- Clarifies in email settings that real AWB/courier/Track your order details are automatically inserted when available; no subject placeholder is needed. Existing bounded tracking verification/fallback and at-most-once delivery are unchanged: missing/unverified tracking cannot be guaranteed in the final email.
+- 587 unique isolated backend/regression checks passed, including 11 new preview/non-leakage and 7 status-label cases plus the existing 569 history/email/payment/refund checks. No real payment, cancellation, refund or customer email submitted for QA.
+- Automatic refunds were verified already enabled. A read-only check for order OD-202610-000185 found no exact Shiprocket record in the verified WooCommerce channel; it remains manual review. This release does not bypass shipment checks, replay that historical job, sync shipments or issue money movement. Refund/stock/email settings, order IDs, references and historical notes stay unchanged.
+- Rollback: restore v1.12.2 for the prior display label/preview. No data migration, webhook change, financial replay or numbering reset is required.
+
 ## v1.12.2 — No customer email for unpaid stock timeouts
 
 - Suppresses the native customer Cancelled order email only while the order is Cancelled, has no recorded paid date or refund ledger, and has an internal WooCommerce system note explicitly identifying the unpaid hold-stock timeout. It does not globally disable customer cancellation emails. Manual/customer/team cancellations, paid/refunded records, administrator emails and refund/shipping/payment notifications keep their existing settings.

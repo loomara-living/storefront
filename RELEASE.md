@@ -2,6 +2,16 @@
 
 All release details are maintained in this single file, newest first. Historical notes describe the behaviour and policies at the time of each release.
 
+## v1.11.3 — Public checkout offers and delivery panels
+
+- Adds explicit administrator-only offer setup: FLAT5 = 5% capped at ₹500 through 31 October 2026; DIWALI = 10% capped at ₹500 through 15 November 2026. Cutoffs are 23:59:59 India time. New offers are individually usable, not stacked. Public descriptions allow native Magic Checkout discovery. Retains WELCOME10 settings/usage history and adds its first-order description; moves duplicate NEWUSER to recoverable Trash. Takes a private snapshot first and stops on identity collisions or a prior attempt. No automatic frontend migration.
+- Server-side WooCommerce discount-instance cap protects both cart and order calculations, including native Magic Checkout calculations. Keeps the advertised percentage intact; tax-exclusive bases include tax for the cap and use a minor-unit rounding reserve so the combined benefit cannot exceed ₹500. Existing unrelated coupons are untouched.
+- Native authenticated Magic Checkout list response is reduced to approved, natively valid offers only. WELCOME10 requires verified customer ownership and no prior eligible orders, excluding the checkout order itself. No user impersonation/email-based account matching; no new public coupon-list endpoint or authentication bypass.
+- Removes only the product-page native Razorpay Buy Now callback. Cart/checkout payment methods, Add to cart/View cart and existing order references are untouched.
+- Product delivery panel privately reads the current customer's default India PIN via nonce-protected AJAX. Uses chosen variation/quantity and real package weight for the existing fixed Shiprocket serviceability endpoint. Manual PIN changes do not change saved addresses; option changes refresh estimates and stale browser responses are discarded. Plugin-absent fallback remains separate and is not presented as courier verification.
+- Product and cart estimates use compact highlighted result panels with space below, success/error styling and estimate disclaimers. Verified synthetic local preview at actual 390px and 1366px without horizontal overflow. 186 coupon +19 delivery mocked backend checks passed; no actual customer address, coupon, order, payment or live courier request used during preparation.
+- Rollback: stop advertising/coupon usage and review the private offer snapshot before reverting code to v1.11.2. Never leave capped percentage coupons active without the cap implementation. Restore NEWUSER from Trash only on explicit direction. No historical order recalculation or renumbering.
+
 ## v1.11.2 — Shiprocket tracking in Shipped email
 
 - Future Shipped notifications queue a read-only tracking lookup before sending. Exact WooCommerce channel/order mapping and shipment ownership are verified using the existing preflight; no email/address matching or historic email resend.

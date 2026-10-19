@@ -54,6 +54,7 @@
         if(!response.headers.get('content-type')?.includes('application/json')){result.textContent='The delivery service could not respond correctly. Refresh this page and try again.';return;}
         const payload=await response.json();
         result.textContent=payload===-1?'This delivery check has expired. Refresh the page and try again.':payload?.data?.message||'Courier estimate unavailable. Please try again.';
+        result.dataset.state=payload?.success?'success':'error';
       }catch{result.textContent='Courier estimate unavailable. Please check your connection and try again.';}finally{button.disabled=false;}
     });
     if(form.querySelector('[name=pin]').value)form.requestSubmit();

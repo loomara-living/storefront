@@ -50,6 +50,7 @@ require_once get_template_directory() . '/inc/product-delivery-113.php';
 require_once get_template_directory() . '/inc/pending-payment-114.php';
 require_once get_template_directory() . '/inc/payment-failures-120.php';
 require_once get_template_directory() . '/inc/payment-failure-setup-120.php';
+require_once get_template_directory() . '/inc/admin-navigation.php';
 
 function loomara_setup() {
     add_theme_support('title-tag');

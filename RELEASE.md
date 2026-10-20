@@ -2,6 +2,14 @@
 
 All release details are maintained in this single file, newest first. Historical notes describe the behaviour and policies at the time of each release.
 
+## v1.12.7 — Consolidated Loomara administration menu
+
+- Adds one administrator-only **WooCommerce → Loomara Settings** hub linking the existing Shiprocket connection, Automatic refunds and Payment failure sync pages. Existing page registrations, capabilities, callbacks and protected direct URLs remain intact; opening the hub performs no settings write or order action.
+- Hides exactly the nine known Loomara submenu entries after their registration: three ongoing tools now reached through the hub, and six inventory/catalogue/weight/parcel/offer/retired-timer setup tools no longer cluttering routine navigation. Native WooCommerce and unrelated plugin menus stay unchanged. Known direct tool URLs highlight the hub without re-registering their actions or changing permissions.
+- Completed setup code and private migration snapshots/audit markers are retained, not deleted or rerun. Shipping/refund/payment configuration and workers, customer records, orders, products, stock, email settings, IDs and numbering remain unchanged.
+- Eighteen isolated admin navigation/capability/link/malformed-input/no-migration checks passed along with existing request/refund/display regressions. QA does not submit any live settings, migrations, email, cancellation, payment or refund action.
+- Rollback: restore functions.php and version/release notes from v1.12.6; the unused admin-navigation module may be removed. Original individual menu registrations will reappear. No database, integration or financial replay is required.
+
 ## v1.12.6 — Compact cancellation and refund details
 
 - Replaces long always-visible customer cancellation/refund messages on account order cards/details with compact **Cancellation details** / **Refund details** information controls. The status badge and full existing explanatory copy remain unchanged. Manual-review and partial-refund guidance retain their existing conditions; no order, job or financial logic changes.

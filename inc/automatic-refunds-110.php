@@ -22,8 +22,11 @@ function loomara_ar_sr_state($p) {
     $code=(string)($p['order_status_code']??'');
     $cancelled=in_array($code,['5','54'],true)&&in_array($label,['CANCELED','CANCELLED','CANCELED BEFORE DISPATCHED','CANCELLED BEFORE DISPATCHED'],true);
     if($code==='18'&&$label==='CANCELLATION REQUESTED'){return 'waiting';}
-    $safe=isset(['1'=>'NEW','2'=>'INVOICED','3'=>'READY TO SHIP','4'=>'PICKUP SCHEDULED'][$code]) &&
-        ['1'=>'NEW','2'=>'INVOICED','3'=>'READY TO SHIP','4'=>'PICKUP SCHEDULED'][$code]===$label;
+    // Canonical API codes, not broad dashboard buckets such as Processing or
+    // Yet to Dispatch. Every attached shipment must independently be safe.
+    $pre_dispatch=['1'=>'NEW','2'=>'INVOICED','3'=>'READY TO SHIP','4'=>'PICKUP SCHEDULED',
+        '12'=>'PICKUP QUEUE','13'=>'PICKUP RESCHEDULED','14'=>'PICKUP ERROR'];
+    $safe=isset($pre_dispatch[$code]) && $pre_dispatch[$code]===$label;
     if (!$cancelled&&!$safe) { return 'unknown'; }
     if (!is_array($p['shipments']??null)) { return 'unknown'; }
     foreach ($p['shipments'] as $s) {
@@ -31,12 +34,12 @@ function loomara_ar_sr_state($p) {
         $sc=is_numeric($raw)?$raw:(string)($s['status_code']??'');
         // Contradictory textual and numeric status must never look cancellable.
         if (!is_numeric($raw) && is_numeric($sc)) {
-            $labels=['PENDING'=>['11'],'AWB ASSIGNED'=>['1'],'LABEL GENERATED'=>['2'],'PICKUP SCHEDULED'=>['3'],'PICKUP GENERATED'=>['3'],'PICKUP QUEUED'=>['4'],'MANIFEST GENERATED'=>['5'],'CANCELED'=>['8'],'CANCELLED'=>['8'],'CANCELLED BEFORE DISPATCHED'=>['45'],'CANCELED BEFORE DISPATCHED'=>['45']];
+            $labels=['PENDING'=>['11'],'AWB ASSIGNED'=>['1'],'LABEL GENERATED'=>['2'],'PICKUP SCHEDULED'=>['3'],'PICKUP GENERATED'=>['3'],'PICKUP QUEUED'=>['4'],'MANIFEST GENERATED'=>['5'],'PICKUP ERROR'=>['13'],'PICKUP RESCHEDULED'=>['15'],'CANCELED'=>['8'],'CANCELLED'=>['8'],'CANCELLED BEFORE DISPATCHED'=>['45'],'CANCELED BEFORE DISPATCHED'=>['45']];
             if (!isset($labels[$raw]) || !in_array($sc,$labels[$raw],true)) { return 'unknown'; }
         }
         if ($cancelled) {
             if (!in_array($sc,['8','45'],true) && !in_array($raw,['CANCELED','CANCELLED','CANCELLED BEFORE DISPATCHED','CANCELED BEFORE DISPATCHED'],true)) { return 'waiting'; }
-        } elseif (!in_array($sc,['1','2','3','4','5','11'],true) && !in_array($raw,['PENDING','AWB ASSIGNED','LABEL GENERATED','PICKUP SCHEDULED','PICKUP GENERATED','PICKUP QUEUED','MANIFEST GENERATED'],true)) { return 'unknown'; }
+        } elseif (!in_array($sc,['1','2','3','4','5','11','13','15'],true) && !in_array($raw,['PENDING','AWB ASSIGNED','LABEL GENERATED','PICKUP SCHEDULED','PICKUP GENERATED','PICKUP QUEUED','MANIFEST GENERATED','PICKUP ERROR','PICKUP RESCHEDULED'],true)) { return 'unknown'; }
     }
     return $cancelled?'cancelled':'cancellable';
 }
@@ -100,7 +103,8 @@ function loomara_ar_reconcile($order,$job) {
     if($existing && ((int)round((float)$existing[0]->get_amount()*100)!==$job['amount'] || ($existing[0]->get_meta('_loomara_razorpay_refund_id') && $existing[0]->get_meta('_loomara_razorpay_refund_id')!==$r['id']))){loomara_ar_review($order,$job,'Local refund identity mismatch.');return;}
     if(!$existing){
         if((int)round((float)$order->get_total_refunded()*100)!==$job['before_refunded']){loomara_ar_review($order,$job,'Local refund balance changed during processing.');return;}
-        $refund=wc_create_refund(['order_id'=>$order->get_id(),'amount'=>$job['amount']/100,'reason'=>$reason,'refund_payment'=>false,'restock_items'=>false]);
+        $refund=wc_create_refund(['order_id'=>$order->get_id(),'amount'=>$job['amount']/100,'reason'=>$reason,'refund_payment'=>false,'restock_items'=>false,
+            '_loomara_verified_refund'=>array_intersect_key($r,array_flip(['id','payment_id','amount','currency','status','acquirer_data']))]);
         if(is_wp_error($refund)){loomara_ar_review($order,$job,'Gateway refund processed; WooCommerce ledger needs reconciliation. Do not refund again.');return;}
         $refund->update_meta_data('_loomara_razorpay_refund_id',$r['id']);$refund->save();
     }

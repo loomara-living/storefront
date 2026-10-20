@@ -7,8 +7,20 @@ function loomara_cr_message() {
     return 'Your cancellation request has been received. Please check your order status again in 15–30 minutes. Cancellation is subject to shipping confirmation. If approved, we’ll verify your refund eligibility and email you an update. This is an estimated check-back window, not a guaranteed completion time.';
 }
 function loomara_cr_save($id,$job) { update_option(loomara_cr_key($id),$job,false); }
-function loomara_cr_schedule($id) {
-    if (!wp_next_scheduled('loomara_cancel_request_124',[$id])) { wp_schedule_single_event(time()+180,'loomara_cancel_request_124',[$id]); }
+function loomara_cr_schedule($id,$delay=180) {
+    if (!wp_next_scheduled('loomara_cancel_request_124',[$id])) { wp_schedule_single_event(time()+max(1,$delay),'loomara_cancel_request_124',[$id]); }
+}
+function loomara_cr_open($order){
+    return $order instanceof WC_Order && in_array($order->get_status(),['pending','on-hold','processing','ready-to-ship'],true) && !$order->get_meta('_shipped_date');
+}
+function loomara_cr_wait($order,$job){
+    $slow=time()>=(int)$job['deadline'] || (int)$job['attempts']>=16;
+    if($slow && empty($job['extended_checks'])){
+        $job['extended_checks']=true;
+        $order->add_order_note('Cancellation shipping verification is still pending. Automatic read-only rechecks continue every 15 minutes, up to 24 hours from the request. Do not pack or dispatch. No cancellation or refund confirmed.');
+    }
+    $delay=$slow?900:180;$job['next_check']=time()+$delay;
+    loomara_cr_save($order->get_id(),$job);loomara_cr_schedule($order->get_id(),$delay);
 }
 function loomara_cr_request($order) {
     // Caller holds the owner/nonce-checked cancellation lock. No historical enrolment.
@@ -17,7 +29,7 @@ function loomara_cr_request($order) {
         !preg_match('/^pay_[A-Za-z0-9]+$/D',(string)$order->get_transaction_id()) ||
         (float)$order->get_total_refunded()>0 || count($order->get_refunds())) { return false; }
     $id=$order->get_id();
-    $job=['stage'=>'requested','created'=>time(),'deadline'=>time()+2700,'attempts'=>0,
+    $job=['stage'=>'requested','created'=>time(),'deadline'=>time()+2700,'retry_until'=>time()+86400,'attempts'=>0,
         'owner'=>(int)$order->get_customer_id(),'payment'=>(string)$order->get_transaction_id(),
         'currency'=>$order->get_currency(),'total'=>(string)$order->get_total()];
     if (!add_option(loomara_cr_key($id),$job,'','no')) { return false; }
@@ -26,13 +38,14 @@ function loomara_cr_request($order) {
     if (!wp_next_scheduled('loomara_cancel_request_mail_124',[$id])) { wp_schedule_single_event(time()+1,'loomara_cancel_request_mail_124',[$id]); }
     try {
         $order->update_meta_data('_loomara_cancellation_requested_124',$job['created']);$order->save();
-        $order->add_order_note('Customer requested cancellation. DO NOT PACK OR DISPATCH while checks are pending. Native status retained for Shiprocket import. Check-back estimate 15–30 minutes; unresolved requests require review after 45 minutes. No cancellation or refund confirmed.');
+        $order->add_order_note('Customer requested cancellation. DO NOT PACK OR DISPATCH while checks are pending. Native status retained for Shiprocket import. Check-back estimate 15–30 minutes; unresolved shipping checks continue every 15 minutes after the initial 45-minute window, for up to 24 hours. No cancellation or refund confirmed.');
     } catch (Throwable $e) {
         $job['stage']='review';$job['reason']='Order request metadata/note could not be saved; inspect before fulfilment.';loomara_cr_save($id,$job);
     }
     return true;
 }
 function loomara_cr_review($order,$job,$reason) {
+    $job['review_from_stage']=$job['stage']??'';
     $job['stage']='review';$job['reason']=$reason;loomara_cr_save($order->get_id(),$job);
     $order->add_order_note('Cancellation request requires manual review: '.$reason.' Do not dispatch without resolving this request. No automatic refund submitted by the request checker.');
 }
@@ -53,15 +66,17 @@ function loomara_cr_worker($id) {
         wp_cache_delete(loomara_cr_key($id),'options');
         $job=get_option(loomara_cr_key($id));$order=wc_get_order($id);
         if (!$order || !is_array($job) || !in_array($job['stage']??'',['requested','shipping_wait'],true)) { return; }
+        if(time()<(int)($job['next_check']??0)){loomara_cr_schedule($id,(int)$job['next_check']-time());return;}
         $job['attempts']=(int)$job['attempts']+1;
-        if (!loomara_cr_identity($order,$job) || !in_array($order->get_status(),['pending','on-hold','processing'],true)) {
+        if (!loomara_cr_identity($order,$job) || !loomara_cr_open($order)) {
             loomara_cr_review($order,$job,'Ownership, payment, balance or fulfilment changed.');return;
         }
-        if (time()>=(int)$job['deadline'] || $job['attempts']>16) { loomara_cr_review($order,$job,'Shipping verification did not finish within the waiting window.');return; }
+        $until=(int)($job['retry_until']??((int)$job['created']+86400));
+        if (time()>=$until || $job['attempts']>112) { loomara_cr_review($order,$job,'Shipping verification did not finish within the extended 24-hour waiting window.');return; }
         $sr=loomara_sr_order_preflight($order);
         if (is_wp_error($sr)) {
             // Missing/unsynced never permits cancellation or refund. Read-only retries are bounded.
-            loomara_cr_save($id,$job);loomara_cr_schedule($id);return;
+            loomara_cr_wait($order,$job);return;
         }
         if (isset($job['shiprocket_order_id']) && (int)$job['shiprocket_order_id']!==(int)$sr['shiprocket_order_id']) {
             loomara_cr_review($order,$job,'Exact Shiprocket identity changed.');return;
@@ -70,7 +85,7 @@ function loomara_cr_worker($id) {
         $state=loomara_ar_sr_state($sr);
         if ($state==='unknown') { loomara_cr_review($order,$job,'Shipment dispatched or status is not safely cancellable.');return; }
         $order=wc_get_order($id);
-        if (!loomara_cr_identity($order,$job) || !in_array($order->get_status(),['pending','on-hold','processing'],true) || time()>=(int)$job['deadline']) {
+        if (!loomara_cr_identity($order,$job) || !loomara_cr_open($order) || time()>=$until) {
             loomara_cr_review($order,$job,'Order changed or waiting window expired during verification.');return;
         }
         if ($state==='cancelled') {
@@ -80,11 +95,11 @@ function loomara_cr_worker($id) {
             $order->update_status('cancelled','Customer cancellation confirmed against exact current Shiprocket order and all shipments. Refund eligibility will be independently verified; no refund confirmed yet.');
             return;
         }
-        if ($state==='waiting' || $job['stage']==='shipping_wait') { loomara_cr_save($id,$job);loomara_cr_schedule($id);return; }
+        if ($state==='waiting' || $job['stage']==='shipping_wait') { loomara_cr_wait($order,$job);return; }
         $token=loomara_sr_read_token();
-        if (is_wp_error($token)) { loomara_cr_save($id,$job);loomara_cr_schedule($id);return; }
+        if (is_wp_error($token)) { loomara_cr_wait($order,$job);return; }
         $order=wc_get_order($id);
-        if (!loomara_cr_identity($order,$job) || !in_array($order->get_status(),['pending','on-hold','processing'],true) || time()-(int)$sr['checked_at']>60 || time()>=(int)$job['deadline']) {
+        if (!loomara_cr_identity($order,$job) || !loomara_cr_open($order) || time()-(int)$sr['checked_at']>60 || time()>=$until) {
             loomara_cr_review($order,$job,'Order or shipping verification changed before cancellation.');return;
         }
         $job['stage']='shipping_wait';$job['shiprocket_order_id']=$sr['shiprocket_order_id'];loomara_cr_save($id,$job);
@@ -93,7 +108,7 @@ function loomara_cr_worker($id) {
         wp_remote_post('https://apiv2.shiprocket.in/v1/external/orders/cancel',['timeout'=>20,'redirection'=>0,'sslverify'=>true,'limit_response_size'=>65536,
             'headers'=>['Authorization'=>'Bearer '.$token,'Content-Type'=>'application/json'],'body'=>wp_json_encode(['ids'=>[(int)$sr['shiprocket_order_id']]])]);
         // HTTP success is only acknowledgement. Every subsequent check is GET-only, even on timeout.
-        loomara_cr_schedule($id);
+        loomara_cr_wait($order,$job);
     } catch (Throwable $e) { loomara_cr_review($order,$job,'Unexpected verification error; inspect before retrying any action.'); }
     finally { delete_option($lock); }
 }

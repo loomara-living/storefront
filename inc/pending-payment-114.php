@@ -2,9 +2,34 @@
 /** Pending-payment timers retired. Checkout offer notice remains active. */
 defined('ABSPATH') || exit;
 // Do not enrol, remind, verify or fail orders. Old queued hooks have no worker.
-// Preserve the previous guard for already-enrolled orders so retirement itself
-// cannot expose those orders to Woo's native hold-stock cancellation.
-add_filter('woocommerce_cancel_unpaid_order',function($cancel,$o){return $o instanceof WC_Order&&$o->get_payment_method()==='razorpay'&&$o->get_meta('_loomara_pending_started_114')?false:$cancel;},100,2);
+// Abandonment is not cancellation or a verified payment failure. Keep native
+// pending (displayed as Payment attempted) Razorpay orders out of Woo's stock
+// timeout cancellation, regardless of whether old timer metadata exists.
+// This filter does not intercept explicit cancellations, payment completion or
+// the separate signed, gateway-verified payment.failed workflow.
+add_filter('woocommerce_cancel_unpaid_order',function($cancel,$o){
+    if($o instanceof WC_Order && $o->get_payment_method()==='razorpay' &&
+        ($o->get_status()==='pending' || $o->get_meta('_loomara_pending_started_114'))){return false;}
+    return $cancel;
+},100,2);
+
+// Native wc_reserved_stock holds have an expiry and stop counting after it,
+// independently of order status. Never increase physical stock or delete holds
+// from a timeout worker: that could race payment/new reservations. Reacquire
+// through Woo's atomic stock-reservation API before a native order-pay retry.
+add_action('woocommerce_before_pay_action','loomara_reserve_retry_stock',10,1);
+function loomara_reserve_retry_stock($order){
+    if(!$order instanceof WC_Order || $order->get_payment_method()!=='razorpay' ||
+        !in_array($order->get_status(),['pending','failed'],true) || $order->get_date_paid()){return;}
+    if(!function_exists('wc_reserve_stock_for_order')){
+        wc_add_notice('Stock availability could not be checked. Please try again shortly.','error');return;
+    }
+    try{wc_reserve_stock_for_order($order);}
+    catch(\Exception $e){
+        // Native pay_action checks error notices before calling the gateway.
+        wc_add_notice('Some items are no longer available in the requested quantity. Please update your cart before paying.','error');
+    }
+}
 
 add_action('woocommerce_after_cart','loomara_cart_coupon_note_114',1);
 add_filter('render_block_woocommerce/cart',function($html){if(is_admin()||!is_cart()){return $html;}ob_start();loomara_cart_coupon_note_114();return ob_get_clean().$html;},5);

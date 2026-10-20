@@ -13,14 +13,16 @@ function loomara_product_share_data($product){
 }
 function loomara_product_whatsapp_share_url($product){
     $data=loomara_product_share_data($product);
-    return $data?'https://wa.me/?text='.rawurlencode($data['text']."\n".$data['url']):'';
+    return $data?'https://wa.me/?text='.rawurlencode($data['text'].' '.$data['url']):'';
 }
 function loomara_product_share_icon(){
     return '<svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="m8.6 10.5 6.8-4M8.6 13.5l6.8 4"/></svg>';
 }
 function loomara_product_share(){
     global $product;$data=loomara_product_share_data($product);if(!$data){return;}
-    $text=$data['text']."\n".$data['url'];$icon=loomara_product_share_icon();
+    // WordPress removes encoded newlines from non-mailto URLs. A plain space
+    // keeps the fallback URL recognisable after native esc_url sanitisation.
+    $text=$data['text'].' '.$data['url'];$icon=loomara_product_share_icon();
     echo '<div class="loomara-product-share" data-product-share="'.esc_attr(wp_json_encode($data)).'"><button type="button" class="loomara-share-icon" data-native-product-share hidden aria-label="Share product" title="Share product">'.$icon.'</button><details class="loomara-share-fallback"><summary class="loomara-share-icon" aria-label="Share product" title="Share product">'.$icon.'</summary><nav aria-label="Share product options"><a href="'.esc_url('https://wa.me/?text='.rawurlencode($text)).'" target="_blank" rel="noopener noreferrer">WhatsApp</a><a href="'.esc_url('mailto:?subject='.rawurlencode($data['title']).'&body='.rawurlencode($text)).'">Email</a><a href="'.esc_url('sms:?body='.rawurlencode($text)).'">Message / SMS</a></nav></details><p class="loomara-share-status" role="status" hidden></p></div>';
 }
 add_action('woocommerce_single_product_summary','loomara_product_share',34);

@@ -2,6 +2,11 @@
 
 All release details are maintained in this single file, newest first. Historical notes describe the behaviour and policies at the time of each release.
 
+## v1.12.12 — Sharing fallback link separator
+
+- Live native WordPress esc_url sanitisation strips encoded newlines from non-mailto links. Use a plain space between public product text and its URL in WhatsApp/SMS/email fallbacks so the canonical link remains clearly separated. Native Web Share title/price/image/link payload and mobile-only icon unchanged.
+- Seventeen PHP sharing checks plus nineteen JavaScript native/fallback regressions pass. No recipient selection, messages sent, order/payment/refund/job/numbering or settings changes. Rollback: restore the three changed files (sharing PHP, style.css and this consolidated history) from v1.12.11; no data rollback or historic replay.
+
 ## v1.12.11 — Mobile product sharing
 
 - Adds only a small 20px share symbol with an accessible 44px touch target on published product details at mobile widths up to767px. Desktop sharing is hidden. Tapping opens the phone's native share sheet when available; unsupported browsers/no-JS retain manual WhatsApp, Email and Message/SMS choices behind the icon.

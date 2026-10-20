@@ -11,6 +11,7 @@ require_once get_template_directory() . '/inc/shopping-experience.php';
 require_once get_template_directory() . '/inc/address-book.php';
 require_once get_template_directory() . '/inc/magic-address-sync.php';
 require_once get_template_directory() . '/inc/product-promotions.php';
+require_once get_template_directory() . '/inc/product-sharing.php';
 require_once get_template_directory() . '/inc/variant-gallery.php';
 require_once get_template_directory() . '/inc/inventory-release.php';
 require_once get_template_directory() . '/inc/category-colours.php';

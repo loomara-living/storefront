@@ -2,6 +2,13 @@
 
 All release details are maintained in this single file, newest first. Historical notes describe the behaviour and policies at the time of each release.
 
+## v1.12.11 — Mobile product sharing
+
+- Adds only a small 20px share symbol with an accessible 44px touch target on published product details at mobile widths up to767px. Desktop sharing is hidden. Tapping opens the phone's native share sheet when available; unsupported browsers/no-JS retain manual WhatsApp, Email and Message/SMS choices behind the icon.
+- Shared payload includes public product title, current display price (From for variable products), canonical product permalink and brand. On secure supported mobile browsers, a public same-origin JPEG/PNG/WebP image is prepared in advance (5MB limit, five-second timeout, no credentials/redirects) and attached only if the native API accepts it. Missing/unsupported images do not block text/link sharing. Recipient/app selection and final sending remain entirely with the customer. No current cart/session/account/order query copied, no SDK or automatic send.
+- Public Open Graph title/price-description/image/link metadata supports WhatsApp link previews unless a known SEO plugin owns that metadata. WhatsApp text URLs cannot force an image attachment; receiving apps control previews and whether they preserve combined files/text/links. No guaranteed app-specific image rendering or external sharing acceptance claim.
+- Sixteen PHP payload/metadata tests and nineteen JavaScript mocked native/fallback/file/security/cancel/double-tap checks pass, plus prior account44+email60/testimonial20 regressions. No real messages sent during QA. Canonical design/minimum price shared, not a selected variation snapshot. No order, inventory, payment, refund, scheduler or numbering changes. Rollback: restore functions.php/version/RELEASE.md from v1.12.10 and leave the three now-unused sharing files unreferenced; no data rollback needed.
+
 ## v1.12.10 — Customer order details, cancellation timing and testimonials
 
 - Testimonial submissions and edits return to the homepage testimonial section with a saved/awaiting-review message. One testimonial per authenticated customer, without the previous thirty-day resubmission loophole; server-side owner lookup and per-user submission lock retained. Existing customers get Edit your testimonial; edits update the same record and return it to Pending moderation. Archived records require team restoration, no silent undelete or second submission. Existing historical records are not deleted or merged.

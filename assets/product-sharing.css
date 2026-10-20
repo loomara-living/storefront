@@ -1,0 +1,10 @@
+.loomara-product-share{display:none}
+@media(max-width:767px){
+ .loomara-product-share{display:flex;justify-content:flex-end;position:relative;margin:10px 0 16px;color:#102c4c}
+ .loomara-product-share .loomara-share-icon{display:inline-flex;align-items:center;justify-content:center;width:44px;height:44px;padding:10px;border:1px solid #e1d2b8;border-radius:50%;background:transparent;color:#102c4c;cursor:pointer;list-style:none;box-shadow:none}
+ .loomara-product-share [hidden]{display:none!important}.loomara-share-icon::-webkit-details-marker{display:none}.loomara-share-icon svg{flex:none}
+ .loomara-share-icon:hover{background:#f6f0e5}.loomara-share-icon:focus-visible{outline:3px solid #bd914f;outline-offset:3px}
+ .loomara-share-fallback nav{position:absolute;right:0;top:50px;z-index:20;min-width:180px;padding:8px;background:#fffaf3;border:1px solid #e1d2b8;border-radius:8px;box-shadow:0 8px 24px #102c4c18}
+ .loomara-share-fallback nav a{display:block;padding:10px 12px;min-height:44px;color:#102c4c;text-decoration:none}.loomara-share-fallback nav a:focus-visible{outline:2px solid #bd914f}
+ .loomara-share-status{font-size:.85rem;max-width:250px;padding:8px;margin:0 8px}
+}

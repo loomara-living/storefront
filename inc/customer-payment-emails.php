@@ -39,6 +39,16 @@ function loomara_success_email_payment_reference($order,$admin,$plain,$email){
     else{echo '<p style="margin:16px 0;padding:12px 16px;background:#f8f4ed;border-left:3px solid #bd914f;color:#102c4c;overflow-wrap:anywhere"><strong>Payment reference number:</strong> '.esc_html($payment).'</p>';}
 }
 add_action('woocommerce_email_order_meta','loomara_success_email_payment_reference',19,4);
+function loomara_cancel_email_payment_details($order,$admin,$plain,$email){
+    if($admin || !$order instanceof WC_Order || ($email->id??'')!=='customer_cancelled_order' ||
+        $order->get_status()!=='cancelled' || $order->get_payment_method()!=='razorpay' || !$order->get_date_paid()){return;}
+    $payment=$order->get_transaction_id();
+    if(!is_string($payment)||!preg_match('/^pay_[A-Za-z0-9]+$/D',$payment)){return;}
+    $help='Order cancellation does not by itself confirm a refund. Any eligible refund is verified separately. Please check your refund email for the Razorpay refund reference and any available bank tracking reference. Bank posting times may vary.';
+    if($plain){echo "\nPayment and refund information\nPayment reference number: ".$payment."\n".$help."\n";}
+    else{echo '<section style="padding:16px 20px;background:#f8f4ed;border:1px solid #e1d2b8;border-radius:8px;margin:20px 0"><h3 style="margin:0 0 12px;color:#102c4c">Payment and refund information</h3><p style="overflow-wrap:anywhere"><strong>Payment reference number:</strong> '.esc_html($payment).'</p><p>'.esc_html($help).'</p></section>';}
+}
+add_action('woocommerce_email_order_meta','loomara_cancel_email_payment_details',19,4);
 // Persist verified details BEFORE wc_create_refund emits its native refund email.
 // Custom args come only from the exact processed-refund reconciliation path.
 function loomara_refund_email_metadata($refund,$args){
@@ -67,9 +77,12 @@ function loomara_refund_email_references($order,$admin,$plain,$email){
     $id=$refund->get_meta('_loomara_razorpay_refund_id');
     if(!is_string($id)||!preg_match('/^rfnd_[A-Za-z0-9]+$/D',$id)){return;}
     $rows=['Razorpay refund reference'=>$id];
+    $payment=$refund->get_meta('_loomara_refund_payment_id');
+    if(is_string($payment)&&preg_match('/^pay_[A-Za-z0-9]+$/D',$payment)&&$order->get_transaction_id()===$payment){$rows['Payment reference number']=$payment;}
+    $has_bank_reference=false;
     $refs=$refund->get_meta('_loomara_refund_bank_references');
-    if(is_array($refs)){foreach(['ARN','RRN','UTR'] as $type){$value=$refs[$type]??null;if(is_string($value)&&preg_match('/^[A-Za-z0-9][A-Za-z0-9 -]{2,99}$/D',$value)){$rows['Bank reference ('.$type.')']=$value;}}}
-    $help=count($rows)>1?'You can quote the bank reference to your bank to trace this refund.':'The bank tracking reference has not been provided yet. Contact us and quote the Razorpay refund reference if you need help.';
+    if(is_array($refs)){foreach(['ARN','RRN','UTR'] as $type){$value=$refs[$type]??null;if(is_string($value)&&preg_match('/^[A-Za-z0-9][A-Za-z0-9 -]{2,99}$/D',$value)){$rows['Bank reference ('.$type.')']=$value;$has_bank_reference=true;}}}
+    $help=$has_bank_reference?'You can quote the bank reference to your bank to trace this refund.':'The bank tracking reference has not been provided yet. Contact us and quote the Razorpay refund reference if you need help.';
     $help.=' Refunds return to the original payment method. Bank posting times may vary.';
     if($plain){echo "\nRefund tracking\n";foreach($rows as $label=>$value){echo $label.': '.$value."\n";}echo $help."\n";}
     else{echo '<section style="padding:16px 20px;background:#f8f4ed;border:1px solid #e1d2b8;border-radius:8px;margin:20px 0"><h3 style="margin:0 0 12px;color:#102c4c">Refund tracking</h3>';foreach($rows as $label=>$value){echo '<p style="margin:6px 0"><strong>'.esc_html($label).':</strong> '.esc_html($value).'</p>';}echo '<p style="margin:12px 0 0">'.esc_html($help).'</p></section>';}

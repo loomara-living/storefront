@@ -2,6 +2,15 @@
 
 All release details are maintained in this single file, newest first. Historical notes describe the behaviour and policies at the time of each release.
 
+## v1.12.9 — Immediate cancellation checks and customer email references
+
+- Future customer cancellation requests immediately enqueue the existing locked verification worker through a unique Action Scheduler async action, with a durable WordPress event due one second later as fallback. No synchronous financial call holds the customer redirect open. Background execution can be delayed by server scheduling.
+- Exact unshipped Shiprocket eligibility is checked before requesting carrier cancellation. WooCommerce becomes Cancelled only after exact order/all-shipment cancellation confirmation; the existing refund engine then independently verifies captured payment and refundable balance. Missing records retry every three minutes initially, then every fifteen minutes after the initial forty-five-minute window, up to twenty-four hours. Existing safeguards, one submission intent and read-only reconciliation remain unchanged. Updated the new-request audit note to describe this flow.
+- Paid Razorpay customer cancellation emails include the original payment reference and explain that cancellation does not itself confirm a refund. Separate verified refund emails include their matching payment reference, refund ID and available bank ARN/RRN/UTR. Never invent missing references or call a gateway while rendering email.
+- Successful-order payment references and verified Shiprocket AWB/courier/clickable tracking links were already implemented and remain unchanged. Tracking links are included only when verified and available; no guaranteed inbox delivery or real financial/carrier acceptance claim.
+- Mocked regression checks passed: cancellation96 plus prior refund64, customer-email60, refund64, owner-safety39, tracking72 and preview11 (overlapping suites). No real payment, cancellation, refund or email was submitted during QA.
+- No historical job replay, resend, status migration, numbering change, standalone-plugin setting change or server cron. Rollback: restore the four changed files from v1.12.8 after reconciling active cancellation/refund intents; retain all durable jobs, locks, reference and mail markers.
+
 ## Standalone WordPress integration — 20 October 2026
 
 - Installed and enabled **Loomara — Paid Order Push to Shiprocket 1.0.0**, independently of the theme/GitHub main. Future newly created paid Processing Razorpay orders enqueue a background export to existing WooCommerce channel12607102, pickupHome; numeric and full Loomara references included. No historical backfill. Existing importer stays enabled.

@@ -96,6 +96,14 @@ function loomara_customer_order_status_label($status,$order=null){
     return in_array($status,['checkout-draft','draft'],true)?'Payment attempted':wc_get_order_status_name($status);
 }
 
+function loomara_customer_cancelled_refund_message($order){
+    if(!$order instanceof WC_Order || !get_current_user_id() || (int)$order->get_customer_id()!==get_current_user_id() ||
+        $order->get_status()!=='cancelled' || !$order->get_date_paid() || $order->get_payment_method()!=='razorpay' ||
+        (float)$order->get_total_refunded()>0 || count($order->get_refunds()) ||
+        !function_exists('loomara_ar_enabled') || !loomara_ar_enabled()){return '';}
+    $job=get_option(loomara_ar_key($order->get_id()),[]);
+    return is_array($job)&&in_array($job['stage']??'',['queued','shipping_wait'],true)?'Your refund will be initiated shortly.':'';
+}
 function loomara_customer_refund_message($order){
     if (!$order instanceof WC_Order || !get_current_user_id() || (int)$order->get_customer_id()!==get_current_user_id()) { return ''; }
     $amount=(float)$order->get_total_refunded();
@@ -105,7 +113,7 @@ function loomara_customer_refund_message($order){
     if ($amount>0 && count($order->get_refunds())) {
         return 'A refund has been recorded for this order. Please check your refund email for the refunded amount and further details. This may be a partial refund; the order status remains unchanged. Bank processing times may vary.';
     }
-    return '';
+    return loomara_customer_cancelled_refund_message($order);
 }
 function loomara_customer_refund_notice($order){
     $message=loomara_customer_refund_message($order);

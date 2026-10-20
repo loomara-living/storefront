@@ -11,10 +11,11 @@ function loomara_cr_schedule($id,$delay=180) {
     if (!wp_next_scheduled('loomara_cancel_request_124',[$id])) { wp_schedule_single_event(time()+max(1,$delay),'loomara_cancel_request_124',[$id]); }
 }
 function loomara_cr_start($id) {
-    // Durable near-immediate fallback; the async runner may start sooner without
-    // holding the customer's redirect open. Both use the same locked worker.
-    if (function_exists('as_enqueue_async_action')) {
-        try { as_enqueue_async_action('loomara_cancel_request_124',[$id],'loomara-cancellation',true); }
+    // Delay rather than sleep in the customer request. Both schedulers use the
+    // same worker; its persisted next_check also rejects an early execution.
+    $job=get_option(loomara_cr_key($id));$at=(int)($job['next_check']??(time()+10));
+    if (function_exists('as_schedule_single_action')) {
+        try { as_schedule_single_action($at,'loomara_cancel_request_124',[$id],'loomara-cancellation',true); }
         catch (Throwable $e) { /* The already-saved WP event remains available. */ }
     }
 }
@@ -37,16 +38,16 @@ function loomara_cr_request($order) {
         !preg_match('/^pay_[A-Za-z0-9]+$/D',(string)$order->get_transaction_id()) ||
         (float)$order->get_total_refunded()>0 || count($order->get_refunds())) { return false; }
     $id=$order->get_id();
-    $job=['stage'=>'requested','created'=>time(),'deadline'=>time()+2700,'retry_until'=>time()+86400,'attempts'=>0,
+    $job=['stage'=>'requested','created'=>time(),'next_check'=>time()+10,'deadline'=>time()+2700,'retry_until'=>time()+86400,'attempts'=>0,
         'owner'=>(int)$order->get_customer_id(),'payment'=>(string)$order->get_transaction_id(),
         'currency'=>$order->get_currency(),'total'=>(string)$order->get_total()];
     if (!add_option(loomara_cr_key($id),$job,'','no')) { return false; }
-    loomara_cr_schedule($id,1);
+    loomara_cr_schedule($id,10);
     // Mail is a separate bounded event: transport failure must never lose the cancellation check.
     if (!wp_next_scheduled('loomara_cancel_request_mail_124',[$id])) { wp_schedule_single_event(time()+1,'loomara_cancel_request_mail_124',[$id]); }
     try {
         $order->update_meta_data('_loomara_cancellation_requested_124',$job['created']);$order->save();
-        $order->add_order_note('Customer requested cancellation. DO NOT PACK OR DISPATCH while checks are pending. Shipping verification is queued immediately; native status stays unchanged until exact Shiprocket cancellation confirmation. If the record is unavailable, automatic checks retry every 3 minutes initially, then every 15 minutes after 45 minutes, for up to 24 hours. Refund eligibility is independently verified after cancellation. No cancellation or refund confirmed yet.');
+        $order->add_order_note('Customer requested cancellation. DO NOT PACK OR DISPATCH while checks are pending. First shipping verification is scheduled after 10 seconds; actual execution depends on the background scheduler. Native status stays unchanged until exact Shiprocket cancellation confirmation. If the record is unavailable, automatic checks retry every 3 minutes initially, then every 15 minutes after 45 minutes, for up to 24 hours. Refund eligibility is independently verified after cancellation. No cancellation or refund confirmed yet.');
     } catch (Throwable $e) {
         $job['stage']='review';$job['reason']='Order request metadata/note could not be saved; inspect before fulfilment.';loomara_cr_save($id,$job);
     }

@@ -1,0 +1,12 @@
+.loomara-order-references{margin:1.5rem 0;padding:clamp(1rem,3vw,1.5rem);border:1px solid #e1d2b8;border-radius:12px;background:#faf7f1;color:#102c4c}
+.loomara-order-references h2{font-size:1.35rem;margin:0 0 1rem}.loomara-order-references h3{font-size:1rem;margin:0 0 .75rem}
+.loomara-order-references dl{margin:0}.loomara-order-references dl>div{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.2fr);gap:.75rem;padding:.5rem 0}
+.loomara-order-references dt{font-weight:500}.loomara-order-references dd{margin:0;overflow-wrap:anywhere}.loomara-order-references p{font-size:.9rem;line-height:1.6}
+.loomara-refund-reference,.loomara-order-tracking{border-top:1px solid #e1d2b8;margin-top:1rem;padding-top:1rem}.loomara-order-tracking .button{display:inline-flex;min-height:44px;align-items:center}
+@media(max-width:480px){.loomara-order-references dl>div{grid-template-columns:1fr;gap:.2rem}.loomara-order-references h2{font-size:1.2rem}}
+.loomara-order-footer-actions{display:flex;flex-wrap:wrap;gap:12px;margin:24px 0 8px;padding-top:20px;border-top:1px solid #e1d2b8}
+.loomara-order-footer-actions a.button{display:inline-flex;align-items:center;justify-content:center;min-height:46px;padding:12px 22px;border:1px solid #102c4c;border-radius:7px;font-family:inherit;font-weight:600;font-size:.95rem;line-height:1.4;text-decoration:none;transition:background-color .2s,color .2s}
+.loomara-order-footer-actions .order-contact-button{background:#102c4c;color:#fff}.loomara-order-footer-actions .order-shop-button{background:transparent;color:#102c4c}
+.loomara-order-footer-actions a.button:hover{background:#254563;color:#fff}.loomara-order-footer-actions a.button:focus-visible{outline:3px solid #bd914f;outline-offset:3px}
+@media(max-width:480px){.loomara-order-footer-actions a.button{flex:1 1 100%;width:100%}}
+@media(prefers-reduced-motion:reduce){.loomara-order-footer-actions a.button{transition:none}}

@@ -183,6 +183,8 @@ function loomara_ar_order_message($order){
     if(!$order instanceof WC_Order){return;}$job=get_option(loomara_ar_key($order->get_id()));if(!is_array($job)){return;}
     // The shared account/detail notice already explains recorded refunds and refund email.
     if (($job['stage']??'')==='complete' && function_exists('loomara_customer_refund_message') && loomara_customer_refund_message($order)) { return; }
+    // Shared compact Refund details control appears on cards and View order.
+    if(function_exists('loomara_customer_cancelled_refund_message') && loomara_customer_cancelled_refund_message($order)){return;}
     $stage=$job['stage']??'';$message=$stage==='complete'?'Refund processed by Razorpay. Bank posting time may vary.':($stage==='review'?'Your cancellation refund needs manual review. Please contact us.':($stage==='skipped'?'No additional automatic refund is due.':'Your cancellation refund is being verified. It is not confirmed until payment and shipment checks pass.'));
     echo '<p class="woocommerce-info">'.esc_html($message).'</p>';
 }

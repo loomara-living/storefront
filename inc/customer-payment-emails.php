@@ -88,3 +88,24 @@ function loomara_refund_email_references($order,$admin,$plain,$email){
     else{echo '<section style="padding:16px 20px;background:#f8f4ed;border:1px solid #e1d2b8;border-radius:8px;margin:20px 0"><h3 style="margin:0 0 12px;color:#102c4c">Refund tracking</h3>';foreach($rows as $label=>$value){echo '<p style="margin:6px 0"><strong>'.esc_html($label).':</strong> '.esc_html($value).'</p>';}echo '<p style="margin:12px 0 0">'.esc_html($help).'</p></section>';}
 }
 add_action('woocommerce_email_order_meta','loomara_refund_email_references',20,4);
+function loomara_refund_email_amounts($order,$admin,$plain,$email){
+    $refund=$email->refund??null;
+    if($admin || !$order instanceof WC_Order || !in_array($email->id??'', ['customer_refunded_order','customer_partially_refunded_order'],true) ||
+        !$refund instanceof WC_Order_Refund || (int)$refund->get_parent_id()!==$order->get_id() || (float)$refund->get_amount()<=0){return;}
+    $rows=['Amount of this refund'=>(float)$refund->get_amount(),'Total refunded to date'=>max((float)$refund->get_amount(),(float)$order->get_total_refunded())];
+    if($plain){echo "\nRefund amounts\n";foreach($rows as $label=>$amount){echo $label.': '.html_entity_decode(strip_tags(wc_price($amount,['currency'=>$order->get_currency()])),ENT_QUOTES,'UTF-8')."\n";}}
+    else{echo '<section style="padding:16px 20px;background:#f8f4ed;border:1px solid #e1d2b8;border-radius:8px;margin:20px 0"><h3>Refund amounts</h3>';foreach($rows as $label=>$amount){echo '<p><strong>'.esc_html($label).':</strong> '.wp_kses_post(wc_price($amount,['currency'=>$order->get_currency()])).'</p>';}echo '</section>';}
+}
+add_action('woocommerce_email_order_meta','loomara_refund_email_amounts',18,4);
+// Scope native totals replacement strictly to the customer refund-email table.
+// Do not change View order, invoices, other customer emails or admin totals.
+add_action('woocommerce_email_before_order_table',function($order,$admin,$plain,$email){
+    $GLOBALS['loomara_refund_email_table_stack'][]=(!$admin && $order instanceof WC_Order && in_array($email->id??'', ['customer_refunded_order','customer_partially_refunded_order'],true))?$order->get_id():0;
+},1,4);
+add_action('woocommerce_email_after_order_table',function(){if(!empty($GLOBALS['loomara_refund_email_table_stack'])){array_pop($GLOBALS['loomara_refund_email_table_stack']);}},999,4);
+add_filter('woocommerce_get_order_item_totals',function($totals,$order){
+    $stack=$GLOBALS['loomara_refund_email_table_stack']??[];
+    if(!$order instanceof WC_Order || !$stack || end($stack)!==$order->get_id() || (float)$order->get_total_refunded()<=0){return $totals;}
+    $totals['order_total']=['label'=>'Total refunded to date:','value'=>wc_price($order->get_total_refunded(),['currency'=>$order->get_currency()])];
+    return $totals;
+},100,2);

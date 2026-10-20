@@ -38,7 +38,8 @@ do_action('woocommerce_before_account_orders', $has_orders);
           <?php endforeach; ?>
         </ul>
         <?php if (function_exists('loomara_pf_visible_120') && loomara_pf_visible_120($order)) : ?><p class="order-payment-failure-note">Your payment was unsuccessful. You can retry securely on this same order. If your bank shows a debit or a payment is still processing, contact us before paying again.</p><?php endif; ?>
-        <footer><div><span class="order-card-label">Order total</span><strong><?php echo wp_kses_post($order->get_formatted_order_total()); ?></strong></div><nav class="loomara-order-actions" aria-label="<?php echo esc_attr('Actions for order '.$order->get_order_number()); ?>">
+        <?php $card_amount=loomara_order_card_amount($order); ?>
+        <footer><div><span class="order-card-label"><?php echo esc_html($card_amount['label']); ?></span><strong><?php echo wp_kses_post($card_amount['value']); ?></strong></div><nav class="loomara-order-actions" aria-label="<?php echo esc_attr('Actions for order '.$order->get_order_number()); ?>">
         <?php foreach (wc_get_account_orders_actions($order) as $key=>$action) : ?>
           <?php $action_label=$key==='view'?'View order':$action['name']; ?>
           <a href="<?php echo esc_url($action['url']); ?>" class="button order-action-button <?php echo esc_attr(sanitize_html_class($key)); ?>" aria-label="<?php echo esc_attr($action_label.' '.$order->get_order_number()); ?>"><?php echo esc_html($action_label); ?></a>

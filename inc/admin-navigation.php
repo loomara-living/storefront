@@ -8,8 +8,13 @@ function loomara_admin_tool_slugs(){
 }
 add_action('admin_menu',function(){
     add_submenu_page('woocommerce','Loomara Settings','Loomara Settings','manage_options','loomara-settings','loomara_admin_settings_page');
-    foreach(loomara_admin_tool_slugs() as $slug){remove_submenu_page('woocommerce',$slug);}
+    foreach(loomara_admin_tool_slugs() as $slug){
+        // WordPress discovers this new page's parent from the submenu during
+        // its access check. Retain its registration; hide only its presentation.
+        if($slug!=='loomara-returns'){remove_submenu_page('woocommerce',$slug);}
+    }
 },999);
+add_action('admin_head',function(){echo '<style>#adminmenu a[href="admin.php?page=loomara-returns"]{display:none!important}</style>';});
 function loomara_admin_settings_page(){
     if(!current_user_can('manage_options')){return;}
     $tools=[

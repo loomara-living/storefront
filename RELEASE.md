@@ -2,6 +2,19 @@
 
 All release details are maintained in this single file, newest first. Historical notes describe the behaviour and policies at the time of each release.
 
+## v2.1.0 — Order safeguards, seven-day Processing policy and product controls
+
+- Move the standalone Paid order push to Shiprocket menu link into the Loomara Settings hub. Original protected URL, plugin registration, export toggle, jobs and saved intents remain unchanged; menu presentation only.
+
+- Product detail wishlist now sits beneath image expansion, with mobile-only share directly below it; removed their old summary/metadata placements. Existing save/share behaviour retained, gallery overlay uses 44px controls.
+- Read-only coupon code, recorded savings (including discount tax) and saved final order amount shown in WooCommerce admin and owner account order details. Historical amounts are never recalculated; no coupon is fabricated when no coupon item is stored.
+- Disabled-by-default seven-day paid Processing cancellation policy with administrator activation/stop control in Loomara Settings. Records future Processing entry time, uses the later of paid/Processing time; legacy records without the latter conservatively use last modification. Hourly bounded 50-record batches include historical eligible orders once enabled. Existing intents/review records are never reset. Paid owner-bound Razorpay orders only; known shipped/return/dispute/refunded/unsupported records blocked. Starts the existing locked carrier verification/cancellation flow, requires exact carrier cancellation confirmation, then the independent captured-payment/refundable-balance engine. No direct blind cancellation/refund or historical financial action during testing. Scheduling is traffic-dependent; seven days is an eligibility boundary, not an exact execution guarantee. Disabling stops new enrollment; preserve and reconcile all previously started cancellation/refund jobs, intents and locks.
+- New processing policy 28 fake-data checks (plus existing request112/refund64), coupon3, sharing17/JS19, menu20, history82, reminder49, failure87 and stock11 regressions pass (overlapping). Local gallery component at390px has expand/like/share in vertical order without overflow, desktop1280 hides share. Actual carrier/bank/inbox acceptance is not proven by mocks.
+
+- Protect native Payment attempted orders carrying the explicit Magic Checkout marker even when their payment-method field is blank. This matches next-day reminder eligibility and closes the observed gap on order 208. Blank unrelated gateways and genuine payment-failure/payment-success/explicit cancellation paths remain unchanged.
+- No historical order restoration or abandonment-reminder replay, stock-setting or numbering change. Existing stock holds expire independently; the guarded one-time next-day reminder remains unchanged.
+- Rollback: restore this release's changed theme files from v1.12.12, first disabling new seven-day enrollments in Loomara Settings. Do not delete/reset durable cancellation/refund intents, locks, mail markers or seven-day baseline metadata; already submitted carrier/financial requests need reconciliation, not replay. Financial consequences cannot be undone by code rollback.
+
 ## v1.12.12 — Sharing fallback link separator
 
 - Live native WordPress esc_url sanitisation strips encoded newlines from non-mailto links. Use a plain space between public product text and its URL in WhatsApp/SMS/email fallbacks so the canonical link remains clearly separated. Native Web Share title/price/image/link payload and mobile-only icon unchanged.

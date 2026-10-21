@@ -42,7 +42,7 @@
       const button=count.closest('.wishlist-button');if(!button)return;
       const n=Number(count.textContent)||0;
       const text=`${n} customers likes this product`;
-      const home=document.body.classList.contains('home'),detail=document.body.classList.contains('single-product')&&!!button.closest('.summary');
+      const home=document.body.classList.contains('home'),detail=document.body.classList.contains('single-product')&&!!button.closest('.summary,.loomara-gallery-actions');
       button.removeAttribute('title');if(count.textContent!==String(n))count.textContent=String(n);count.setAttribute('aria-label',text);
       let tip=button.querySelector('.wishlist-hover-tip,.wishlist-detail-count');
       if(!tip){tip=document.createElement('span');tip.className='wishlist-hover-tip';button.append(tip);}

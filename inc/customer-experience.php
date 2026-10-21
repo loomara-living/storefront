@@ -73,7 +73,13 @@ function loomara_wishlist_button() {
     echo '<button class="wishlist-button" type="submit" aria-label="' . esc_attr(($saved ? 'Remove from wishlist: ' : 'Save to wishlist: ') . $product->get_name()) . '"><span data-wishlist-heart aria-hidden="true">' . ($saved ? '♥' : '♡') . '</span><span class="wishlist-total" data-wishlist-count="'.absint($product->get_id()).'">'.absint(loomara_wishlist_total($product->get_id())).'</span><span class="wishlist-word"> ' . ($saved ? 'Saved · remove' : 'Save to wishlist') . '</span></button></form>';
 }
 add_action('woocommerce_after_shop_loop_item', 'loomara_wishlist_button', 20);
-add_action('woocommerce_single_product_summary', 'loomara_wishlist_button', 35);
+// Product-detail controls live beside the image, not beneath product metadata.
+add_action('woocommerce_product_thumbnails',function(){
+    echo '<div class="loomara-gallery-actions" aria-label="Product actions">';
+    loomara_wishlist_button();
+    if(function_exists('loomara_product_share')){loomara_product_share();}
+    echo '</div>';
+},30);
 
 add_action('admin_post_loomara_wishlist', function () {
     if (!is_user_logged_in()) {

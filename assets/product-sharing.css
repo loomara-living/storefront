@@ -1,5 +1,13 @@
 .loomara-product-share{display:none}
+.woocommerce div.product div.images{position:relative}
+.woocommerce div.product div.images .woocommerce-product-gallery__trigger{top:12px;right:20px;width:44px;height:44px}
+.loomara-gallery-actions{position:absolute;top:66px;right:20px;z-index:5;display:flex;flex-direction:column;align-items:center;gap:8px}
+.loomara-gallery-actions .wishlist-form{margin:0!important}
+.loomara-gallery-actions .wishlist-button{position:relative!important;display:flex!important;align-items:center!important;justify-content:center;width:44px!important;height:44px!important;padding:8px!important;border:1px solid #e1d2b8;border-radius:50%;background:#fffaf3;color:#102c4c}
+.loomara-gallery-actions .wishlist-word,.loomara-gallery-actions .wishlist-total{display:none!important}
+.loomara-gallery-actions .wishlist-detail-count{position:absolute;right:52px;top:0;width:150px;margin:0;padding:6px 8px;background:#fffaf3;border-radius:6px;font-size:.7rem;line-height:1.4;text-align:right}
 @media(max-width:767px){
+ .loomara-gallery-actions .loomara-product-share{margin:0}
  .loomara-product-share{display:flex;justify-content:flex-end;position:relative;margin:10px 0 16px;color:#102c4c}
  .loomara-product-share .loomara-share-icon{display:inline-flex;align-items:center;justify-content:center;width:44px;height:44px;padding:10px;border:1px solid #e1d2b8;border-radius:50%;background:transparent;color:#102c4c;cursor:pointer;list-style:none;box-shadow:none}
  .loomara-product-share [hidden]{display:none!important}.loomara-share-icon::-webkit-details-marker{display:none}.loomara-share-icon svg{flex:none}

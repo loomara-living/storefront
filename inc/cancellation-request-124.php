@@ -37,9 +37,13 @@ function loomara_cr_request($order) {
         $order->get_payment_method()!=='razorpay' || !$order->get_date_paid() ||
         !preg_match('/^pay_[A-Za-z0-9]+$/D',(string)$order->get_transaction_id()) ||
         (float)$order->get_total_refunded()>0 || count($order->get_refunds())) { return false; }
+    return loomara_cr_create($order,'customer');
+}
+/** Internal creator: callers validate eligibility and hold the per-order lock. */
+function loomara_cr_create($order,$source='customer') {
     $id=$order->get_id();
     $job=['stage'=>'requested','created'=>time(),'next_check'=>time()+10,'deadline'=>time()+2700,'retry_until'=>time()+86400,'attempts'=>0,
-        'owner'=>(int)$order->get_customer_id(),'payment'=>(string)$order->get_transaction_id(),
+        'source'=>$source,'owner'=>(int)$order->get_customer_id(),'payment'=>(string)$order->get_transaction_id(),
         'currency'=>$order->get_currency(),'total'=>(string)$order->get_total()];
     if (!add_option(loomara_cr_key($id),$job,'','no')) { return false; }
     loomara_cr_schedule($id,10);
@@ -47,7 +51,7 @@ function loomara_cr_request($order) {
     if (!wp_next_scheduled('loomara_cancel_request_mail_124',[$id])) { wp_schedule_single_event(time()+1,'loomara_cancel_request_mail_124',[$id]); }
     try {
         $order->update_meta_data('_loomara_cancellation_requested_124',$job['created']);$order->save();
-        $order->add_order_note('Customer requested cancellation. DO NOT PACK OR DISPATCH while checks are pending. First shipping verification is scheduled after 10 seconds; actual execution depends on the background scheduler. Native status stays unchanged until exact Shiprocket cancellation confirmation. If the record is unavailable, automatic checks retry every 3 minutes initially, then every 15 minutes after 45 minutes, for up to 24 hours. Refund eligibility is independently verified after cancellation. No cancellation or refund confirmed yet.');
+        $order->add_order_note(($source==='processing-age'?'Seven-day Processing policy requested cancellation.':'Customer requested cancellation.').' DO NOT PACK OR DISPATCH while checks are pending. First shipping verification is scheduled after 10 seconds; actual execution depends on the background scheduler. Native status stays unchanged until exact Shiprocket cancellation confirmation. If the record is unavailable, automatic checks retry every 3 minutes initially, then every 15 minutes after 45 minutes, for up to 24 hours. Refund eligibility is independently verified after cancellation. No cancellation or refund confirmed yet.');
     } catch (Throwable $e) {
         $job['stage']='review';$job['reason']='Order request metadata/note could not be saved; inspect before fulfilment.';loomara_cr_save($id,$job);
     }
@@ -60,6 +64,7 @@ function loomara_cr_review($order,$job,$reason) {
     $order->add_order_note('Cancellation request requires manual review: '.$reason.' Do not dispatch without resolving this request. No automatic refund submitted by the request checker.');
 }
 function loomara_cr_identity($order,$job) {
+    if(($job['source']??'')==='processing-age' && (!function_exists('loomara_processing_age_eligible') || !loomara_processing_age_eligible($order))){return false;}
     return $order instanceof WC_Order && (int)$order->get_customer_id()===(int)$job['owner'] &&
         $order->get_payment_method()==='razorpay' && $order->get_transaction_id()===$job['payment'] &&
         $order->get_currency()===$job['currency'] && (string)$order->get_total()===$job['total'] &&
@@ -102,7 +107,7 @@ function loomara_cr_worker($id) {
             $job['stage']='confirmed';$job['shiprocket_order_id']=$sr['shiprocket_order_id'];loomara_cr_save($id,$job);
             $saved=get_option(loomara_cr_key($id));
             if (!is_array($saved) || ($saved['stage']??'')!=='confirmed' || ($saved['shiprocket_order_id']??0)!==$job['shiprocket_order_id']) { throw new RuntimeException('Confirmation persistence failed'); }
-            $order->update_status('cancelled','Customer cancellation confirmed against exact current Shiprocket order and all shipments. Refund eligibility will be independently verified; no refund confirmed yet.');
+            $order->update_status('cancelled',(($job['source']??'')==='processing-age'?'Seven-day Processing policy cancellation':'Customer cancellation').' confirmed against exact current Shiprocket order and all shipments. Refund eligibility will be independently verified; no refund confirmed yet.');
             return;
         }
         if ($state==='waiting' || $job['stage']==='shipping_wait') { loomara_cr_wait($order,$job);return; }
@@ -143,6 +148,10 @@ function loomara_cr_send_mail($id,$audience) {
         $body='<h2>Cancellation requested — do not pack or dispatch</h2><p>Order: <strong>'.esc_html($order->get_order_number()).'</strong><br>Customer: '.esc_html($name).'<br>Requested: '.esc_html(wp_date('d M Y, h:i a T',(int)$job['created'],new DateTimeZone('Asia/Kolkata'))).'</p><p>The customer requested cancellation. Shipping checks are in progress or require review. Cancellation and refund are not confirmed by this email. Check the current order before taking any fulfilment action.</p><p><a href="'.esc_url($order->get_edit_order_url()).'">Open order in WooCommerce</a></p>';
         if ($customer) {
             $body='<p>Hi '.esc_html($order->get_billing_first_name()).',</p><p>We have received your cancellation request for order <strong>'.esc_html($order->get_order_number()).'</strong>.</p><p>'.esc_html(loomara_cr_message()).'</p><p>This email acknowledges your request, not final cancellation or a completed refund. Please view your order for the latest status.</p><p><a href="'.esc_url($order->get_view_order_url()).'">View your order</a> · <a href="'.esc_url(home_url('/contact/')).'">Contact Loomara Living</a></p>';
+        }
+        if(($job['source']??'')==='processing-age'){
+            $body='<h2>Processing delay — cancellation checks started</h2><p>Order <strong>'.esc_html($order->get_order_number()).'</strong> has remained in Processing for more than seven days. Loomara Living has started shipping verification for cancellation and refund eligibility. Cancellation and refund are not yet confirmed. Please check your order for updates.</p><p><a href="'.esc_url($customer?$order->get_view_order_url():$order->get_edit_order_url()).'">View order</a></p>';
+            if(!$customer){$body.='<p><strong>Do not pack or dispatch while cancellation checks are pending.</strong></p>';}
         }
         $ok=wc_mail(implode(',',$list),'['.wp_specialchars_decode(get_bloginfo('name'),ENT_QUOTES).'] Cancellation requested — '.$order->get_order_number(),$mailer->wrap_message('Cancellation requested',$body),['Content-Type: text/html; charset=UTF-8']);
         update_option($key,$ok?'accepted':'failed',false);

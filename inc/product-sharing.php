@@ -25,10 +25,10 @@ function loomara_product_share(){
     $text=$data['text'].' '.$data['url'];$icon=loomara_product_share_icon();
     echo '<div class="loomara-product-share" data-product-share="'.esc_attr(wp_json_encode($data)).'"><button type="button" class="loomara-share-icon" data-native-product-share hidden aria-label="Share product" title="Share product">'.$icon.'</button><details class="loomara-share-fallback"><summary class="loomara-share-icon" aria-label="Share product" title="Share product">'.$icon.'</summary><nav aria-label="Share product options"><a href="'.esc_url('https://wa.me/?text='.rawurlencode($text)).'" target="_blank" rel="noopener noreferrer">WhatsApp</a><a href="'.esc_url('mailto:?subject='.rawurlencode($data['title']).'&body='.rawurlencode($text)).'">Email</a><a href="'.esc_url('sms:?body='.rawurlencode($text)).'">Message / SMS</a></nav></details><p class="loomara-share-status" role="status" hidden></p></div>';
 }
-add_action('woocommerce_single_product_summary','loomara_product_share',34);
+// Rendered by the shared gallery controls below wishlist; no second summary copy.
 add_action('wp_enqueue_scripts',function(){
     if(function_exists('is_product')&&is_product()){
-        wp_enqueue_style('loomara-product-sharing',get_template_directory_uri().'/assets/product-sharing.css',[],'2');
+        wp_enqueue_style('loomara-product-sharing',get_template_directory_uri().'/assets/product-sharing.css',[],'3');
         wp_enqueue_script('loomara-product-sharing',get_template_directory_uri().'/assets/product-sharing.js',[],'2',true);
     }
 });

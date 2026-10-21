@@ -8,7 +8,11 @@ defined('ABSPATH') || exit;
 // This filter does not intercept explicit cancellations, payment completion or
 // the separate signed, gateway-verified payment.failed workflow.
 add_filter('woocommerce_cancel_unpaid_order',function($cancel,$o){
-    if($o instanceof WC_Order && $o->get_payment_method()==='razorpay' &&
+    // Magic Checkout can leave the method blank until payment completes. Use
+    // its explicit marker, just as the next-day reminder does; never infer a
+    // gateway from a blank method alone.
+    if($o instanceof WC_Order && ($o->get_payment_method()==='razorpay' ||
+        ($o->get_payment_method()==='' && $o->get_meta('is_magic_checkout_order')==='yes')) &&
         ($o->get_status()==='pending' || $o->get_meta('_loomara_pending_started_114'))){return false;}
     return $cancel;
 },100,2);

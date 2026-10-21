@@ -58,7 +58,7 @@ function loomara_rt_identity($o){
     return hash('sha256',wp_json_encode([(int)$o->get_customer_id(),$o->get_payment_method(),$o->get_transaction_id(),$o->get_currency(),(string)$o->get_total(),$items,$address]));
 }
 function loomara_rt_schedule($id,$seq,$delay=900){if(!wp_next_scheduled('loomara_return_check',[$id,$seq])){wp_schedule_single_event(time()+max(1,$delay),'loomara_return_check',[$id,$seq]);}}
-function loomara_rt_request($o,$uid,$selection,$reason){
+function loomara_rt_request($o,$uid,$selection,$reason,$reason_code='other'){
     if(!$o instanceof WC_Order){return new WP_Error('order','Order unavailable.');}
     $id=$o->get_id();$lock='loomara_return_lock_'.$id;$delivery='loomara_delivery_complete_lock_111_'.$id;
     if(!add_option($lock,time(),'','no')){return new WP_Error('busy','A return is already being updated. Try again shortly.');}
@@ -76,8 +76,10 @@ function loomara_rt_request($o,$uid,$selection,$reason){
         // eligibility and the immutable order snapshot before recording a request.
         $o=wc_get_order($id);if(!loomara_rt_can_request($o,$uid)){return new WP_Error('window','Order eligibility changed during verification.');}
         $book=loomara_rt_book($id);$plan=loomara_rt_plan($o,$selection,$book);if(is_wp_error($plan)){return $plan;}
+        $policy=loomara_rt_policy($o,$selection,$reason_code);if(is_wp_error($policy)){return $policy;}
         $seq=(int)($book['sequence']??0)+1;
         $r=['seq'=>$seq,'reference'=>'LM-RET-'.$id.'-'.$seq,'created'=>time(),'stage'=>'requested','owner'=>$uid,'identity'=>loomara_rt_identity($o),'selection'=>array_map('intval',$selection),'plan'=>$plan,'baseline_refunded'=>loomara_rt_minor($o->get_total_refunded()),'reason'=>$reason,'delivery_at'=>$delivery_proof['at'],'forward'=>$delivery_proof['forward'],'attempts'=>0];
+        $r['reason_code']=$reason_code;$r['policy_review']=$policy['review'];
         $book['sequence']=$seq;$book['requests'][$seq]=$r;loomara_rt_save($id,$book);
         if((loomara_rt_book($id)['requests'][$seq]??null)!==$r){return new WP_Error('persistence','Return request could not be safely saved. Contact us.');}
         $o->update_status('return-init','Customer return request '.$r['reference'].' accepted within the seven-day window. Selected items reserved for return; no pickup or refund confirmed.');
@@ -113,6 +115,7 @@ add_action('woocommerce_before_order_object_save',function($o){
     }
 },100);
 function loomara_rt_status($stage){return ['requested'=>'return-init','booking_intent'=>'return-init','booking_uncertain'=>'return-review','pickup'=>'return-pickup','collected'=>'return-transit','received'=>'return-received','approved'=>'return-complete','refund_intent'=>'refund-initiated','refund_pending'=>'refund-initiated','review'=>'return-review','inspection_rejected'=>'return-rejected'][$stage]??'return-review';}
+require_once __DIR__.'/returns-recovery.php';
 require_once __DIR__.'/returns-shiprocket.php';
 require_once __DIR__.'/returns-refunds.php';
 require_once __DIR__.'/returns-ui.php';

@@ -84,9 +84,12 @@ function loomara_ar_review($order,$job,$message) {
 function loomara_ar_wait($order,$job,$stage) {
     $job['stage']=$stage;
     if (($job['attempts']??0)>=($stage==='refund_pending'?180:24)) { loomara_ar_review($order,$job,'Verification did not reach a confirmed result.'); return; }
-    loomara_ar_save($order->get_id(),$job);loomara_ar_schedule($order->get_id(),$stage==='refund_pending'?3600:60);
+    loomara_ar_save($order->get_id(),$job);
+    if(in_array($stage,['refund_uncertain','refund_pending'],true)&&$order->get_status()==='cancelled'){$order->update_status('refund-initiated','Cancellation refund submitted; awaiting verified Razorpay processing. Bank credit is not confirmed.');}
+    loomara_ar_schedule($order->get_id(),$stage==='refund_pending'?3600:60);
 }
 function loomara_ar_reconcile($order,$job) {
+    if($order->get_payment_method()!=='razorpay'||$order->get_transaction_id()!==($job['payment']??'')||$order->get_currency()!=='INR'||!in_array($order->get_status(),['cancelled','refund-initiated','refunded'],true)) { loomara_ar_review($order,$job,'Order payment identity or status changed during refund reconciliation.');return; }
     $list=loomara_ar_rzp_request('GET','payments/'.$job['payment'].'/refunds?count=100');
     if (is_wp_error($list)||!is_array($list['items']??null)||count($list['items'])>=100) { loomara_ar_wait($order,$job,'refund_uncertain');return; }
     $found=array_values(array_filter($list['items'],function($r)use($job){return ($r['receipt']??'')===$job['receipt'];}));
@@ -108,6 +111,9 @@ function loomara_ar_reconcile($order,$job) {
         if(is_wp_error($refund)){loomara_ar_review($order,$job,'Gateway refund processed; WooCommerce ledger needs reconciliation. Do not refund again.');return;}
         $refund->update_meta_data('_loomara_razorpay_refund_id',$r['id']);$refund->save();
     }
+    $order=wc_get_order($order->get_id());
+    if((int)round((float)$order->get_total_refunded()*100)!==(int)$job['before_refunded']+(int)$job['amount'] || (int)round((float)$order->get_total_refunded()*100)!==(int)round((float)$order->get_total()*100)){loomara_ar_review($order,$job,'Processed refund recorded, but the final refund total requires review. No second gateway refund.');return;}
+    if($order->get_status()!=='refunded'){$order->update_status('refunded','Cancellation refund confirmed processed by Razorpay: '.$r['id'].'. Bank posting times may vary.');}
     $job['stage']='complete';$job['message']='Refund processed by Razorpay; bank posting time may vary.';loomara_ar_save($order->get_id(),$job);
     $order->add_order_note('Automatic cancellation refund processed: '.$r['id'].'. Original payment method; no second gateway refund issued by the WooCommerce ledger.');
 }
@@ -159,6 +165,9 @@ function loomara_ar_worker($id) {
         $saved=get_option(loomara_ar_key($id));
         if (!is_array($saved)||($saved['stage']??'')!=='refund_submitting'||($saved['body']??null)!==$job['body']) { throw new RuntimeException('Durable refund intent could not be verified.'); }
         // Once submitted, all subsequent work is GET-only reconciliation, even after timeout/crash.
+        // Shared status is registered by returns.php; no refund ledger or bank
+        // success is claimed until a later exact processed response is verified.
+        $order->update_status('refund-initiated','Cancellation refund request initiated; awaiting Razorpay confirmation. Bank credit is not confirmed.');
         loomara_ar_rzp_request('POST','payments/'.$payment.'/refund',$job['body'],$job['receipt']);
         loomara_ar_wait($order,$job,'refund_uncertain');
     } catch(Throwable $e) { loomara_ar_review($order,$job,'Unexpected processing error; review required before any further action.'); }
@@ -185,7 +194,8 @@ function loomara_ar_order_message($order){
     if (($job['stage']??'')==='complete' && function_exists('loomara_customer_refund_message') && loomara_customer_refund_message($order)) { return; }
     // Shared compact Refund details control appears on cards and View order.
     if(function_exists('loomara_customer_cancelled_refund_message') && loomara_customer_cancelled_refund_message($order)){return;}
-    $stage=$job['stage']??'';$message=$stage==='complete'?'Refund processed by Razorpay. Bank posting time may vary.':($stage==='review'?'Your cancellation refund needs manual review. Please contact us.':($stage==='skipped'?'No additional automatic refund is due.':'Your cancellation refund is being verified. It is not confirmed until payment and shipment checks pass.'));
+    $stage=$job['stage']??'';$submitted=in_array($stage,['refund_submitting','refund_uncertain','refund_pending'],true);
+    $message=$stage==='complete'?'Refund processed by Razorpay. Bank posting time may vary.':($stage==='review'?'Your cancellation refund needs manual review. Please contact us.':($stage==='skipped'?'No additional automatic refund is due.':($submitted?'Your cancellation refund has been initiated and is awaiting Razorpay processing confirmation. Bank credit is not confirmed yet.':'Your cancellation refund is being verified. It is not confirmed until payment and shipment checks pass.')));
     echo '<p class="woocommerce-info">'.esc_html($message).'</p>';
 }
 add_action('woocommerce_order_details_after_order_table','loomara_ar_order_message');

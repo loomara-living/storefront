@@ -24,6 +24,8 @@ function loomara_render_variant_gallery() {
     if (!$images) { woocommerce_show_product_images(); return; }
     $image = $images[0];
     echo '<div class="images loomara-variant-gallery" data-variant-gallery data-initial-gallery="' . esc_attr(wp_json_encode($images)) . '">';
+    echo '<a class="loomara-variant-expand" data-variant-expand href="' . esc_url($image['full']) . '" target="_blank" rel="noopener" aria-label="Expand product image" title="Expand product image"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M9 3H3v6m12-6h6v6M3 15v6h6m12-6v6h-6M3 3l6 6m12-6-6 6M3 21l6-6m12 6-6-6"/></svg></a>';
+    if (function_exists('loomara_product_gallery_actions')) { loomara_product_gallery_actions(); }
     echo '<a class="variant-main-link" data-variant-main-link href="' . esc_url($image['full']) . '" target="_blank" rel="noopener" aria-label="Open selected product image at full size"><img data-variant-main src="' . esc_url($image['src']) . '" alt="' . esc_attr($image['alt'] ?: $product->get_name()) . '" width="' . absint($image['width']) . '" height="' . absint($image['height']) . '"></a>';
     echo '<div class="variant-thumbnails" data-variant-thumbnails aria-label="Product photographs">';
     foreach ($images as $index => $item) {
@@ -40,6 +42,6 @@ add_action('wp', function () {
 });
 add_action('wp_enqueue_scripts', function () {
     if (function_exists('is_product') && is_product()) {
-        wp_enqueue_script('loomara-variants', get_template_directory_uri() . '/assets/variants.js', ['jquery', 'wc-add-to-cart-variation'], '1.7.2', true);
+        wp_enqueue_script('loomara-variants', get_template_directory_uri() . '/assets/variants.js', ['jquery', 'wc-add-to-cart-variation'], '1.7.3', true);
     }
 });

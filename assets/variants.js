@@ -28,6 +28,8 @@ jQuery(function ($) {
     main.width = image.width;
     main.height = image.height;
     link.href = image.full;
+    const expand = gallery.querySelector('[data-variant-expand]');
+    if (expand) expand.href = image.full;
     caption.textContent = image.caption || '';
     thumbnails.querySelectorAll('button').forEach((button, i) => button.setAttribute('aria-pressed', String(i === index)));
   }

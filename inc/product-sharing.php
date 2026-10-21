@@ -1,6 +1,14 @@
 <?php
 /** Mobile public-product sharing; customers choose the app/recipient and send. */
 defined('ABSPATH') || exit;
+// Custom colour galleries do not execute WooCommerce's thumbnail hook.
+// Native galleries keep their existing hook; this helper is custom-gallery only.
+function loomara_product_gallery_actions(){
+    echo '<div class="loomara-gallery-actions" aria-label="Product actions">';
+    if(function_exists('loomara_wishlist_button')){loomara_wishlist_button();}
+    loomara_product_share();
+    echo '</div>';
+}
 function loomara_product_share_data($product){
     if(!$product instanceof WC_Product || $product->get_status()!=='publish'){return [];}
     $url=get_permalink($product->get_id());
@@ -28,7 +36,7 @@ function loomara_product_share(){
 // Rendered by the shared gallery controls below wishlist; no second summary copy.
 add_action('wp_enqueue_scripts',function(){
     if(function_exists('is_product')&&is_product()){
-        wp_enqueue_style('loomara-product-sharing',get_template_directory_uri().'/assets/product-sharing.css',[],'4');
+        wp_enqueue_style('loomara-product-sharing',get_template_directory_uri().'/assets/product-sharing.css',[],'5');
         wp_enqueue_script('loomara-product-sharing',get_template_directory_uri().'/assets/product-sharing.js',[],'2',true);
     }
 });

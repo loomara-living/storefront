@@ -70,6 +70,7 @@ function loomara_rt_prepare($o,$r,$parcel){
     $forward=loomara_sr_order_preflight($o);if(is_wp_error($forward)||(string)($forward['order_status_code']??'')!=='7'||empty($forward['shipments'])){return new WP_Error('forward','Exact delivered forward shipment must be verified before a reverse pickup.');}
     foreach($forward['shipments'] as $s){if((string)($s['status_code']??'')!=='7' && (string)($s['status']??'')!=='7'){return new WP_Error('forward','Every forward shipment must be delivered.');}}
     if((int)$forward['shiprocket_order_id']!==(int)$r['forward']['order_id']){return new WP_Error('identity','Original forward shipment changed.');}
+    $policy=loomara_rt_policy($o,$r['selection'],$r['reason_code']??'other');if(is_wp_error($policy)){return $policy;}
     $token=loomara_sr_read_token();if(is_wp_error($token)){return $token;}$home=loomara_rt_home($token);if(is_wp_error($home)){return $home;}
     $payload=loomara_rt_payload($o,$r,$home,$parcel);if(is_wp_error($payload)){return $payload;}
     $match=loomara_rt_reverse_match($r,$token);if(is_wp_error($match)){return $match;}if($match){return new WP_Error('duplicate','A reverse order already exists. Reconcile it; do not book again.');}
@@ -82,17 +83,21 @@ function loomara_rt_prepare($o,$r,$parcel){
     if(!$quotes){return new WP_Error('quote','No reliable reverse-serviceability quote. Team review required.');}
     return ['at'=>time(),'parcel'=>array_map('floatval',$parcel),'payload_hash'=>hash('sha256',wp_json_encode($payload)),'quotes'=>$quotes];
 }
-function loomara_rt_booking($o,$seq,$courier,$automatic=false){
+function loomara_rt_booking($o,$seq,$courier,$automatic=false,$eligibility_note=''){
     $id=$o->get_id();$book=loomara_rt_book($id);$r=$book['requests'][$seq]??[];$quote=$r['quote']??[];
     if(!loomara_rt_enabled()||($r['stage']??'')!=='requested'||time()-(int)($quote['at']??0)>600||!isset($quote['quotes'][$courier])){return new WP_Error('quote','Prepare a fresh quote before approving pickup.');}
     $fresh=loomara_rt_prepare($o,$r,$quote['parcel']);if(is_wp_error($fresh)){return $fresh;}
     if($fresh['payload_hash']!==$quote['payload_hash']||!isset($fresh['quotes'][$courier])||$fresh['quotes'][$courier]['rate']>$quote['quotes'][$courier]['rate']){return new WP_Error('quote','Pickup details or estimated charges changed. Prepare and approve a new quote.');}
     if($automatic && !loomara_rt_auto_quote_eligible($fresh['quotes'][$courier]['rate'])){return new WP_Error('cap','Automatic pickup requires a quote strictly below ₹100.');}
+    $policy=loomara_rt_policy($o,$r['selection'],$r['reason_code']??'other');if(is_wp_error($policy)){return $policy;}
+    $eligibility_note=sanitize_textarea_field($eligibility_note);
+    if($policy['review']&&($automatic||strlen($eligibility_note)<5||strlen($eligibility_note)>1500)){return new WP_Error('policy','Team eligibility approval with a clear note is required before pickup.');}
     $token=loomara_sr_read_token();if(is_wp_error($token)){return $token;}$home=loomara_rt_home($token);if(is_wp_error($home)){return $home;}$payload=loomara_rt_payload($o,$r,$home,$quote['parcel']);if(is_wp_error($payload)){return $payload;}
     if(hash('sha256',wp_json_encode($payload))!==$quote['payload_hash']){return new WP_Error('identity','Pickup details changed before booking.');}
     $o=wc_get_order($id);
     if(!$o||$o->get_status()!=='return-init'||loomara_rt_identity($o)!==$r['identity']||loomara_rt_minor($o->get_total_refunded())!==(int)$r['baseline_refunded']||$o->get_meta('_loomara_return_hold_111')==='yes'||!loomara_rt_enabled()){return new WP_Error('identity','Return changed immediately before booking intent.');}
     $r['stage']='booking_intent';$r['booking_at']=time();$r['approved_by']=$automatic?0:get_current_user_id();$r['approval_source']=$automatic?'quote-below-100':'staff';$r['courier']=$courier;$r['quote_rate']=$fresh['quotes'][$courier]['rate'];$r['parcel']=$quote['parcel'];
+    if($policy['review']){$r['eligibility_approval']=['by'=>get_current_user_id(),'at'=>time(),'note'=>$eligibility_note];}
     unset($r['quote']);$book['requests'][$seq]=$r;loomara_rt_save($id,$book);
     if((loomara_rt_book($id)['requests'][$seq]??null)!==$r){return new WP_Error('intent','Booking intent could not be saved.');}
     loomara_rt_schedule($id,$seq,60);
@@ -130,15 +135,23 @@ function loomara_rt_shipping_worker($id,$seq){
     try{
         $o=wc_get_order($id);$book=loomara_rt_book($id);$r=$book['requests'][$seq]??[];
         if(!$o||!in_array($r['stage']??'',['booking_intent','booking_uncertain','pickup','collected'],true)){return;}
-        if(!isset(loomara_rt_labels()[$o->get_status()])){$r['stage']='review';$r['message']='Order status changed outside the return flow. Reconcile before continuing.';$book['requests'][$seq]=$r;loomara_rt_save($id,$book);$o->add_order_note($r['message']);return;}
+        if((int)($r['next_check']??0)>time()){return;}
+        if(!isset(loomara_rt_labels()[$o->get_status()])){loomara_rt_review($o,$book,$seq,'Order status changed outside the return flow. Reconcile before continuing.');return;}
         if(loomara_rt_identity($o)!==$r['identity']||time()-(int)$r['created']>30*DAY_IN_SECONDS){$r['stage']='review';$r['message']='Return identity changed or tracking exceeded thirty days.';}
         else{
             $token=loomara_sr_read_token();$d=is_wp_error($token)?$token:loomara_rt_reverse_match($r,$token);
-            if(is_wp_error($d)||!$d){$r['attempts']=(int)$r['attempts']+1;if($r['attempts']<96){$book['requests'][$seq]=$r;loomara_rt_save($id,$book);loomara_rt_schedule($id,$seq);return;}$r['stage']='review';$r['message']='Exact reverse record could not be reconciled. Do not create another booking.';}
+            if(is_wp_error($d)||!$d){
+                if(!$d||loomara_rt_temporary($d)){loomara_rt_retry($o,$book,$seq,'shipping','Exact reverse record temporarily unavailable; existing booking is not repeated.');return;}
+                loomara_rt_review($o,$book,$seq,$d->get_error_message());return;
+            }
             else{
                 if(isset($r['shipping']['shiprocket_id'])&&(int)$r['shipping']['shiprocket_id']!==(int)$d['id']){$s=new WP_Error('identity','Reverse identity changed.');}else{$s=loomara_rt_ship_state($d,$r,$token);}
-                if(is_wp_error($s)){$r['stage']='review';$r['message']=$s->get_error_message();}
+                if(is_wp_error($s)){
+                    if(loomara_rt_temporary($s)){loomara_rt_retry($o,$book,$seq,'shipping',$s->get_error_message());return;}
+                    loomara_rt_review($o,$book,$seq,$s->get_error_message());return;
+                }
                 else{$old=$r['stage'];$r['shipping']=$s;$r['stage']=$s['stage'];if($r['stage']==='received'){$r['received_at']=time();}
+                    $r['last_check']=time();unset($r['next_check'],$r['shipping_retry']);
                     if($old==='collected'&&in_array($r['stage'],['pickup','booking_uncertain'],true)){$r['stage']='collected';}
                     $book['requests'][$seq]=$r;loomara_rt_save($id,$book);$o->update_status(loomara_rt_status($r['stage']),'Verified reverse shipment update for '.$r['reference'].'.');
                     if($old!==$r['stage']){loomara_rt_notify($o,$r,loomara_rt_labels()[loomara_rt_status($r['stage'])],'Return status updated. View your order for reverse tracking and next steps. Receipt is not approval of a refund.');}
@@ -146,9 +159,9 @@ function loomara_rt_shipping_worker($id,$seq){
                 }
             }
         }
-        $book['requests'][$seq]=$r;loomara_rt_save($id,$book);$o->update_status('return-review',$r['message']);
+        $book['requests'][$seq]=$r;loomara_rt_review($o,$book,$seq,$r['message']);
     }catch(Throwable $e){
-        $saved=loomara_rt_book($id);if(isset($saved['requests'][$seq])){$saved['requests'][$seq]['stage']='review';$saved['requests'][$seq]['message']='Reverse tracking requires review after an unexpected response; never rebook blindly.';loomara_rt_save($id,$saved);}
+        $saved=loomara_rt_book($id);if(isset($o,$saved['requests'][$seq])&&$o){loomara_rt_review($o,$saved,$seq,'Reverse tracking needs review after an unexpected response; never rebook blindly.');}
     }finally{delete_option($lock);}
 }
 add_action('loomara_return_check','loomara_rt_shipping_worker',10,2);
@@ -166,14 +179,25 @@ function loomara_rt_auto_quote_worker($id,$seq){
     try{
         $o=wc_get_order($id);$book=loomara_rt_book($id);$r=$book['requests'][$seq]??[];
         if(!$o||($r['stage']??'')!=='requested'||isset($r['auto_quote_checked_at'])){return;}
+        if((int)($r['next_check']??0)>time()){return;}
+        $policy=loomara_rt_policy($o,$r['selection'],$r['reason_code']??'other');
+        if(is_wp_error($policy)||$policy['review']){
+            $r['auto_quote_checked_at']=time();$r['policy_review']=true;$r['message']='Team eligibility and pickup approval required. No automatic booking.';$book['requests'][$seq]=$r;loomara_rt_save($id,$book);
+            loomara_rt_notify($o,$r,'Return pickup needs approval','Your return request remains recorded. Our team will review eligibility and arrange an approved pickup. No extra payment or repeat request is needed.');return;
+        }
         $parcel=loomara_rt_saved_parcel($o,$r);$quote=is_wp_error($parcel)?$parcel:loomara_rt_prepare($o,$r,$parcel);
         $r['auto_quote_checked_at']=time();
-        if(is_wp_error($quote)){$r['message']='Automatic quote unavailable; team pickup review required.';$book['requests'][$seq]=$r;loomara_rt_save($id,$book);return;}
+        if(is_wp_error($quote)){
+            if(loomara_rt_temporary($quote)){loomara_rt_retry($o,$book,$seq,'quote','Automatic quote temporarily unavailable.');return;}
+            loomara_rt_review($o,$book,$seq,'Automatic quote unavailable: '.$quote->get_error_message(),'quote');return;
+        }
+        unset($r['next_check'],$r['quote_retry']);
         $r['quote']=$quote;$book['requests'][$seq]=$r;loomara_rt_save($id,$book);$choices=$quote['quotes'];uasort($choices,static function($a,$b){return $a['rate']<=>$b['rate'];});
-        foreach($choices as $q){if(loomara_rt_auto_quote_eligible($q['rate'])){$result=loomara_rt_booking($o,$seq,$q['id'],true);if(is_wp_error($result)){$saved=loomara_rt_book($id);$saved['requests'][$seq]['message']='Automatic pickup could not pass final checks. Team review required.';loomara_rt_save($id,$saved);}return;}}
+        foreach($choices as $q){if(loomara_rt_auto_quote_eligible($q['rate'])){$result=loomara_rt_booking($o,$seq,$q['id'],true);if(is_wp_error($result)){$saved=loomara_rt_book($id);if(empty($saved['requests'][$seq]['booking_at'])){loomara_rt_review($o,$saved,$seq,'Automatic pickup could not pass final checks. '.$result->get_error_message(),'quote');}}return;}}
         $r['message']='No quote below ₹100. Team approval required before pickup.';$book['requests'][$seq]=$r;loomara_rt_save($id,$book);
+        loomara_rt_notify($o,$r,'Return pickup needs approval','Your return request remains recorded. Our team will review the courier quote and arrange pickup. No extra payment or repeat request is needed.');
     }catch(Throwable $e){
-        $saved=loomara_rt_book($id);if(isset($saved['requests'][$seq])){$saved['requests'][$seq]['message']='Pickup checks need team review. Preserve any existing booking intent.';loomara_rt_save($id,$saved);if(in_array($saved['requests'][$seq]['stage'],['booking_intent','booking_uncertain'],true)){loomara_rt_schedule($id,$seq);}}
+        $saved=loomara_rt_book($id);if(isset($o,$saved['requests'][$seq])&&$o){loomara_rt_review($o,$saved,$seq,'Pickup checks need team review. Preserve any existing booking intent.','quote');}
     }finally{delete_option($lock);}
 }
 add_action('loomara_return_auto_quote','loomara_rt_auto_quote_worker',10,2);

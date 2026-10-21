@@ -2,6 +2,11 @@
 
 All release details are maintained in this single file, newest first. Historical notes describe the behaviour and policies at the time of each release.
 
+## v2.1.1 — White circular gallery controls
+
+- Wishlist and mobile share controls use solid white circular backgrounds like image expansion, with subtle hover feedback and visible keyboard focus. Existing 44px targets and mobile-only sharing remain unchanged. Sharing stylesheet cache version advances to4.
+- Local390px computed-style checks confirm white backgrounds, 50% radius and44px targets; PHP17/JavaScript19 sharing regressions pass. No order, payment, refund, job or setting changes. Rollback: restore the four changed files (style.css, RELEASE.md, inc/product-sharing.php and assets/product-sharing.css) from v2.1.0; no data rollback or job replay.
+
 ## v2.1.0 — Order safeguards, seven-day Processing policy and product controls
 
 - Move the standalone Paid order push to Shiprocket menu link into the Loomara Settings hub. Original protected URL, plugin registration, export toggle, jobs and saved intents remain unchanged; menu presentation only.

@@ -4,7 +4,7 @@ defined('ABSPATH') || exit;
 function loomara_admin_tool_slugs(){
     return ['loomara-inventory-release','loomara-catalogue-186','loomara-catalogue-190',
         'loomara-package-197','loomara-offers-113','loomara-pending-retirement-116',
-        'loomara-shiprocket','loomara-auto-refunds','loomara-payment-failures','loomara-order-push'];
+        'loomara-shiprocket','loomara-auto-refunds','loomara-payment-failures','loomara-order-push','loomara-returns'];
 }
 add_action('admin_menu',function(){
     add_submenu_page('woocommerce','Loomara Settings','Loomara Settings','manage_options','loomara-settings','loomara_admin_settings_page');
@@ -15,6 +15,7 @@ function loomara_admin_settings_page(){
     $tools=[
         ['Shiprocket connection','loomara-shiprocket','Manage the shipping connection and run read-only order matching checks.'],
         ['Paid order push to Shiprocket','loomara-order-push','Manage the existing paid-order exporter and review its recent export records.'],
+        ['Customer returns','loomara-returns','Review item-level return requests, approve reverse pickups and inspect received returns.'],
         ['Automatic refunds','loomara-auto-refunds','Review the automatic cancellation-refund setting and its verification safeguards.'],
         ['Payment failure sync','loomara-payment-failures','Review the dedicated Razorpay payment-failure webhook connection.'],
     ];

@@ -48,6 +48,7 @@ require_once get_template_directory() . '/inc/fulfilment-statuses-199.php';
 require_once get_template_directory() . '/inc/automatic-refunds-110.php';
 require_once get_template_directory() . '/inc/cancellation-request-124.php';
 require_once get_template_directory() . '/inc/processing-age-cancellation.php';
+require_once get_template_directory() . '/inc/returns.php';
 require_once get_template_directory() . '/inc/delivery-lifecycle-111.php';
 require_once get_template_directory() . '/inc/shipped-tracking-112.php';
 require_once get_template_directory() . '/inc/checkout-offers-113.php';

@@ -2,6 +2,13 @@
 
 All release details are maintained in this single file, newest first. Historical notes describe the behaviour and policies at the time of each release.
 
+## v2.2.3 — Transit stages and four shipment email milestones
+
+- Adds native in-transit and out-for-delivery stages, customer/admin filters, recorded-payment checks, owned tracking access and active-return forward-update protection. Both remain ineligible for customer cancellation.
+- Automatic shipment emails only at Pickup scheduled, Shipped, Out for delivery and Delivered. Adds native settings/HTML/plain-text templates and per-stage once-only mail markers for the two new emails, with bound-account recipient routing. No separate Out for pickup, Picked up or In transit notification. Existing cancellation/payment/refund notifications remain unchanged. Matching known automatic Shiprocket tracking-link customer-note emails are suppressed without deleting notes; unrelated team/customer notes remain enabled.
+- Shipped email read-only courier/AWB/tracking enrichment survives progression to In transit or Out for delivery without resending an already-notified shipment. No first-observed transit notification or historical email replay. Delivered/cancelled/refunded states suppress stale queued shipping mail.
+- Channel mapping: IN_TRANSIT to in-transit and Out for Delivery to out-for-delivery. No order214 change beyond the already-approved pickup correction. No historical stage email replay, provider booking, financial action or feature-activation change. Rollback follows v2.2.2's registered-status precautions; retain all email/job markers to avoid duplicate sends.
+
 ## v2.2.2 — Forward pickup status mapping
 
 - Registers native pickup-scheduled, out-for-pickup and picked-up stages for WooCommerce/admin/customer order filters, preserving recorded paid-date checks rather than inferring payment from shipping. All stored status keys fit WordPress limits.

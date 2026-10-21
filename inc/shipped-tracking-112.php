@@ -54,7 +54,7 @@ function loomara_tracking_worker_112($id) {
     if(!add_option($lock,time(),'','no')){return;}
     try {
         $order=wc_get_order($id);
-        if(!$order||$order->get_status()!=='shipped'||$order->get_meta('_loomara_delivered_at_111')){$job['stage']='skipped';update_option($key,$job,false);return;}
+        if(!$order||!in_array($order->get_status(),['shipped','in-transit','out-for-delivery'],true)||$order->get_meta('_loomara_delivered_at_111')){$job['stage']='skipped';update_option($key,$job,false);return;}
         $job['attempts']++;update_option($key,$job,false);
         $rows=loomara_tracking_fetch_112($order);$complete=(bool)$rows;
         foreach($rows as $row){if(!$row['url']||!$row['courier']){$complete=false;}}
@@ -64,7 +64,7 @@ function loomara_tracking_worker_112($id) {
         }
         // Reload status immediately before sending; cancelled/delivered orders must not get stale mail.
         $order=wc_get_order($id);
-        if(!$order||$order->get_status()!=='shipped'||$order->get_meta('_loomara_delivered_at_111')){$job['stage']='skipped';update_option($key,$job,false);return;}
+        if(!$order||!in_array($order->get_status(),['shipped','in-transit','out-for-delivery'],true)||$order->get_meta('_loomara_delivered_at_111')){$job['stage']='skipped';update_option($key,$job,false);return;}
         $emails=WC()->mailer()->get_emails();$email=$emails['Loomara_Email_Shipped']??null;
         if(!$email instanceof Loomara_Email_Shipped){$job['stage']='review';update_option($key,$job,false);return;}
         $email->trigger($id,$order,true);

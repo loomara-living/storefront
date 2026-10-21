@@ -11,7 +11,7 @@ function loomara_customer_payment_recipient($recipient,$order){
 }
 foreach(['customer_processing_order','customer_on_hold_order','customer_completed_order',
     'customer_refunded_order','customer_partially_refunded_order','customer_cancelled_order',
-    'loomara_customer_shipped','loomara_customer_delivered'] as $id){
+    'loomara_customer_shipped','loomara_customer_delivered','loomara_customer_pickup-scheduled','loomara_customer_out-for-delivery'] as $id){
     add_filter('woocommerce_email_recipient_'.$id,'loomara_customer_payment_recipient',100,2);
 }
 // Official Magic Checkout supports prefill.email. Never patch vendor JavaScript,

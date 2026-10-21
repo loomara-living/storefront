@@ -110,7 +110,7 @@ function loomara_rt_notify($o,$r,$title,$text){
 add_action('woocommerce_before_order_object_save',function($o){
     if(!$o instanceof WC_Order || !$o->get_id() || empty($o->get_changes()['status'])){return;}
     $book=loomara_rt_book($o->get_id());
-    if(loomara_rt_active($book)&&in_array($o->get_status(),['processing','ready-to-ship','shipped','delivered','completed'],true)){
+    if(loomara_rt_active($book)&&in_array($o->get_status(),['processing','ready-to-ship','pickup-scheduled','out-for-pickup','picked-up','shipped','delivered','completed'],true)){
         $r=end($book['requests']);$status=loomara_rt_status($r['stage']);$o->set_status($status);
     }
 },100);

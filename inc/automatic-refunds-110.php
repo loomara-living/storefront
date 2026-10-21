@@ -127,7 +127,7 @@ function loomara_ar_worker($id) {
     try {
         $job['attempts']=(int)($job['attempts']??0)+1;
         if(in_array($job['stage'],['refund_submitting','refund_uncertain','refund_pending'],true)){loomara_ar_reconcile($order,$job);return;}
-        if(!in_array($job['from']??'', ['pending','on-hold','processing','ready-to-ship'],true)){loomara_ar_review($order,$job,'Previous order status is not a verified pre-dispatch state.');return;}
+        if(!in_array($job['from']??'', ['pending','on-hold','processing','ready-to-ship','pickup-scheduled','out-for-pickup'],true)){loomara_ar_review($order,$job,'Previous order status is not a verified pre-dispatch state.');return;}
         if($order->get_status()!=='cancelled'){loomara_ar_review($order,$job,'Order is no longer Cancelled.');return;}
         $payment=(string)$order->get_transaction_id();
         if($order->get_payment_method()!=='razorpay'||!preg_match('/^pay_[A-Za-z0-9]+$/D',$payment)){loomara_ar_review($order,$job,'No supported captured Razorpay payment reference.');return;}

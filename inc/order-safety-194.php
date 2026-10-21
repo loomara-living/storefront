@@ -49,7 +49,7 @@ add_filter('update_user_metadata',function($check,$id,$key,$value){
 function loomara_order_can_customer_cancel($order,$user_id) {
     if (function_exists('loomara_cr_job') && loomara_cr_job($order)) { return false; }
     if (!$order instanceof WC_Order || !$user_id || (int)$order->get_customer_id()!==(int)$user_id ||
-        !in_array($order->get_status(),['pending','on-hold','processing','ready-to-ship'],true)) { return false; }
+        !in_array($order->get_status(),['pending','on-hold','processing','ready-to-ship','pickup-scheduled','out-for-pickup'],true)) { return false; }
     // A paid Razorpay request is verified remotely before cancellation. An AWB
     // can be assigned before dispatch; it must not hide that request button.
     $remote_request=function_exists('loomara_cr_request') && $order->get_payment_method()==='razorpay' &&
@@ -57,7 +57,7 @@ function loomara_order_can_customer_cancel($order,$user_id) {
         !(float)$order->get_total_refunded() && !count($order->get_refunds());
     if($order->get_meta('_shipped_date')){return false;}
     if($remote_request){return true;}
-    if($order->get_status()==='ready-to-ship'){return false;}
+    if(in_array($order->get_status(),['ready-to-ship','pickup-scheduled','out-for-pickup'],true)){return false;}
     // Legacy/unpaid direct cancellation still cannot bypass a tracking record.
     foreach (['_wc_shipment_tracking_items','_shiprocket_awb_code','awb_code','_tracking_number','_shipped_date'] as $key) {
         if ($order->get_meta($key)) { return false; }

@@ -2,6 +2,12 @@
 
 All release details are maintained in this single file, newest first. Historical notes describe the behaviour and policies at the time of each release.
 
+## v2.2.2 — Forward pickup status mapping
+
+- Registers native pickup-scheduled, out-for-pickup and picked-up stages for WooCommerce/admin/customer order filters, preserving recorded paid-date checks rather than inferring payment from shipping. All stored status keys fit WordPress limits.
+- Pickup tracking remains visible on owned order details. Active customer returns reject forward pickup overwrites. Paid Razorpay pre-collection cancellation requests retain exact remote verification; picked-up is not eligible for customer cancellation. No automatic shipping email is sent before Shipped; no return/refund/job activation or historical replay.
+- Shiprocket channel mapping must use these exact canonical slugs. Registration alone does not poll or replay provider events; order214 requires fresh exact verification before a one-order correction. Rollback must remap affected provider statuses and settle or deliberately reclassify native pickup records; do not simply remove registered statuses from existing orders.
+
 ## v2.2.1 — Return recovery, refund progress and gallery controls
 
 - Cancellation refunds use Refund initiated after their durable submission intent, and Refunded only after verified processed Razorpay response and matching full native refund ledger. Pending/uncertain requests reconcile without a duplicate POST; payment identity/status conflicts require review. No historical replay or activation-setting change.

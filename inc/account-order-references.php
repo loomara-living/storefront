@@ -49,7 +49,7 @@ function loomara_account_order_references($order){
         echo '</dl>';if(!$found){echo '<p>Bank reference not available yet. Please quote the Razorpay refund reference if you contact us.</p>';}echo '</div>';
     }
     if($amount>0){echo '<p>Please check your refund email for further details. Bank posting times may vary.</p>';}
-    if(in_array($order->get_status(),['shipped','delivered','completed'],true)){
+    if(in_array($order->get_status(),['pickup-scheduled','out-for-pickup','picked-up','shipped','delivered','completed'],true)){
         $tracking=$order->get_meta('_loomara_verified_tracking_112');
         if(is_array($tracking)){foreach($tracking as $row){
             if(!is_array($row)||!is_string($row['awb']??null)||!preg_match('/^[A-Za-z0-9-]{3,100}$/D',$row['awb'])){continue;}

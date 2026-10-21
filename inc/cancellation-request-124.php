@@ -20,7 +20,7 @@ function loomara_cr_start($id) {
     }
 }
 function loomara_cr_open($order){
-    return $order instanceof WC_Order && in_array($order->get_status(),['pending','on-hold','processing','ready-to-ship'],true) && !$order->get_meta('_shipped_date');
+    return $order instanceof WC_Order && in_array($order->get_status(),['pending','on-hold','processing','ready-to-ship','pickup-scheduled','out-for-pickup'],true) && !$order->get_meta('_shipped_date');
 }
 function loomara_cr_wait($order,$job){
     $slow=time()>=(int)$job['deadline'] || (int)$job['attempts']>=16;

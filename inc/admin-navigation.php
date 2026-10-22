@@ -30,6 +30,7 @@ function loomara_admin_settings_page(){
         echo '<section style="background:#fff;border:1px solid #c3c4c7;border-radius:8px;padding:20px"><h2 style="margin-top:0">'.esc_html($title).'</h2><p>'.esc_html($description).'</p><a class="button button-primary" href="'.esc_url(admin_url('admin.php?page='.$slug)).'">Open '.esc_html($title).'</a></section>';
     }
     echo '</div>';
+    if(function_exists('loomara_abandoned_reminder_settings')){loomara_abandoned_reminder_settings();}
     if(function_exists('loomara_processing_age_settings')){loomara_processing_age_settings();}
     echo '<p style="max-width:850px;margin-top:24px;color:#50575e">Completed inventory, catalogue, weight, parcel and coupon setup tools, and retired payment-timer cleanup, are hidden from the menu. Their protected code, saved audit records and existing administrator URLs remain intact. They have not been rerun or deleted.</p></div>';
 }

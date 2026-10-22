@@ -30,6 +30,14 @@ function loomara_fulfilment_status_labels($statuses) {
 }
 add_filter('wc_order_statuses','loomara_fulfilment_status_labels',20);
 
+// Do not remove registered courier states globally: stored orders and workers
+// still need their exact keys. Only consolidate the native order editor choices.
+add_action('admin_enqueue_scripts',function(){
+    $screen=get_current_screen();
+    if(!$screen||!in_array($screen->id,['shop_order','woocommerce_page_wc-orders'],true)||!current_user_can('edit_shop_orders')){return;}
+    wp_enqueue_script('loomara-admin-ready-status',get_template_directory_uri().'/assets/admin-ready-status.js',['jquery'],filemtime(__DIR__.'/../assets/admin-ready-status.js'),true);
+});
+
 // Do not add fulfilment statuses to global paid statuses: shipping is not proof
 // of a payment (e.g. COD). Preserve an already recorded payment for these orders.
 function loomara_fulfilment_is_paid($paid,$order) {

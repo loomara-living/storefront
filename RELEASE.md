@@ -2,6 +2,23 @@
 
 All release details are maintained in this single file, newest first. Historical notes describe the behaviour and policies at the time of each release.
 
+## v3.1.2 — Ready to ship admin choice, reminder controls and tracking emails
+
+- Ready to ship email starts only at Pickup Scheduled, not Ready to ship/Out for pickup/Picked up. Existing customer display labels remain combined. A separately keyed read-only tracking job reuses exact Shiprocket order/channel/shipment/AWB matching and approved HTTPS tracking URLs, retries up to four checks, then sends available details without inventing missing links. Later shipping/cancellation suppresses stale pickup mail; Shipped keeps its independent once-only email and verified courier/AWB/Track your order button. Existing sent markers are preserved; no historical resend.
+- Recognised automatic Shiprocket tracking-link notes are suppressed from customer-note emails even when AWB metadata arrives later. Future matching notes become private audit records after insertion, not deleted. Unrelated/manual messages remain unchanged. No historical note conversion, booking, shipping-status mutation or financial test. Scheduling and real inbox/carrier acceptance are not guaranteed by mock checks.
+
+### Reminder master switch
+
+- Administrator-only nonce-protected Enable/Disable reminders control on Loomara Settings. Existing enabled behaviour is preserved by default; the native WooCommerce email setting is additionally respected. Disable suppresses new enrollment and outstanding queued work through a persisted cutoff; re-enable admits only new orders, never historical replay. Worker rechecks before sending; an email already handed to mail transport cannot be recalled. No order-status, stock, gateway or financial change; no live setting toggled.
+
+### Reminder private order-note audit
+
+- Writes one private Reminder email queued note only after a new reminder schedule succeeds, plus truthful accepted/skipped/disabled/verification/failed/uncertain outcome notes. Durable note markers prevent duplicate entries; audit failures do not change reminder state or cause resends. No customer-note emails, historical queue replay or order215 backfill; timing/eligibility/status rules remain unchanged.
+
+### One Ready to ship option in the order editor
+
+- Consolidates the native WooCommerce order-editor status dropdown to one Ready to ship choice. Preserves an already-selected internal courier key, so opening/saving an order does not rewrite its shipping stage; fresh manual selections use the canonical ready-to-ship key. Registered states, Shiprocket mappings, cancellation checks and once-only emails are unchanged. No historical order migration or live deployment.
+
 ## v3.1.1 — Cashfree storefront widget removal
 
 - Dequeues only the observed cf-woocommerce-js handle when its source is sdk.cashfree.com/js/widget/. Covers late head/footer enqueues, without disabling or deregistering the Cashfree gateway, payment SDK, Razorpay, or changing any payment settings. No live payment or refund test. Rollback: restore functions.php and style.css from v3.1.0; the inert helper may remain on disk. Orders, inventory and financial settings are unchanged.

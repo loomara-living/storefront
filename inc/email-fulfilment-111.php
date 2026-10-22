@@ -15,8 +15,7 @@ class Loomara_Email_Fulfilment_111 extends WC_Email {
         if($this->fulfilment_status==='pickup-scheduled'){
             // Preserve existing settings ID and durable once-only mail marker.
             $this->title='Loomara — Ready to ship';
-            $this->description='One customer email for the combined Ready to ship milestone. Later pickup updates do not resend it.';
-            foreach(['ready-to-ship','out-for-pickup','picked-up'] as $stage){add_action('woocommerce_order_status_'.$stage.'_notification',[$this,'trigger'],10,2);}
+            $this->description='One Ready to ship email at Pickup Scheduled, with verified courier/AWB/tracking when available. Later pickup updates do not send separate emails.';
         }
         parent::__construct();
     }
@@ -36,7 +35,7 @@ class Loomara_Email_Fulfilment_111 extends WC_Email {
         $this->tracking_preview_123=false;
         $this->object=$order instanceof WC_Order?$order:wc_get_order($id);
         $allowed=$this->fulfilment_status==='shipped'?['shipped','in-transit','out-for-delivery']:[$this->fulfilment_status];
-        if($this->fulfilment_status==='pickup-scheduled'){$allowed=['ready-to-ship','pickup-scheduled','out-for-pickup','picked-up'];}
+        if($this->fulfilment_status==='pickup-scheduled'){$allowed=$tracking_ready?['pickup-scheduled','out-for-pickup','picked-up']:['pickup-scheduled'];}
         if(!$this->object||!in_array($this->object->get_status(),$allowed,true)){return;}
         if($this->fulfilment_status!=='delivered'&&$this->object->get_meta('_loomara_delivered_at_111')){return;}
         if($this->fulfilment_status==='pickup-scheduled'&&(get_option('loomara_email_111_shipped_'.$this->object->get_id())||get_option('loomara_email_111_out-for-delivery_'.$this->object->get_id()))){return;}
@@ -45,6 +44,7 @@ class Loomara_Email_Fulfilment_111 extends WC_Email {
         $this->placeholders['{order_date}']=$this->object->get_date_created()?$this->object->get_date_created()->date_i18n('d M Y'):'';
         if(!$this->is_enabled()||!$this->get_recipient()||!is_email($this->recipient)){return;}
         if($this->fulfilment_status==='shipped'&&!$tracking_ready&&function_exists('loomara_tracking_queue_112')){loomara_tracking_queue_112($this->object);return;}
+        if($this->fulfilment_status==='pickup-scheduled'&&!$tracking_ready&&function_exists('loomara_tracking_queue_112')){loomara_tracking_queue_112($this->object,'pickup-scheduled');return;}
         $key='loomara_email_111_'.$this->fulfilment_status.'_'.$this->object->get_id();
         // Durable at-most-once automatic send; uncertain SMTP acceptance needs review.
         if(!add_option($key,'sending','','no')){return;}
@@ -121,11 +121,18 @@ class Loomara_Email_Out_For_Delivery extends Loomara_Email_Fulfilment_111 {
 // repeatedly emailing the same link. Unrelated customer/team notes stay enabled.
 function loomara_shipping_note_email_enabled($enabled,$order,$email){
     if(!$enabled||!$order instanceof WC_Order||($email->id??'')!=='customer_note'){return $enabled;}
-    $text=trim(html_entity_decode(strip_tags((string)($email->customer_note??'')),ENT_QUOTES,'UTF-8'));
-    if(!preg_match('~^Please click on the below url to track your Shipments:\s*https://shiprocket\.co/tracking/([A-Za-z0-9-]{3,100})/?$~iD',$text,$m)){return $enabled;}
-    foreach(['awb','_shiprocket_awb_code','awb_code','_tracking_number'] as $key){if((string)$order->get_meta($key)===$m[1]){return false;}}
-    return $enabled;
+    return loomara_is_automatic_tracking_note($email->customer_note??'')?false:$enabled;
 }
+function loomara_is_automatic_tracking_note($content){
+    $text=trim(html_entity_decode(strip_tags((string)$content),ENT_QUOTES,'UTF-8'));
+    return (bool)preg_match('~^Please click on the below url to track your Shipments:\s*https://(?:[a-z0-9-]+\.)?shiprocket\.(?:co|in)/tracking/[A-Za-z0-9-]{3,100}/?$~iD',$text);
+}
+// Keep future automatic link notes as private audit records, not customer notes.
+// The email filter above also covers the notification fired before this hook.
+add_action('woocommerce_order_note_added',function($note_id,$order){
+    if(!$order instanceof WC_Order){return;}$note=get_comment($note_id);
+    if($note&&$note->comment_type==='order_note'&&(int)$note->comment_post_ID===$order->get_id()&&loomara_is_automatic_tracking_note($note->comment_content)){update_comment_meta($note_id,'is_customer_note',0);}
+},1,2);
 add_filter('woocommerce_email_enabled_customer_note','loomara_shipping_note_email_enabled',100,3);
 // Official WooCommerce preview hook: no order metadata is changed or saved.
 add_filter('woocommerce_prepare_email_for_preview',function($email){return $email instanceof Loomara_Email_Shipped?$email->enable_tracking_preview_123():$email;});

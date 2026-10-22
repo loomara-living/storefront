@@ -2,6 +2,10 @@
 
 All release details are maintained in this single file, newest first. Historical notes describe the behaviour and policies at the time of each release.
 
+## v3.1.3 — Reminder product images
+
+- HTML payment-attempt reminders include a compact linked product thumbnail beside each exact product/variant link, with a published-parent image fallback. Missing images are omitted without losing the product link. Plain-text email remains text-only. Reminder timing, enabled settings, eligibility and once-only safeguards are unchanged; no historical resend or test email. All 72 mocked reminder checks pass. Rollback: restore the email template and version metadata from v3.1.2; retain reminder jobs and sent markers.
+
 ## v3.1.2 — Ready to ship admin choice, reminder controls and tracking emails
 
 - Ready to ship email starts only at Pickup Scheduled, not Ready to ship/Out for pickup/Picked up. Existing customer display labels remain combined. A separately keyed read-only tracking job reuses exact Shiprocket order/channel/shipment/AWB matching and approved HTTPS tracking URLs, retries up to four checks, then sends available details without inventing missing links. Later shipping/cancellation suppresses stale pickup mail; Shipped keeps its independent once-only email and verified courier/AWB/Track your order button. Existing sent markers are preserved; no historical resend.

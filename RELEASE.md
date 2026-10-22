@@ -2,6 +2,11 @@
 
 All release details are maintained in this single file, newest first. Historical notes describe the behaviour and policies at the time of each release.
 
+## v3.1.4 — Search indexing cleanup
+
+- Adds clean canonical hints for unfiltered home, Shop and taxonomy archives, retaining pagination and omitting tracking/cache parameters. Native singular canonical URLs are cleaned through their existing filter; SEO-plugin archive ownership is respected. Search, private/account/cart/checkout, 404 and filtered collection views are not declared equivalent to an unfiltered archive. No robots/noindex changes.
+- Retired /returns-policy GET/HEAD requests permanently redirect to the published /returns-refunds page. POST requests, unrelated paths and absent/unpublished replacement pages remain untouched. The literal uploads/* URL remains a 404; no blanket missing-page redirects. No Search Console validation submitted or indexing guarantee. Thirty mocked SEO checks and 72 reminder regression checks pass. Rollback: restore functions.php and version metadata from v3.1.3; the unused helper may remain on disk. No order, payment, email, stock or noindex-setting changes.
+
 ## v3.1.3 — Reminder product images
 
 - HTML payment-attempt reminders include a compact linked product thumbnail beside each exact product/variant link, with a published-parent image fallback. Missing images are omitted without losing the product link. Plain-text email remains text-only. Reminder timing, enabled settings, eligibility and once-only safeguards are unchanged; no historical resend or test email. All 72 mocked reminder checks pass. Rollback: restore the email template and version metadata from v3.1.2; retain reminder jobs and sent markers.

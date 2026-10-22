@@ -7,6 +7,7 @@ if (!defined('ABSPATH')) {
 require_once get_template_directory() . '/inc/store-setup.php';
 require_once get_template_directory() . '/inc/form-compatibility.php';
 require_once get_template_directory() . '/inc/cashfree-widget.php';
+require_once get_template_directory() . '/inc/search-indexing.php';
 require_once get_template_directory() . '/inc/customer-experience.php';
 require_once get_template_directory() . '/inc/discovery.php';
 require_once get_template_directory() . '/inc/shopping-experience.php';

@@ -2,6 +2,15 @@
 
 All release details are maintained in this single file, newest first. Historical notes describe the behaviour and policies at the time of each release.
 
+## v4.1.0 — Collection discovery and testimonial cities
+
+- Testimonial forms suggest the selected default saved-address city, falling back to native shipping city only when no saved default is available. Public city remains editable and opt-in, displayed as Name - City; existing testimonials are not backfilled from private addresses.
+- Restyles subcategory links into a labelled Shop by style segmented row, with an All [category] reset and clear current selection. Mobile row scrolls within its container instead of spreading tall pills across the page. Style links retain sale/collection, size/material/price/sorting context but reset pagination and prior subcategory. No category/product data changes.
+
+- Desktop replaces collection search with a compact Sort by dropdown and hides sorting in the left filter pane. Mobile retains Search collection and sorting in its existing filter drawer. Top ordering uses the same six choices as the filter panel, retains collection/category/size/material/price/search context and resets pagination. Native GET Apply fallback works without JavaScript; enhanced selection submits automatically. Header search anchor points to its own panel.
+- Both search inputs show matching published catalogue cards while typing (two characters, 300ms debounce), reusing the real search page and its existing fuzzy/SKU/category matching. More matches load through native pagination, with a View all matching products link; no first-result redirect, new API or provider calls. Safe DOM-built title/price/image links, request abort/stale-result protection, empty/network fallback and scrollable result list.
+- 176 local mocked checks pass across search, sorting, subcategory links, testimonials, SEO and reminder regressions. No product/order/payment/settings changes, private-city backfill or historical job replay. MaxMind remains unchanged. Rollback: restore the 13 changed theme files to v3.1.4 (remove the two newly introduced live-search assets only after restoring their enqueue references); retain all persistent order/job metadata.
+
 ## v3.1.4 — Search indexing cleanup
 
 - Adds clean canonical hints for unfiltered home, Shop and taxonomy archives, retaining pagination and omitting tracking/cache parameters. Native singular canonical URLs are cleaned through their existing filter; SEO-plugin archive ownership is respected. Search, private/account/cart/checkout, 404 and filtered collection views are not declared equivalent to an unfiltered archive. No robots/noindex changes.

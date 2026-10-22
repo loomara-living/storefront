@@ -101,7 +101,10 @@ function loomara_shop_discovery() {
         $url = add_query_arg($args, is_search() ? home_url('/') : (is_product_taxonomy() ? get_term_link(get_queried_object()) : wc_get_page_permalink('shop')));
         echo '<a href="' . esc_url($url) . '"' . ($selection === $key ? ' aria-current="page"' : '') . '>' . esc_html($label) . '</a>';
     }
-    echo '</nav><form id="collection-search" class="collection-search" role="search" method="get" action="' . esc_url(home_url('/')) . '"><label class="sr-only" for="shop-product-search">Search products</label><input id="shop-product-search" name="s" type="search" placeholder="Search the collection" value="' . esc_attr(get_search_query()) . '" required><input type="hidden" name="post_type" value="product"><button type="submit" aria-label="Search products">' . loomara_icon('search') . '</button></form></div>';
+    echo '</nav>';
+    loomara_catalog_sort_control();
+    echo '<form id="collection-search" class="collection-search collection-search-mobile" role="search" method="get" action="'.esc_url(home_url('/')).'"><label class="sr-only" for="shop-product-search">Search products</label><input id="shop-product-search" name="s" type="search" placeholder="Search the collection" value="'.esc_attr(get_search_query()).'" required><input type="hidden" name="post_type" value="product"><button type="submit" aria-label="Search products">'.loomara_icon('search').'</button></form>';
+    echo '</div>';
 }
 
 function loomara_home_collection($selection) {

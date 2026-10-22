@@ -63,11 +63,26 @@ function loomara_catalog_category_links($label = 'Shop by category', $category =
     echo '</nav>';
     if (!is_product() && function_exists('loomara_catalog_category') && loomara_catalog_category()) {
         $root=get_term_by('slug',loomara_catalog_category(),'product_cat');
+        if(!$root || is_wp_error($root)){return;}
         $children=get_terms(['taxonomy'=>'product_cat','parent'=>$root->term_id,'hide_empty'=>true]);
         if(!is_wp_error($children)&&$children){
-            echo '<nav class="catalog-style-links" aria-label="Shop by style">';
-            foreach($children as $child){$url=get_term_link($child);if(is_wp_error($url))continue;if(loomara_collection_selection()!=='all')$url=add_query_arg('collection',loomara_collection_selection(),$url);echo '<a href="'.esc_url($url).'"'.(loomara_catalog_subcategory()===$child->slug?' aria-current="page"':'').'>'.esc_html($child->name).'</a>';}
-            echo '</nav>';
+            loomara_catalog_style_links($root,$children);
         }
     }
+}
+function loomara_catalog_style_links($root,$children){
+    $selected=loomara_catalog_subcategory();
+    $args=[];
+    if(loomara_collection_selection()!=='all'){$args['collection']=loomara_collection_selection();}
+    foreach(['catalog_size','catalog_material','min_price','max_price','orderby'] as $key){
+        $value=loomara_catalog_value($key);if($value!==''){$args[$key]=$value;}
+    }
+    $items=array_merge([['term'=>$root,'label'=>'All '.strtolower($root->name),'active'=>$selected==='']],array_map(function($child)use($selected){return ['term'=>$child,'label'=>$child->name,'active'=>$selected===$child->slug];},$children));
+    echo '<nav class="catalog-style-links" aria-label="Shop by style"><span class="catalog-style-label">Shop by style</span><div class="catalog-style-options">';
+    foreach($items as $item){
+        $url=get_term_link($item['term']);if(is_wp_error($url)){continue;}
+        if($args){$url=add_query_arg($args,$url);}
+        echo '<a href="'.esc_url($url).'"'.($item['active']?' aria-current="page"':'').'>'.esc_html($item['label']).'</a>';
+    }
+    echo '</div></nav>';
 }

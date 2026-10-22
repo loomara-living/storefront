@@ -1,3 +1,11 @@
+// Keep the native GET form usable without JavaScript; enhance selection to apply.
+document.querySelectorAll('[data-collection-sort]').forEach(form => {
+  const select = form.querySelector('select[name="orderby"]');
+  if (!select || typeof form.requestSubmit !== 'function') return;
+  select.addEventListener('change', () => form.requestSubmit());
+  form.classList.add('is-enhanced');
+});
+
 (() => {
   const sidebar = document.querySelector('.catalog-filter-panel');
   const content = sidebar?.querySelector('[data-filter-content]');

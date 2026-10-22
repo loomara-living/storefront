@@ -14,6 +14,12 @@ function loomara_customer_testimonial($user){
 }
 function loomara_testimonial_city_default(){
     // A form suggestion only. Never publish a private saved city without consent.
+    if(!is_user_logged_in())return '';
+    if(function_exists('loomara_saved_addresses') && function_exists('loomara_default_address_id')){
+        $addresses=loomara_saved_addresses();
+        $default=loomara_default_address_id($addresses);
+        if(isset($addresses[$default]))return sanitize_text_field((string)($addresses[$default]['city']??''));
+    }
     return sanitize_text_field((string)get_user_meta(get_current_user_id(),'shipping_city',true));
 }
 function loomara_testimonial_prompt($context='home') {
@@ -64,7 +70,7 @@ add_action('admin_post_loomara_submit_testimonial',function(){
 function loomara_testimonial_return_url(){return add_query_arg('testimonial','submitted',home_url('/')).'#customer-testimonial-title';}
 function loomara_testimonial_caption($quote){
     $city=get_post_meta($quote->ID,'_loomara_public_city',true);
-    return $quote->post_title.(is_string($city)&&trim($city)!==''?' — '.sanitize_text_field($city):'');
+    return $quote->post_title.(is_string($city)&&trim($city)!==''?' - '.sanitize_text_field($city):'');
 }
 function loomara_customer_testimonials() {
     $quotes=get_posts(['post_type'=>'loomara_testimonial','post_status'=>'publish','numberposts'=>5,'orderby'=>'date','order'=>'DESC']);

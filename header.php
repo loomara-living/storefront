@@ -29,7 +29,7 @@
   </nav>
   <?php if (class_exists('WooCommerce')) : ?>
     <div class="header-actions">
-      <a class="header-icon header-search" href="<?php echo esc_url(wc_get_page_permalink('shop') . '#collection-search'); ?>" aria-label="Search products" title="Search products" data-search-toggle aria-expanded="false" aria-controls="header-search-panel"><?php echo loomara_icon('search'); ?></a>
+      <a class="header-icon header-search" href="#header-search-panel" aria-label="Search products" title="Search products" data-search-toggle aria-expanded="false" aria-controls="header-search-panel"><?php echo loomara_icon('search'); ?></a>
       <a class="header-icon header-account" href="<?php echo esc_url(wc_get_page_permalink('myaccount')); ?>" aria-label="Your account" title="Your account"><?php echo loomara_icon('user'); ?></a>
       <a class="header-icon header-wishlist" href="<?php echo esc_url(wc_get_account_endpoint_url('wishlist')); ?>" aria-label="Wishlist" title="Wishlist"><?php echo loomara_icon('heart'); ?></a>
       <?php echo loomara_header_cart_markup(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>

@@ -29,6 +29,22 @@ function loomara_catalog_order() {
     $order = loomara_catalog_value('orderby');
     return in_array($order, ['popularity','rating','date','price','price-desc'], true) ? $order : 'menu_order';
 }
+function loomara_catalog_sort_options() {
+    return ['menu_order'=>'Recommended','date'=>'Newest first','price'=>'Price: low to high','price-desc'=>'Price: high to low','popularity'=>'Best selling','rating'=>'Highest rated'];
+}
+function loomara_catalog_sort_control() {
+    $base=is_search()?home_url('/'):(is_product_taxonomy()?get_term_link(get_queried_object()):wc_get_page_permalink('shop'));
+    if(is_wp_error($base)){return;}
+    echo '<form class="collection-sort" method="get" action="'.esc_url($base).'" aria-label="Sort products" data-collection-sort><label for="collection-sort-order">Sort by</label><select id="collection-sort-order" name="orderby">';
+    foreach(loomara_catalog_sort_options() as $key=>$label){echo '<option value="'.esc_attr($key).'"'.selected(loomara_catalog_order(),$key,false).'>'.esc_html($label).'</option>';}
+    echo '</select>';
+    foreach(['collection','catalog_category','catalog_subcategory','catalog_size','catalog_material','min_price','max_price'] as $key){
+        $value=loomara_catalog_value($key);
+        if($value!==''){echo '<input type="hidden" name="'.esc_attr($key).'" value="'.esc_attr($value).'">';}
+    }
+    if(is_search()){echo '<input type="hidden" name="s" value="'.esc_attr(get_search_query()).'"><input type="hidden" name="post_type" value="product">';}
+    echo '<button type="submit" class="collection-sort-apply">Apply</button></form>';
+}
 function loomara_catalog_matches_size($product) {
     $wanted = loomara_catalog_size();
     if (!$wanted) { return true; }
@@ -40,7 +56,7 @@ function loomara_catalog_matches_size($product) {
 }
 function loomara_catalog_filters() {
     $category = loomara_catalog_category(); $size = loomara_catalog_size();
-    $orders = ['menu_order'=>'Recommended','date'=>'Newest first','price'=>'Price: low to high','price-desc'=>'Price: high to low','popularity'=>'Best selling','rating'=>'Highest rated'];
+    $orders = loomara_catalog_sort_options();
     $active = (int)($category !== '') + (int)($size !== '') + (int)(loomara_catalog_value('catalog_material') !== '') + (int)(loomara_catalog_price('min_price') !== '' || loomara_catalog_price('max_price') !== '');
     echo '<aside class="catalog-filter-panel" id="catalog-filter-panel" aria-label="Catalogue filters"><div data-filter-content><div class="catalog-filter-heading"><h2 id="catalog-filter-heading">Filters &amp; sorting</h2><a class="catalog-filter-close" data-filter-close href="#catalog-products" aria-label="Close filters">×</a></div>';
     echo '<form class="catalog-filters" method="get" action="'.esc_url(wc_get_page_permalink('shop')).'" aria-label="Filter and sort products">';
@@ -81,6 +97,6 @@ function loomara_catalog_sort_entries($entries) {
 }
 add_action('wp_enqueue_scripts', function () {
     if (function_exists('is_shop') && (is_shop() || is_product_taxonomy() || (is_search() && in_array('product',(array)get_query_var('post_type'),true)))) {
-        wp_enqueue_script('loomara-catalog-browser', get_template_directory_uri().'/assets/catalog-browser-v183.js', [], '1.8.3', true);
+        wp_enqueue_script('loomara-catalog-browser', get_template_directory_uri().'/assets/catalog-browser-v183.js', [], '1.8.3.1', true);
     }
 });

@@ -2,6 +2,10 @@
 
 All release details are maintained in this single file, newest first. Historical notes describe the behaviour and policies at the time of each release.
 
+## v3.1.1 — Cashfree storefront widget removal
+
+- Dequeues only the observed cf-woocommerce-js handle when its source is sdk.cashfree.com/js/widget/. Covers late head/footer enqueues, without disabling or deregistering the Cashfree gateway, payment SDK, Razorpay, or changing any payment settings. No live payment or refund test. Rollback: restore functions.php and style.css from v3.1.0; the inert helper may remain on disk. Orders, inventory and financial settings are unchanged.
+
 ## v3.1.0 — Combined Ready to ship milestone and pending QC fixes
 
 - Ready to ship, Pickup scheduled, Out for pickup and Picked up share the displayed label Ready to ship. The customer status filter offers one choice and queries all four underlying courier stages. Existing records and exact courier keys remain intact for cancellation safety; collected parcels are not made cancellable by a display rename.

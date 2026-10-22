@@ -5,6 +5,7 @@ if (!defined('ABSPATH')) {
 }
 
 require_once get_template_directory() . '/inc/store-setup.php';
+require_once get_template_directory() . '/inc/form-compatibility.php';
 require_once get_template_directory() . '/inc/customer-experience.php';
 require_once get_template_directory() . '/inc/discovery.php';
 require_once get_template_directory() . '/inc/shopping-experience.php';
@@ -46,6 +47,7 @@ require_once get_template_directory() . '/inc/pin-autofill-197.php';
 require_once get_template_directory() . '/inc/package-dimensions-197.php';
 require_once get_template_directory() . '/inc/fulfilment-statuses-199.php';
 require_once get_template_directory() . '/inc/automatic-refunds-110.php';
+require_once get_template_directory() . '/inc/cancellation-refund-references.php';
 require_once get_template_directory() . '/inc/cancellation-request-124.php';
 require_once get_template_directory() . '/inc/processing-age-cancellation.php';
 require_once get_template_directory() . '/inc/returns.php';

@@ -14,7 +14,7 @@ do_action('woocommerce_before_account_orders', $has_orders);
     <select id="order-status-filter" name="order_status">
       <option value="all" <?php selected($selection,'all'); ?>>All orders</option>
       <option value="successful" <?php selected($selection,'successful'); ?>>Successful orders</option>
-      <?php foreach (wc_get_order_statuses() as $key=>$label) : $value=preg_replace('/^wc-/', '', $key); if(in_array($value,['pending','checkout-draft','draft'],true)){continue;} ?>
+      <?php foreach (wc_get_order_statuses() as $key=>$label) : $value=preg_replace('/^wc-/', '', $key); if(in_array($value,['pending','checkout-draft','draft','pickup-scheduled','out-for-pickup','picked-up'],true)){continue;} ?>
         <option value="<?php echo esc_attr($value); ?>" <?php selected($selection,$value); ?>><?php echo esc_html($label); ?></option>
       <?php endforeach; ?>
     </select>

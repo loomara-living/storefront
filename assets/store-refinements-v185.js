@@ -26,7 +26,7 @@
     event.preventDefault();const button=form.querySelector('button');if(button.disabled)return;button.disabled=true;
     const body=new FormData(form);body.set('action','loomara_toggle_wishlist');
     try{
-      const url=new URL(form.getAttribute('action'),location.href);url.pathname=url.pathname.replace(/admin-post\.php$/,'admin-ajax.php');
+      const url=new URL(form.getAttribute('action'),location.href);url.pathname=url.pathname.replace(/admin-post\.php$/,'admin-ajax.php');url.searchParams.set('action','loomara_toggle_wishlist');
       const response=await fetch(url,{method:'POST',body,credentials:'same-origin',cache:'no-store'});const result=await response.json();
       if(!response.ok||!result.success)throw new Error(result.data?.message||'Unable to update wishlist. Please refresh and try again.');
       const id=body.get('product_id');

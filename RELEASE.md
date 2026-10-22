@@ -2,6 +2,18 @@
 
 All release details are maintained in this single file, newest first. Historical notes describe the behaviour and policies at the time of each release.
 
+## v3.1.0 — Combined Ready to ship milestone and pending QC fixes
+
+- Ready to ship, Pickup scheduled, Out for pickup and Picked up share the displayed label Ready to ship. The customer status filter offers one choice and queries all four underlying courier stages. Existing records and exact courier keys remain intact for cancellation safety; collected parcels are not made cancellable by a display rename.
+- One Ready to ship email uses the existing pickup email's settings ID and durable send marker. The first qualifying event sends it; later pickup-stage events cannot resend it, and old pickup-email markers prevent renamed duplicate sends. No separate pickup notifications before Shipped. Shipped/AWB, Out for delivery and Delivered emails remain unchanged. No historical email replay, provider mapping, order status migration or live setting change.
+
+- Retains the original WordPress submenu registrations for protected integration tools, hiding only their menu presentation. This restores native parent/access discovery for Loomara Settings links without changing page capabilities, settings or actions. Legacy migration tools remain hidden and are not rerun.
+- Adds narrowly scoped form compatibility before payment SDK loading: recognised Loomara same-origin admin-post/admin-ajax forms move their hidden action route into the endpoint query, retaining POST nonces/private fields and native no-JavaScript markup. AJAX wishlist routing uses the same query/body handler. No Razorpay SDK, risk protection, payment fields or credentials are modified. Local native browser reproduction and routing tests pass; live vendor/payment acceptance still needs verification after deployment.
+- Product-gallery likes descriptions sit below the heart as a separate compact element, with mobile sharing below them. Counts under two stay hidden; saved-heart state and desktop sharing visibility remain unchanged.
+- Future newly completed cancellation refunds without a bank reference receive a separate GET-only follow-up: first after one hour, then every six hours, bounded to fourteen days/56 checks. Exact original payment/refund/receipt/amount, native refund parent/metadata and balance must match; conflicting references require review. Valid late ARN/RRN/UTR values update the existing refund and issue once-only customer/team reference notices. Exhaustion requires review and does not create another refund. No historical enrollment, financial POST, refund ledger/status mutation or existing intent reset.
+- Repairs the cart JavaScript test fixture's missing dataset object; this was a test fixture defect, not a newly reproduced cart failure. Prior return recovery/review notifications, exclusions and bounded refund reconciliation remain included from v2.2.1.
+- Rollback: restore presentation/form assets from v2.2.3 if necessary, but retain the bank-reference worker until any enrolled jobs settle. Preserve all existing provider/financial intents, locks, mail markers and refund metadata. No activation changes, historical jobs/emails, numbering, product/stock changes or real financial testing in this release.
+
 ## v2.2.3 — Transit stages and four shipment email milestones
 
 - Adds native in-transit and out-for-delivery stages, customer/admin filters, recorded-payment checks, owned tracking access and active-return forward-update protection. Both remain ineligible for customer cancellation.

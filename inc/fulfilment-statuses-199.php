@@ -2,7 +2,8 @@
 /** Native fulfilment statuses. Registration never migrates orders or confirms payment. */
 defined('ABSPATH') || exit;
 function loomara_fulfilment_labels(){
-    return ['ready-to-ship'=>'Ready to ship','pickup-scheduled'=>'Pickup scheduled','out-for-pickup'=>'Out for pickup','picked-up'=>'Picked up','shipped'=>'Shipped','in-transit'=>'In transit','out-for-delivery'=>'Out for delivery','delivered'=>'Delivered'];
+    // Exact courier keys remain internal for cancellation safety; one display milestone.
+    return ['ready-to-ship'=>'Ready to ship','pickup-scheduled'=>'Ready to ship','out-for-pickup'=>'Ready to ship','picked-up'=>'Ready to ship','shipped'=>'Shipped','in-transit'=>'In transit','out-for-delivery'=>'Out for delivery','delivered'=>'Delivered'];
 }
 
 function loomara_register_fulfilment_statuses() {

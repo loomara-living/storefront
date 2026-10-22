@@ -1,7 +1,7 @@
 <?php
 /** Future delivery notifications and seven-calendar-day completion, without historic backfill. */
 defined('ABSPATH') || exit;
-add_filter('woocommerce_email_actions',function($actions){return array_values(array_unique(array_merge($actions,['woocommerce_order_status_pickup-scheduled','woocommerce_order_status_shipped','woocommerce_order_status_out-for-delivery','woocommerce_order_status_delivered'])));});
+add_filter('woocommerce_email_actions',function($actions){return array_values(array_unique(array_merge($actions,['woocommerce_order_status_ready-to-ship','woocommerce_order_status_pickup-scheduled','woocommerce_order_status_out-for-pickup','woocommerce_order_status_picked-up','woocommerce_order_status_shipped','woocommerce_order_status_out-for-delivery','woocommerce_order_status_delivered'])));});
 add_filter('woocommerce_email_classes',function($emails){
     require_once __DIR__.'/email-fulfilment-111.php';
     $emails['Loomara_Email_Shipped']=new Loomara_Email_Shipped();

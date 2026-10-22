@@ -44,8 +44,16 @@
       const text=`${n} customers likes this product`;
       const home=document.body.classList.contains('home'),detail=document.body.classList.contains('single-product')&&!!button.closest('.summary,.loomara-gallery-actions');
       button.removeAttribute('title');if(count.textContent!==String(n))count.textContent=String(n);count.setAttribute('aria-label',text);
-      let tip=button.querySelector('.wishlist-hover-tip,.wishlist-detail-count');
+      const gallery=detail?button.closest('.loomara-gallery-actions'):null;
+      let tip=(gallery?[...gallery.querySelectorAll('[data-wishlist-tip-for]')].find(el=>el.dataset.wishlistTipFor===count.dataset.wishlistCount):null)||button.querySelector('.wishlist-hover-tip,.wishlist-detail-count');
       if(!tip){tip=document.createElement('span');tip.className='wishlist-hover-tip';button.append(tip);}
+      if(gallery){
+        tip.dataset.wishlistTipFor=count.dataset.wishlistCount;
+        const anchor=button.closest('.wishlist-form')||button;
+        if(tip.previousElementSibling!==anchor)anchor.after(tip);
+        tip.id=`loomara-detail-likes-${count.dataset.wishlistCount}`;
+        button.setAttribute('aria-describedby',tip.id);
+      }
       tip.className=detail?'wishlist-detail-count':'wishlist-hover-tip';tip.hidden=n<2||(!home&&!detail);
       if(tip.textContent!==text)tip.textContent=text;
     });

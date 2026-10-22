@@ -36,7 +36,7 @@ function loomara_product_share(){
 // Rendered by the shared gallery controls below wishlist; no second summary copy.
 add_action('wp_enqueue_scripts',function(){
     if(function_exists('is_product')&&is_product()){
-        wp_enqueue_style('loomara-product-sharing',get_template_directory_uri().'/assets/product-sharing.css',[],'5');
+        wp_enqueue_style('loomara-product-sharing',get_template_directory_uri().'/assets/product-sharing.css',[],'6');
         wp_enqueue_script('loomara-product-sharing',get_template_directory_uri().'/assets/product-sharing.js',[],'2',true);
     }
 });

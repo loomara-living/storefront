@@ -116,6 +116,7 @@ function loomara_ar_reconcile($order,$job) {
     if($order->get_status()!=='refunded'){$order->update_status('refunded','Cancellation refund confirmed processed by Razorpay: '.$r['id'].'. Bank posting times may vary.');}
     $job['stage']='complete';$job['message']='Refund processed by Razorpay; bank posting time may vary.';loomara_ar_save($order->get_id(),$job);
     $order->add_order_note('Automatic cancellation refund processed: '.$r['id'].'. Original payment method; no second gateway refund issued by the WooCommerce ledger.');
+    if(function_exists('loomara_ar_bank_enroll')){loomara_ar_bank_enroll($order,$job,$r);}
 }
 function loomara_ar_worker($id) {
     if(!loomara_ar_enabled()){return;}

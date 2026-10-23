@@ -2,6 +2,16 @@
 
 All release details are maintained in this single file, newest first. Historical notes describe the behaviour and policies at the time of each release.
 
+## v4.3.0 — Homepage lifestyle image, product layout and restock customer details
+
+- Replaces the abstract homepage hero illustration with the owner-provided sunlit reading-corner photograph. The theme asset uses explicit dimensions, useful alternative text, high-priority loading and responsive cover crops; the existing Loomara logo and “Rest, considered.” overlay remain. No Media Library write.
+
+- Product-detail visual refresh inspired by owner references: real ratings below title, stronger native prices with real sale percentages, one known public copyable coupon (expiry/restriction checks and explicit checkout eligibility), prominent native purchase button, compact in-stock dispatch/comfort panel, and standalone genuine Customer reviews section after Description/Product details. Verified paid-purchase moderation/duplicate safeguards remain; no fake review/discount/stock or payment changes. Local preview uses labelled sample prices only; live product prices remain authoritative.
+
+- Restock requests already retain user IDs. Add administrator-only customer detail view with current account email, notification opt-in and the exact product/variant purchase link, paginated 50 customers per page.
+- Optional explicit back-in-stock email consent for new/repeated requests; historical requests remain unconsented unless the customer opts in later. Do not copy account emails into catalogue metadata. No automatic customer emails or historical campaigns; no stock, weight, product, order or payment record migration.
+- 217 mocked regressions passed; synthetic desktop/390px component layout checked, not a full native WooCommerce lifecycle test. Roll back theme to v4.2.0 for prior layout while retaining all private restock requests/consent and existing shipping-weight snapshot. No historical jobs, customer emails or financial tests replayed.
+
 ## v4.2.0 — Product details, shipping weights and restock requests
 
 - Hide numeric stock quantities in native customer availability messages; out-of-stock badge/faded product imagery and variant-aware Request restock control. Colour cards use the selected variant stock status. Signed-in customers only, nonce/server stock checks, permanent per-customer/SKU deduplication; private demand counts and team email transport result in Loomara Settings. No stock mutations or automatic customer back-in-stock promises.

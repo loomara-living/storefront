@@ -2,6 +2,11 @@
 
 All release details are maintained in this single file, newest first. Historical notes describe the behaviour and policies at the time of each release.
 
+## v4.1.2 — WooCommerce variant schema output compatibility
+
+- Live v4.1.1 verification identified WooCommerce's page-type whitelist filtering out the generated ProductGroup node. Adds productgroup to the native output types on product pages only, keeping one graph with real variants. Order-email and other-page type selections remain unchanged.
+- Four native-output selection/duplicate/context regression checks added; variant schema tests now 26, with 537 total mocked checks. The v4.1.1 tag remains immutable. Rollback to v4.1.0 for the prior native Product schema, or retain this output-type filter alongside the variant generator.
+
 ## v4.1.1 — Technical SEO and category metadata
 
 - Fixes the reproduced live catalogue canonical mismatch: unfiltered colour_page=2 and later Shop/product-category slices retain their own page URL, while colour_page=1 resolves to the collection base. Existing crawlable Load more anchors and infinite scrolling remain intact. Filter/search/sort combinations are left to the SEO plugin. No visible layout or link changes.

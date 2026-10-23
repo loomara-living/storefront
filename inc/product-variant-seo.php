@@ -51,3 +51,11 @@ function loomara_variant_seo_schema($data,$parent){
     return $data;
 }
 add_filter('woocommerce_structured_data_product','loomara_variant_seo_schema',40,2);
+
+// WooCommerce only serialises types on its page whitelist; include the group.
+add_filter('woocommerce_structured_data_type_for_page',function($types){
+    if(function_exists('is_product') && is_product() && !doing_action('woocommerce_email_order_details')){
+        $types[]='productgroup';
+    }
+    return array_values(array_unique($types));
+},20);

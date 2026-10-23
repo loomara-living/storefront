@@ -2,6 +2,18 @@
 
 All release details are maintained in this single file, newest first. Historical notes describe the behaviour and policies at the time of each release.
 
+## v4.1.1 — Technical SEO and category metadata
+
+- Fixes the reproduced live catalogue canonical mismatch: unfiltered colour_page=2 and later Shop/product-category slices retain their own page URL, while colour_page=1 resolves to the collection base. Existing crawlable Load more anchors and infinite scrolling remain intact. Filter/search/sort combinations are left to the SEO plugin. No visible layout or link changes.
+- Extends the existing WooCommerce Product graph into one ProductGroup for suitable variable products, with actual published visible colour/size variants, SKUs, selectable URLs, images, tax-display prices, currency and availability. Existing brand, genuine ratings and shipping/return terms remain. No fabricated GTINs/reviews or second Product graph; simple products, incomplete variants and groups over 100 children retain native output. Read-only, no product-data writes.
+- Adds deduplicated Google Font preconnections only when the existing font stylesheet is queued and prioritises the existing hero logo download. Fonts, images, dimensions and design remain the same. No measured performance-score claim.
+- Adds the public product-only RSS endpoint /?loomara_product_feed=1 for Merchant Center scheduled fetch. It exports published visible products/variants with actual SKU, colour/size, image, description, price/currency and stock, batched across the full catalogue. Missing images/descriptions and explicit _loomara_google_exclude metadata are excluded; historical canonical aliases are skipped. Fifteen-minute generated cache, anonymous GET/HEAD only, noindex response header, no customer/order data, new WordPress jobs or provider credentials. Daily Google fetch connection and retirement of the initial one-time import remain separate Merchant Center rollout steps.
+- Dedicated checks: category metadata/resource hints 65, catalogue canonical 23, variant schema 22, prior search indexing 30 and merchant feed 19. Including catalogue, testimonial, reminder, checkout, payment/refund safety, stock and sharing regressions, 533 mocked checks pass. Google Rich Results live acceptance must be checked after deployment.
+
+- Adds distinct India-focused SEO title/description defaults for the four main product categories through documented AIOSEO filters. No visible content, headings, layout, URL, canonical, schema, indexing-policy or product/order changes. No cotton grades, certifications, dimensions or pack counts invented.
+- Only unfiltered first-page root categories qualify; subcategories, search, sorting/filter/pagination URLs, other taxonomies, admin and previews retain their existing metadata. Independently customised titles/descriptions win. No markup, persistent data writes, jobs or additional network requests. No deployment yet.
+- The HTML title also changes browser-tab text; storefront page content and styling remain identical. Rollback: first pause any configured Merchant feed fetch, then restore functions.php, front-page.php, inc/search-indexing.php, version and RELEASE.md to v4.1.0; the three unused new helpers may remain on disk. No AIOSEO database-setting rollback is involved. Merchant Center onboarding is separate from the code release.
+
 ## v4.1.0 — Collection discovery and testimonial cities
 
 - Testimonial forms suggest the selected default saved-address city, falling back to native shipping city only when no saved default is available. Public city remains editable and opt-in, displayed as Name - City; existing testimonials are not backfilled from private addresses.

@@ -7,6 +7,22 @@ function loomara_clean_canonical_url($url){
 }
 add_filter('get_canonical_url','loomara_clean_canonical_url',20);
 
+/** Colour pagination is independent of WordPress's parent-product pagination. */
+function loomara_catalog_page_canonical($url){
+    if(is_admin() || is_search() || is_feed() || is_preview() || is_404()){return $url;}
+    if(!(function_exists('is_shop') && is_shop()) && !is_tax('product_cat')){return $url;}
+    $allowed=['colour_page','v','utm_source','utm_medium','utm_campaign','utm_term','utm_content','gclid','fbclid'];
+    foreach(array_keys($_GET) as $key){if(!in_array($key,$allowed,true)){return $url;}}
+    $page=$_GET['colour_page']??null;
+    if(!is_scalar($page) || !preg_match('/^[1-9][0-9]{0,5}$/',(string)$page)){return $url;}
+    $base=is_shop()?wc_get_page_permalink('shop'):get_term_link(get_queried_object());
+    if(is_wp_error($base) || !$base){return $url;}
+    // Preserve a deliberately different canonical destination configured by staff.
+    if($url && rtrim(strtok($url,'?'),'/')!==rtrim($base,'/')){return $url;}
+    return (int)$page===1?$base:add_query_arg('colour_page',(int)$page,$base);
+}
+add_filter('aioseo_canonical_url','loomara_catalog_page_canonical',20);
+
 function loomara_archive_canonical_url(){
     if(is_admin() || is_404() || is_search() || is_feed() || is_preview() || is_singular()) {return '';}
     if((function_exists('is_cart')&&is_cart()) || (function_exists('is_checkout')&&is_checkout()) || (function_exists('is_account_page')&&is_account_page())) {return '';}

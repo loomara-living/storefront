@@ -2,6 +2,16 @@
 
 All release details are maintained in this single file, newest first. Historical notes describe the behaviour and policies at the time of each release.
 
+## v4.2.0 — Product details, shipping weights and restock requests
+
+- Hide numeric stock quantities in native customer availability messages; out-of-stock badge/faded product imagery and variant-aware Request restock control. Colour cards use the selected variant stock status. Signed-in customers only, nonce/server stock checks, permanent per-customer/SKU deduplication; private demand counts and team email transport result in Loomara Settings. No stock mutations or automatic customer back-in-stock promises.
+
+- Owner-confirmed shipping weights: bedsheets 1.2 kg, comforters 1.2 kg, combos 2 kg. Existing cushion-cover pair is a set of 2 at 0.3 kg; set-of-4 rule is 0.5 kg (no new pack/variant created). Explicit administrator-only, nonce-protected one-time update saves a private snapshot and preserves prices/stock and other protected fields. Sample/unknown SKUs and unconfirmed cover packs are excluded; no legacy migration replay.
+
+- Move native Additional information into Description, retaining product attributes, saved parcel dimensions and shipping weight without changing product records.
+- Default care instruction to Machine washable when absent. Default thread count to 186 for bedsheets and NA for comforters only; retain existing specifications and do not infer thread counts for combos/cushion covers.
+- Parcel dimensions remain explicitly labelled, not presented as bedding measurements. Existing product records retain their descriptions and attributes. Rollback theme to v4.1.2 for the prior tab/stock presentation; retain private demand records and migration snapshot. Do not rerun completed weight updates or automatically overwrite stock when restoring weights.
+
 ## v4.1.2 — WooCommerce variant schema output compatibility
 
 - Live v4.1.1 verification identified WooCommerce's page-type whitelist filtering out the generated ProductGroup node. Adds productgroup to the native output types on product pages only, keeping one graph with real variants. Order-email and other-page type selections remain unchanged.

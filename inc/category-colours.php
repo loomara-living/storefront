@@ -47,6 +47,7 @@ function loomara_category_colour_card($entry) {
     $image_id = $variation->get_image_id() ?: $product->get_image_id();
     $price = $variation->get_price_html();
     $filters = [
+        'woocommerce_product_get_stock_status' => function ($value,$p) use ($parent_id,$variation) { return $p->get_id() === $parent_id ? $variation->get_stock_status() : $value; },
         'the_title' => function ($value,$id) use ($parent_id,$name) { return (int)$id === $parent_id ? $name : $value; },
         'woocommerce_product_get_name' => function ($value,$p) use ($parent_id,$name) { return $p->get_id() === $parent_id ? $name : $value; },
         'woocommerce_product_get_image_id' => function ($value,$p) use ($parent_id,$image_id) { return $p->get_id() === $parent_id ? $image_id : $value; },

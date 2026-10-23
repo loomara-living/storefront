@@ -1,0 +1,7 @@
+.products .product.outofstock {position:relative}
+.products .product.outofstock img,.single-product .product.outofstock .images img,.loomara-selected-out-of-stock .images img {opacity:.58}
+.loomara-stock-badge {display:inline-block;background:#fff3ed;color:#853b2c;border:1px solid #e7c7bc;border-radius:20px;padding:5px 12px;font-size:13px;margin:8px 0}
+.loomara-restock {border-top:1px solid #ded7cb;padding-top:16px;margin-top:16px}
+.loomara-restock[hidden] {display:none!important}
+.loomara-restock .button {min-height:44px}
+.loomara-restock p {font-size:14px;line-height:1.5}

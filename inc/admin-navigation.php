@@ -4,7 +4,7 @@ defined('ABSPATH') || exit;
 function loomara_admin_tool_slugs(){
     return ['loomara-inventory-release','loomara-catalogue-186','loomara-catalogue-190',
         'loomara-package-197','loomara-offers-113','loomara-pending-retirement-116',
-        'loomara-shiprocket','loomara-auto-refunds','loomara-payment-failures','loomara-order-push','loomara-returns'];
+        'loomara-shiprocket','loomara-auto-refunds','loomara-payment-failures','loomara-order-push','loomara-returns','loomara-weights-420'];
 }
 add_action('admin_menu',function(){
     add_submenu_page('woocommerce','Loomara Settings','Loomara Settings','manage_options','loomara-settings','loomara_admin_settings_page');
@@ -31,6 +31,7 @@ function loomara_admin_settings_page(){
     }
     echo '</div>';
     if(function_exists('loomara_abandoned_reminder_settings')){loomara_abandoned_reminder_settings();}
+    if(function_exists('loomara_restock_settings')){loomara_restock_settings();}
     if(function_exists('loomara_processing_age_settings')){loomara_processing_age_settings();}
     echo '<p style="max-width:850px;margin-top:24px;color:#50575e">Completed inventory, catalogue, weight, parcel and coupon setup tools, and retired payment-timer cleanup, are hidden from the menu. Their protected code, saved audit records and existing administrator URLs remain intact. They have not been rerun or deleted.</p></div>';
 }

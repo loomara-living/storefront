@@ -65,6 +65,9 @@ require_once get_template_directory() . '/inc/payment-failures-120.php';
 require_once get_template_directory() . '/inc/abandoned-reminder.php';
 require_once get_template_directory() . '/inc/payment-failure-setup-120.php';
 require_once get_template_directory() . '/inc/admin-navigation.php';
+require_once get_template_directory() . '/inc/product-description-details.php';
+require_once get_template_directory() . '/inc/restock-requests.php';
+require_once get_template_directory() . '/inc/shipping-weights-420.php';
 
 function loomara_setup() {
     add_theme_support('title-tag');

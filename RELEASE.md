@@ -2,6 +2,12 @@
 
 All release details are maintained in this single file, newest first. Historical notes describe the behaviour and policies at the time of each release.
 
+## v4.3.1 — Restore original abstract hero and stylesheet cache version
+
+- Owner requested removal of the lifestyle photo from the homepage. Restore the original v4.2.0 abstract bed artwork and remove photo-only styles, preserving copy, logo, buttons and all v4.3.0 product/restock changes. Original photo asset retained unused; no file deletion.
+
+- Live v4.3.0 verification found the main stylesheet still advertised fixed version 1.8.0. Existing browsers could reuse the older sheet without the new photo positioning, rendering the hero image at intrinsic 1280px height. Use the theme release version in its stylesheet URL so browsers fetch the reviewed styling after each release. No layout redesign, product/order/payment change or data migration; v4.3.0 tag remains immutable.
+
 ## v4.3.0 — Homepage lifestyle image, product layout and restock customer details
 
 - Replaces the abstract homepage hero illustration with the owner-provided sunlit reading-corner photograph. The theme asset uses explicit dimensions, useful alternative text, high-priority loading and responsive cover crops; the existing Loomara logo and “Rest, considered.” overlay remain. No Media Library write.

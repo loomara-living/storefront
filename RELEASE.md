@@ -2,6 +2,11 @@
 
 All release details are maintained in this single file, newest first. Historical notes describe the behaviour and policies at the time of each release.
 
+## v4.3.2 — Footer branding and gentle catalogue motion
+
+- Add a compact existing Loomara logo beside the tagline “Wrap your world in comfort” in the footer. Rotate up to four genuine gallery photographs on visible homepage/shop/category product cards every five seconds, using colour-specific galleries for colour listings. Single-image cards remain static. Pause controls, hover/focus/tab visibility and reduced-motion support; appended catalogue cards are supported. No variation, price, stock, order or payment changes.
+- Subtle short arrival and hover treatments with reduced-motion fallback. No product, stock, order, payment, email or scheduled-job changes.
+
 ## v4.3.1 — Restore original abstract hero and stylesheet cache version
 
 - Owner requested removal of the lifestyle photo from the homepage. Restore the original v4.2.0 abstract bed artwork and remove photo-only styles, preserving copy, logo, buttons and all v4.3.0 product/restock changes. Original photo asset retained unused; no file deletion.

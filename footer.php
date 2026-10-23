@@ -1,4 +1,5 @@
 <footer class="site-footer">
+  <a class="footer-brand" href="<?php echo esc_url(home_url('/')); ?>" aria-label="Loomara Living home"><img src="<?php echo esc_url(get_template_directory_uri() . '/assets/loomara-logo-transparent.png'); ?>" alt="Loomara Living" width="1536" height="1024" loading="lazy" decoding="async"><span class="footer-tagline">Wrap your world in comfort</span></a>
   <div class="footer-links"><p>Explore</p>
     <?php if (class_exists('WooCommerce')) : ?><a href="<?php echo esc_url(wc_get_page_permalink('shop')); ?>">Collection</a><?php endif; ?>
     <a href="<?php echo esc_url(home_url('/our-story/')); ?>">Our story</a>

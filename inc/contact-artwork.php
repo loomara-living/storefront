@@ -10,9 +10,9 @@ function loomara_contact_artwork() {
     ];
     $html='<section class="contact-hub contact-artwork"><p class="lede">A little help for your home.</p><p>Questions about a piece, an order or a return? Choose how you would like to reach us.</p><div class="contact-artwork-grid">';
     foreach($channels as [$asset,$width,$height,$alt,$url,$label,$external]){
-        $html.='<a href="'.esc_url($url).'"'.($external?' target="_blank" rel="noopener noreferrer"':'').' aria-label="'.esc_attr($label.($external?' (opens in a new tab)':'')).'"><img src="'.esc_url(get_template_directory_uri().'/assets/'.$asset).'" width="'.$width.'" height="'.$height.'" alt="'.esc_attr($alt).'" loading="lazy" decoding="async"><span class="contact-artwork-detail">'.esc_html($label).'<span aria-hidden="true">'.($external?'↗':'→').'</span></span></a>';
+        $html.='<a href="'.esc_url($url).'"'.($external?' target="_blank" rel="noopener noreferrer"':'').' aria-label="'.esc_attr($label.($external?' (opens in a new tab)':'')).'"><img src="'.esc_url(get_template_directory_uri().'/assets/'.$asset).'" width="'.$width.'" height="'.$height.'" alt="'.esc_attr($alt).'" loading="lazy" decoding="async"></a>';
     }
     $orders=function_exists('wc_get_account_endpoint_url')?wc_get_account_endpoint_url('orders'):home_url('/my-account/');
     return $html.'</div><p class="contact-safety-note">For order enquiries, include your order number. Please never share passwords, OTPs or payment credentials.</p><nav class="contact-help-links" aria-label="More order help"><a href="'.esc_url($orders).'">View or track your order</a><a href="'.esc_url(home_url('/faqs/')).'">Frequently asked questions</a></nav></section>';
 }
-add_action('wp_enqueue_scripts',function(){if(is_page('contact'))wp_enqueue_style('loomara-contact-artwork',get_template_directory_uri().'/assets/contact-artwork.css',['loomara-store-refinements'],'1');},40);
+add_action('wp_enqueue_scripts',function(){if(is_page('contact'))wp_enqueue_style('loomara-contact-artwork',get_template_directory_uri().'/assets/contact-artwork.css',['loomara-store-refinements'],'2');},40);

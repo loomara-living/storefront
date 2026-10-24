@@ -1,7 +1,7 @@
 <?php
 /** Missing footer information pages: explicit administrator provisioning only. */
 defined('ABSPATH') || exit;
-add_action('wp_enqueue_scripts',function(){wp_enqueue_style('loomara-footer-artwork',get_template_directory_uri().'/assets/footer-artwork.css',['loomara-refinements'],'1');},40);
+add_action('wp_enqueue_scripts',function(){wp_enqueue_style('loomara-footer-artwork',get_template_directory_uri().'/assets/footer-artwork.css',['loomara-refinements'],'2');},40);
 function loomara_footer_guide_plan() {
     $contact=esc_url(home_url('/contact/'));$shop=esc_url(home_url('/shop/'));
     return [

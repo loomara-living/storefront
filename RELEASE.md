@@ -2,6 +2,13 @@
 
 All release details are maintained in this single file, newest first. Historical notes describe the behaviour and policies at the time of each release.
 
+## v5.2.1 — Restore simple footer and mobile homepage layout
+
+- Restore only the original Explore, Say hello and Policies footer links, with a subdued photographic background. Remove the new footer introduction, guide/category links and separate image panel; preserve published guide pages without deleting them. Compact two-column mobile links, full-width contact details and readable touch targets.
+- Contact channel images are the clickable email/phone/WhatsApp/Instagram links; remove separate visible contact captions while retaining accessible destination labels.
+- On mobile, move the one existing homepage hero to the end of homepage content, immediately above the footer. Keep desktop placement unchanged, avoid duplicate headings and follow visual placement in keyboard order.
+- Mobile category artwork uses full-width, uncropped rectangular images, with no square card border/background or forced square image ratio.
+
 ## v5.2.0 — Storefront imagery, navigation and product presentation
 
 - Cart estimates reuse the installed Shiprocket plugin's public integration identifier instead of duplicating a hardcoded header. Missing plugin configuration returns an honest unavailable message; private account credentials and provider settings stay unchanged.

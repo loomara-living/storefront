@@ -102,6 +102,7 @@ function loomara_assets() {
     }
     wp_enqueue_style('loomara-refinements', get_template_directory_uri() . '/assets/refinements-v179.css', [class_exists('WooCommerce') ? 'loomara-discovery' : 'loomara-theme'], '1.8.0');
     wp_enqueue_script('loomara-theme', get_template_directory_uri() . '/assets/loomara.js', ['jquery'], '1.8.7', true);
+    if (is_front_page()) wp_enqueue_script('loomara-home-mobile-layout', get_template_directory_uri() . '/assets/home-mobile-layout.js', [], '1', true);
     wp_localize_script('loomara-theme', 'loomaraStore', ['ajaxUrl' => admin_url('admin-ajax.php')]);
     if(class_exists('WooCommerce')){
         wp_enqueue_script('loomara-live-search',get_template_directory_uri().'/assets/live-product-search.js',[],'1.0.0',true);

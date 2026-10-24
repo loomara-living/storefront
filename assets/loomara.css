@@ -243,5 +243,12 @@ h1 em, h2 em { color: var(--gold); font-weight: 500; }
 .home-promotion img{display:block;width:100%;max-width:100%;height:auto}
 .home-promotion>a:focus-visible{outline:3px solid var(--ink,#102a48);outline-offset:-3px}
 .home-category-section .category-grid .category-card-artwork{height:auto;min-height:0;overflow:hidden}
-.home-category-section .category-grid .category-card-artwork img{display:block;width:100%;height:auto;max-width:100%;object-fit:contain;transform:none}
+.home-category-section .category-grid .category-card-artwork img{display:block;width:100%;height:auto;max-width:100%;aspect-ratio:auto;object-fit:contain;transform:none}
+.home-category-section .category-grid .category-card-artwork{border:0;background:transparent;box-shadow:none;padding:0}
+@media(max-width:620px){
+ .home-main{display:flex;flex-direction:column}
+ .home-main>.hero{order:2}
+ .home-category-section .category-grid{grid-template-columns:1fr;gap:1rem}
+ .home-category-section .category-grid .category-card-artwork{width:100%;aspect-ratio:auto}
+}
 .home-category-section .category-grid .category-card-artwork:focus-visible{outline:3px solid var(--ink,#102a48);outline-offset:4px}

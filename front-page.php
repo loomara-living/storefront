@@ -1,5 +1,5 @@
 <?php get_header(); ?>
-<main id="main">
+<main id="main" class="home-main">
   <section class="home-promotion" aria-label="First-order welcome offer">
     <a href="<?php echo esc_url(class_exists('WooCommerce') ? wc_get_page_permalink('shop') : home_url('/shop/')); ?>" aria-label="Shop bedding — 20% off your first eligible order with WELCOME20">
       <img src="<?php echo esc_url(get_template_directory_uri() . '/assets/homepage-welcome20-ad.jpg'); ?>" width="1983" height="793" alt="Loomara Living — special for new users: 20% off your first order. Shop now. Premium cotton fabric, soft and breathable, long-lasting quality, comfort for every home." fetchpriority="high" decoding="async">

@@ -2,6 +2,20 @@
 
 All release details are maintained in this single file, newest first. Historical notes describe the behaviour and policies at the time of each release.
 
+## v5.2.0 — Storefront imagery, navigation and product presentation
+
+- Cart estimates reuse the installed Shiprocket plugin's public integration identifier instead of duplicating a hardcoded header. Missing plugin configuration returns an honest unavailable message; private account credentials and provider settings stay unchanged.
+
+- Replace the Contact page’s old channel boxes with the four supplied contact images, uncropped and responsive. Real email/telephone/WhatsApp/Instagram links and contact details sit with each image; add secure account-order and FAQ help links. Existing introductory/safety copy preserved; no page-record changes or messages sent.
+- Add the supplied Shop and Sale artwork at the top of their respective Shop collection views, before navigation/heading/filters/products. Sale is selected through the existing collection=sale parser. Proportional, uncropped responsive images with intrinsic dimensions; category, search and product pages unchanged. No pricing or sale-filter changes.
+- Replace the prior footer (not append) with image-inspired Shop, About, Customer Support and Policies navigation. Use the supplied artwork’s photographic right edge, real accessible responsive links, confirmed Instagram/email/phone, current year and existing free India shipping wording. Reuse the existing returns/shipping policy pages rather than publish duplicates; Track Your Order leads to the secure account Orders page. Prepare only missing Our Materials, Care Guide and Size Guide pages through a protected explicit administrator action; preserve existing published pages and stop for review of unpublished collisions. No invented textile dimensions, certifications or social accounts.
+- Restyle shared WooCommerce success/info/error and Cart/Checkout block notices as lightweight icon-and-text confirmations instead of heavy boxes. Add-to-cart View cart becomes a clear underlined action with a 44px target. Preserve native messages, roles, live announcements, links and visible error/warning cues; no auto-dismiss or validation changes.
+- Replace the four Layers for living category cards with the supplied Images/Home-Page artwork. Remove HTML text/arrow overlays; retain accessible category labels and corresponding category links. Preserve the full artwork without cropping at desktop/mobile widths, with optimized lazy-loaded JPEGs and intrinsic dimensions.
+- Place the owner-supplied Ads/WELCOME20 promotion at the top of homepage content, below the existing header and above the unchanged original hero. Full-width proportional image without cropping, accessible Shop link, explicit dimensions and high loading priority. Original PNG retained; optimized JPEG used on the website.
+- Make product Add to cart and View cart buttons full-width, at least 58px tall, with readable 16px text and rounded corners overriding the generic WooCommerce small-font/square-corner rules. Keep quantity on its own row and preserve hidden/disabled native states. Align mobile price note/coupon immediately after price despite existing flex ordering.
+- Restyle the top-of-cart delivery estimate as a compact, softly bordered rectangular card with delivery icon, heading and Change PIN control. Expand an accessible PIN editor and recheck the current cart without changing saved addresses. Keep invalid/failed checks editable and never invent delivery dates.
+- Use “Price inclusive of taxes” beneath the price and put the coupon card immediately after it, before the short description/options. Remove the WELCOME20 sign-in sentence from that card only. Preserve first-order enforcement, stored coupon descriptions, tax settings and checkout calculations.
+
 ## v5.1.1 — Product description heading and delivery presentation
 
 - Place cart delivery at the top, above cart items, for both classic and block carts. Keep add-ons below the cart and avoid duplicating the delivery checker.

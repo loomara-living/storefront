@@ -34,6 +34,7 @@ function loomara_admin_settings_page(){
     if(function_exists('loomara_restock_settings')){loomara_restock_settings();}
     if(function_exists('loomara_processing_age_settings')){loomara_processing_age_settings();}
     if(function_exists('loomara_welcome20_settings')){loomara_welcome20_settings();}
+    if(function_exists('loomara_footer_guides_settings')){loomara_footer_guides_settings();}
     echo '<p style="max-width:850px;margin-top:24px;color:#50575e">Completed inventory, catalogue, weight, parcel and coupon setup tools, and retired payment-timer cleanup, are hidden from the menu. Their protected code, saved audit records and existing administrator URLs remain intact. They have not been rerun or deleted.</p></div>';
 }
 function loomara_admin_tool_selected(){

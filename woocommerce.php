@@ -1,5 +1,6 @@
 <?php get_header(); ?>
 <main id="main" class="woocommerce-shell">
+  <?php loomara_catalog_page_banner(); ?>
   <?php loomara_catalog_navigation(); ?>
   <?php if (is_shop() || is_product_taxonomy() || is_search()) : ?>
     <header class="shop-heading">

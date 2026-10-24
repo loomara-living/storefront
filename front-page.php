@@ -1,5 +1,10 @@
 <?php get_header(); ?>
 <main id="main">
+  <section class="home-promotion" aria-label="First-order welcome offer">
+    <a href="<?php echo esc_url(class_exists('WooCommerce') ? wc_get_page_permalink('shop') : home_url('/shop/')); ?>" aria-label="Shop bedding — 20% off your first eligible order with WELCOME20">
+      <img src="<?php echo esc_url(get_template_directory_uri() . '/assets/homepage-welcome20-ad.jpg'); ?>" width="1983" height="793" alt="Loomara Living — special for new users: 20% off your first order. Shop now. Premium cotton fabric, soft and breathable, long-lasting quality, comfort for every home." fetchpriority="high" decoding="async">
+    </a>
+  </section>
   <section class="hero">
     <div class="hero-copy reveal">
       <p class="eyebrow">A softer way home</p>
@@ -19,10 +24,10 @@
   <section class="collection home-category-section" id="home-categories">
     <div class="section-heading reveal"><div><p class="eyebrow">Shop by category</p><h2>Layers for living</h2></div><?php if (class_exists('WooCommerce')) : ?><a class="text-link" href="<?php echo esc_url(wc_get_page_permalink('shop')); ?>">View the collection <span aria-hidden="true">→</span></a><?php endif; ?></div>
     <div class="category-grid">
-      <a class="category-card reveal" href="<?php echo esc_url(loomara_product_category_url('bedsheets')); ?>"><img src="<?php echo esc_url(get_template_directory_uri() . '/assets/products/botanical-whisper-bedsheet-ivory.jpeg'); ?>" alt="Soft botanical bedsheet styled in a calm bedroom"><div class="category-meta"><div><h3>Bedsheets</h3><p>Breathable foundations for unhurried rest.</p></div><b aria-hidden="true">↗</b></div></a>
-      <a class="category-card reveal" href="<?php echo esc_url(loomara_product_category_url('comforters')); ?>"><img src="<?php echo esc_url(get_template_directory_uri() . '/assets/products/cloud-rest-comforter-ivory.jpg'); ?>" alt="Ivory comforter on a warmly styled bed"><div class="category-meta"><div><h3>Comforters</h3><p>Lofty warmth with a light, restful feel.</p></div><b aria-hidden="true">↗</b></div></a>
-      <a class="category-card reveal" href="<?php echo esc_url(loomara_product_category_url('combo')); ?>"><img src="<?php echo esc_url(get_template_directory_uri() . '/assets/products/everyday-calm-bedding-combo-sage.jpg'); ?>" alt="Sage bedding combo with coordinated pillowcases"><div class="category-meta"><div><h3>Combo</h3><p>Coordinated sets, ready to layer.</p></div><b aria-hidden="true">↗</b></div></a>
-      <a class="category-card reveal" href="<?php echo esc_url(loomara_product_category_url('cushion-covers')); ?>"><img src="<?php echo esc_url(get_template_directory_uri() . '/assets/products/soft-geometry-cushion-cover-pair.jpg'); ?>" alt="Terracotta and oat woven cushion cover pair"><div class="category-meta"><div><h3>Cushion covers</h3><p>Tactile details that finish the room.</p></div><b aria-hidden="true">↗</b></div></a>
+      <a class="category-card category-card-artwork reveal" href="<?php echo esc_url(loomara_product_category_url('bedsheets')); ?>" aria-label="Shop Bedsheets"><img src="<?php echo esc_url(get_template_directory_uri() . '/assets/home-category-bedsheets.jpg'); ?>" width="832" height="466" loading="lazy" decoding="async" alt="Bedsheets — Everyday Comfort for a Brighter Tomorrow. Shop Bedsheets."></a>
+      <a class="category-card category-card-artwork reveal" href="<?php echo esc_url(loomara_product_category_url('comforters')); ?>" aria-label="Shop Comforters"><img src="<?php echo esc_url(get_template_directory_uri() . '/assets/home-category-comforters.jpg'); ?>" width="832" height="466" loading="lazy" decoding="async" alt="Comforters — Warmth You’ll Love All Year Round. Shop Comforters."></a>
+      <a class="category-card category-card-artwork reveal" href="<?php echo esc_url(loomara_product_category_url('combo')); ?>" aria-label="Shop Combo Sets"><img src="<?php echo esc_url(get_template_directory_uri() . '/assets/home-category-combo.jpg'); ?>" width="832" height="467" loading="lazy" decoding="async" alt="Combo Sets — Complete Comfort in Perfect Harmony. Shop Combo Sets."></a>
+      <a class="category-card category-card-artwork reveal" href="<?php echo esc_url(loomara_product_category_url('cushion-covers')); ?>" aria-label="Shop Cushion Covers"><img src="<?php echo esc_url(get_template_directory_uri() . '/assets/home-category-cushion-covers.jpg'); ?>" width="832" height="467" loading="lazy" decoding="async" alt="Cushion Covers — Little Details Make a Big Difference. Shop Cushion Covers."></a>
     </div>
   </section>
   <?php if (class_exists('WooCommerce')) : ?>

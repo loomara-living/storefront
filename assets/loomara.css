@@ -238,3 +238,10 @@ h1 em, h2 em { color: var(--gold); font-weight: 500; }
   .header-account { display: inline; font-size: .7rem; }
   .section-grid { padding: 3.5rem 1.25rem; }
 }
+.home-promotion{width:100%;margin:0;padding:0;line-height:0}
+.home-promotion>a{display:block}
+.home-promotion img{display:block;width:100%;max-width:100%;height:auto}
+.home-promotion>a:focus-visible{outline:3px solid var(--ink,#102a48);outline-offset:-3px}
+.home-category-section .category-grid .category-card-artwork{height:auto;min-height:0;overflow:hidden}
+.home-category-section .category-grid .category-card-artwork img{display:block;width:100%;height:auto;max-width:100%;object-fit:contain;transform:none}
+.home-category-section .category-grid .category-card-artwork:focus-visible{outline:3px solid var(--ink,#102a48);outline-offset:4px}

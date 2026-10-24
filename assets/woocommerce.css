@@ -399,3 +399,5 @@
   .woocommerce-checkout .wp-page-content .entry-content { padding-top:1.25rem; }
   .woocommerce-cart .page-hero, .woocommerce-checkout .page-hero { padding:1.25rem; }
 }
+.catalog-page-banner{width:100%;margin:0 0 clamp(1.5rem,3vw,2.5rem);line-height:0}
+.catalog-page-banner img{display:block;width:100%;max-width:100%;height:auto}

@@ -11,6 +11,8 @@ require_once get_template_directory() . '/inc/search-indexing.php';
 require_once get_template_directory() . '/inc/category-seo.php';
 require_once get_template_directory() . '/inc/customer-experience.php';
 require_once get_template_directory() . '/inc/discovery.php';
+require_once get_template_directory() . '/inc/footer-guides.php';
+require_once get_template_directory() . '/inc/contact-artwork.php';
 require_once get_template_directory() . '/inc/shopping-experience.php';
 require_once get_template_directory() . '/inc/address-book.php';
 require_once get_template_directory() . '/inc/magic-address-sync.php';
@@ -94,7 +96,7 @@ function loomara_assets() {
     );
     wp_enqueue_style('loomara-theme', get_template_directory_uri() . '/assets/loomara.css', ['loomara-fonts'], wp_get_theme()->get('Version'));
     if (class_exists('WooCommerce')) {
-        wp_enqueue_style('loomara-woocommerce', get_template_directory_uri() . '/assets/woocommerce.css', ['loomara-theme'], '1.8.0.4');
+        wp_enqueue_style('loomara-woocommerce', get_template_directory_uri() . '/assets/woocommerce.css', ['loomara-theme'], '1.8.0.5');
         wp_enqueue_script('wc-cart-fragments');
         wp_enqueue_style('loomara-discovery', get_template_directory_uri() . '/assets/discovery.css', ['loomara-woocommerce'], '1.8.0');
     }

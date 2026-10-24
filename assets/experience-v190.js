@@ -46,9 +46,16 @@
   document.querySelectorAll('[data-cart-delivery]').forEach(form=>{
     const result=form.parentElement.querySelector('[data-cart-delivery-result]'),button=form.querySelector('button');
     const compact=form.dataset?.deliveryCompact==='true';
-    const pin=form.querySelector('[name=pin]').value;
-    const unavailable=`Estimated delivery is currently unavailable for default PIN code ${pin}.`;
-    form.addEventListener('submit',async event=>{event.preventDefault();if(button.disabled)return;button.disabled=true;result.textContent=compact?`Checking estimated delivery for default PIN code ${pin}…`:'Checking courier estimate…';
+    const input=form.querySelector('[name=pin]'),defaultPin=input.value;
+    const edit=compact?form.parentElement.querySelector('[data-delivery-edit]'):null;
+    let checkedPin=defaultPin;
+    const closeEditor=()=>{if(edit){form.hidden=true;edit.setAttribute('aria-expanded','false');edit.textContent='Change PIN';}};
+    edit?.addEventListener('click',()=>{const open=form.hidden;form.hidden=!open;edit.setAttribute('aria-expanded',String(open));edit.textContent=open?'Cancel':'Change PIN';if(open)input.focus();else input.value=checkedPin;});
+    form.addEventListener('submit',async event=>{event.preventDefault();if(button.disabled)return;
+      const pin=input.value.trim(),pinLabel=pin===defaultPin?'default PIN code':'PIN code';
+      if(!/^[1-9][0-9]{5}$/.test(pin)){result.textContent='Enter a valid six-digit India PIN code.';return;}
+      const unavailable=`Estimated delivery is currently unavailable for ${pinLabel} ${pin}.`;
+      button.disabled=true;result.textContent=compact?`Checking estimated delivery for ${pinLabel} ${pin}…`:'Checking courier estimate…';
       try{
         // A named input called "action" can shadow HTMLFormElement.action.
         const target=new URL(form.getAttribute('action'),location.href);
@@ -58,10 +65,11 @@
         const payload=await response.json();
         result.textContent=compact
           ? (payload?.success && typeof payload.data?.estimatedDate==='string' && payload.data.estimatedDate.trim() && payload.data.pin===pin
-              ? `Estimated delivery by ${payload.data.estimatedDate.trim()} for default PIN code ${pin}.`
+              ? `Estimated delivery by ${payload.data.estimatedDate.trim()} for ${pinLabel} ${pin}.`
               : unavailable)
           : payload===-1?'This delivery check has expired. Refresh the page and try again.':payload?.data?.message||'Courier estimate unavailable. Please try again.';
         result.dataset.state=payload?.success?'success':'error';
+        if(compact&&payload?.success&&payload.data?.pin===pin&&payload.data.estimatedDate?.trim()){checkedPin=pin;closeEditor();}
       }catch{result.textContent=compact?unavailable:'Courier estimate unavailable. Please check your connection and try again.';}finally{button.disabled=false;}
     });
     if(form.querySelector('[name=pin]').value)form.requestSubmit();

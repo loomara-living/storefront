@@ -13,7 +13,11 @@
 .loomara-product-offer p{margin:.3rem 0;font-size:1rem}.loomara-product-offer strong{color:#946822}
 .loomara-product-offer small{display:block;font-size:.78rem;line-height:1.5}.loomara-offer-terms{color:#756f65;margin-top:.35rem}
 .loomara-copy-offer{background:#a97b35;color:white;border:0;border-radius:8px;padding:.65rem .9rem;min-height:44px;font:inherit;font-size:.8rem;cursor:pointer}
-.single-product .summary form.cart .single_add_to_cart_button{min-height:52px;border-radius:10px;flex:1;white-space:normal}
+.single-product .summary form.cart{display:flex;flex-wrap:wrap;gap:.75rem;align-items:center}
+.single-product .summary form.cart .variations,.single-product .summary form.cart .single_variation_wrap{width:100%;flex-basis:100%}
+.single-product .summary form.cart .woocommerce-variation-add-to-cart{display:flex;flex-wrap:wrap;gap:.75rem;align-items:center}
+.single-product .summary form.cart .single_add_to_cart_button,.single-product .summary form.cart .single-view-cart{display:flex;align-items:center;justify-content:center;float:none!important;box-sizing:border-box;width:100%!important;max-width:100%;flex:1 0 100%;min-height:58px;padding:1rem 1.4rem!important;border-radius:10px!important;font:600 1rem/1.4 var(--sans,sans-serif)!important;letter-spacing:.02em;text-transform:none;text-align:center;text-decoration:none;white-space:normal}
+@media(max-width:900px){.single-product div.product .summary>.loomara-detail-rating{order:2}.single-product div.product .summary>.loomara-price-extras,.single-product div.product .summary>.loomara-product-offer{order:3}}
 .loomara-product-promises{background:#f1ece2;border-radius:14px;padding:1rem 1.1rem;margin:1.2rem 0}
 .loomara-product-promises p{display:flex;gap:.8rem;align-items:flex-start;margin:0 0 .9rem;font-size:.9rem}.loomara-product-promises p:last-child{margin-bottom:0}
 .loomara-product-promises p>span:first-child{color:#9b753a;font-size:1.25rem}.loomara-product-promises small{display:block;color:#756f65;font-size:.75rem;line-height:1.5;margin-top:.2rem}

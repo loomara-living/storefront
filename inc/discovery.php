@@ -71,6 +71,14 @@ function loomara_collection_selection() {
     return in_array($value, ['all', 'best-sellers', 'sale'], true) ? $value : 'all';
 }
 
+function loomara_catalog_page_banner() {
+    if (!is_shop() || is_search()) { return; }
+    $sale=loomara_collection_selection()==='sale';
+    $asset=$sale?'sale-collection-banner.jpg':'shop-collection-banner.jpg';
+    $alt=$sale?'Sale — premium home textiles at special prices. Bring home comfort and style for less.':'The Loomara Collection — Shop. Find your softer layer: bedsheets, comforters, combos and cushion covers.';
+    echo '<div class="catalog-page-banner"><img src="'.esc_url(get_template_directory_uri().'/assets/'.$asset).'" width="1983" height="793" alt="'.esc_attr($alt).'" fetchpriority="high" decoding="async"></div>';
+}
+
 add_action('woocommerce_product_query', function ($query) {
     $selection = loomara_collection_selection();
     if ($selection === 'sale') {

@@ -21,7 +21,7 @@ function loomara_detail_rating() {
 add_action('woocommerce_single_product_summary',function(){
     global $product;if(!$product instanceof WC_Product)return;
     $saving=loomara_detail_saving($product);
-    echo '<div class="loomara-price-extras"><span class="loomara-save-badge" data-product-saving'.(!$saving?' hidden':'').'>'.esc_html($saving?'Save '.$saving.'%':'').'</span><small>'.esc_html(wc_prices_include_tax()?'Price inclusive of applicable taxes':'Applicable taxes calculated at checkout').'</small></div>';
+    echo '<div class="loomara-price-extras"><span class="loomara-save-badge" data-product-saving'.(!$saving?' hidden':'').'>'.esc_html($saving?'Save '.$saving.'%':'').'</span><small>'.esc_html('Price inclusive of taxes').'</small></div>';
 },11);
 add_filter('woocommerce_available_variation',function($data,$parent,$variation){$data['loomara_saving_percent']=loomara_detail_saving($variation);return $data;},30,3);
 function loomara_detail_offer() {
@@ -36,13 +36,16 @@ function loomara_detail_offer() {
         if($coupon->get_email_restrictions())continue;
         if(!$coupon->is_valid_for_product($product))continue;
         $description=trim(wp_strip_all_tags($coupon->get_description()));
+        if ($code === 'welcome20') {
+            $description=trim(str_replace('Sign in or create an account to use WELCOME20.', '', $description));
+        }
         if(!$description)continue;
         echo '<aside class="loomara-product-offer" aria-label="Available offer"><div><span class="loomara-offer-eyebrow">A little more comfort</span><p>Code <strong>'.esc_html(strtoupper($code)).'</strong></p><small>'.esc_html($description).'</small></div><button type="button" class="loomara-copy-offer" data-copy-offer="'.esc_attr(strtoupper($code)).'" aria-label="Copy coupon '.esc_attr(strtoupper($code)).'">Copy</button><span class="screen-reader-text" data-copy-status role="status"></span></aside>';
         break;
     }
 }
-// Delivery panel is priority 35: keep the offer immediately before it.
-add_action('woocommerce_single_product_summary','loomara_detail_offer',34);
+// Native price is priority 10; tax note 11, then the offer before the excerpt.
+add_action('woocommerce_single_product_summary','loomara_detail_offer',12);
 add_action('woocommerce_single_product_summary',function(){
     echo '<aside class="loomara-product-promises" aria-label="Shopping with Loomara"><p><span aria-hidden="true">↗</span><span><strong>In-stock orders dispatch within 24 hours</strong><small>Thoughtfully packed, ready for your home.</small></span></p><p><span aria-hidden="true">♡</span><span><strong>Made for everyday comfort</strong><small>Find materials and care instructions in Product details.</small></span></p></aside>';
 },32);
@@ -64,6 +67,6 @@ function loomara_detail_reviews() {
 }
 add_action('woocommerce_after_single_product_summary','loomara_detail_reviews',11);
 add_action('wp_enqueue_scripts',function(){if(is_product()){
-    wp_enqueue_style('loomara-product-detail-polish',get_template_directory_uri().'/assets/product-detail-polish.css',['loomara-restock'],'3');
+    wp_enqueue_style('loomara-product-detail-polish',get_template_directory_uri().'/assets/product-detail-polish.css',['loomara-restock'],'4');
     wp_enqueue_script('loomara-product-detail-polish',get_template_directory_uri().'/assets/product-detail-polish.js',['jquery','wc-add-to-cart-variation'],'3',true);
 }},30);

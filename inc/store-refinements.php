@@ -70,11 +70,7 @@ add_filter('woocommerce_checkout_fields',function($groups){
 add_filter('the_content', function ($content) {
     if (!is_main_query() || !in_the_loop()) { return $content; }
     if (is_page('contact')) {
-        return '<section class="contact-hub"><p class="lede">A little help for your home.</p><p>Questions about a piece, an order or a return? Choose how you would like to reach us.</p><div class="contact-channel-grid">'
-            .'<a href="mailto:hello@loomaraliving.com"><span aria-hidden="true">✉</span><h2>Email us</h2><p>hello@loomaraliving.com</p></a>'
-            .'<a href="tel:+918175950351"><span aria-hidden="true">☎</span><h2>Call us</h2><p>+91 81759 50351</p></a>'
-            .'<a href="https://wa.me/918175950351" target="_blank" rel="noopener noreferrer"><span aria-hidden="true">◌</span><h2>WhatsApp</h2><p>Chat with Loomara →</p></a>'
-            .'<a href="https://www.instagram.com/loomara.living/" target="_blank" rel="noopener noreferrer">'.loomara_icon('instagram').'<h2>Instagram</h2><p>@loomara.living ↗</p></a></div><p>For order enquiries, include your order number. Please never share passwords, OTPs or payment credentials.</p></section>';
+        return loomara_contact_artwork();
     }
     if (is_page('faqs')) {
         // Preserve merchant-edited questions; only correct the old blanket-size sentence.

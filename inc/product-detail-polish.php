@@ -41,7 +41,8 @@ function loomara_detail_offer() {
         break;
     }
 }
-add_action('woocommerce_single_product_summary','loomara_detail_offer',12);
+// Delivery panel is priority 35: keep the offer immediately before it.
+add_action('woocommerce_single_product_summary','loomara_detail_offer',34);
 add_action('woocommerce_single_product_summary',function(){
     echo '<aside class="loomara-product-promises" aria-label="Shopping with Loomara"><p><span aria-hidden="true">↗</span><span><strong>In-stock orders dispatch within 24 hours</strong><small>Thoughtfully packed, ready for your home.</small></span></p><p><span aria-hidden="true">♡</span><span><strong>Made for everyday comfort</strong><small>Find materials and care instructions in Product details.</small></span></p></aside>';
 },32);

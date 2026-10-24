@@ -13,9 +13,9 @@ function loomara_description_details_tabs($tabs) {
 }
 add_filter('woocommerce_product_tabs', 'loomara_description_details_tabs', 99);
 
-// The native tab already labels this section; avoid a second Description title.
+// Keep a visible heading within the description panel as requested.
 function loomara_description_details_heading($heading) {
-    return '';
+    return $heading;
 }
 add_filter('woocommerce_product_description_heading', 'loomara_description_details_heading');
 

@@ -2,6 +2,12 @@
 
 All release details are maintained in this single file, newest first. Historical notes describe the behaviour and policies at the time of each release.
 
+## v5.1.1 — Product description heading and delivery presentation
+
+- Place cart delivery at the top, above cart items, for both classic and block carts. Keep add-ons below the cart and avoid duplicating the delivery checker.
+- Present cart delivery as a quiet inline delivery-icon/text row, without a background, enclosing border or box shadow. Remove the box around the missing-default-PIN fallback checker too. Saved-PIN lookup, courier estimate and error behaviour unchanged.
+- Restore the visible Description heading inside the description panel. Place the coupon card directly before the delivery-estimate panel, after product options/cart controls. Coupon eligibility, pricing and delivery requests unchanged.
+
 ## v5.1.0 — WELCOME20 and catalogue controls
 
 - Change the first-order welcome offer to WELCOME20 at 20%, including the announcement banner, FAQ, product offer and Magic Checkout public-code list. Explicit snapshot-protected administrator update renames the saved coupon while retaining restrictions and usage history; historical orders and other coupons remain unchanged.

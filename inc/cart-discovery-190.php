@@ -24,15 +24,20 @@ function loomara_cart_delivery() {
     if(!WC()->cart||WC()->cart->is_empty())return;
     $addresses=loomara_saved_addresses();$default=loomara_default_address_id($addresses);$pin=$addresses[$default]['postcode']??'';
     if(!loomara_pin_format_valid($pin)){
-        echo '<section class="cart-discovery-190"><h2>Check delivery to your PIN code</h2><form class="cart-delivery-form" data-cart-delivery method="post" action="'.esc_url(admin_url('admin-ajax.php')).'"><input type="hidden" name="action" value="loomara_cart_delivery">';wp_nonce_field('loomara_cart_delivery','delivery_nonce');
+        echo '<section class="cart-discovery-190 cart-delivery-manual"><h2>Check delivery to your PIN code</h2><form class="cart-delivery-form" data-cart-delivery method="post" action="'.esc_url(admin_url('admin-ajax.php')).'"><input type="hidden" name="action" value="loomara_cart_delivery">';wp_nonce_field('loomara_cart_delivery','delivery_nonce');
         echo '<label for="cart-delivery-pin">India PIN code</label><input id="cart-delivery-pin" name="pin" inputmode="numeric" autocomplete="postal-code" pattern="[1-9][0-9]{5}" maxlength="6" required><button class="button" type="submit">Check delivery</button></form><p class="cart-delivery-result" data-cart-delivery-result role="status" aria-live="polite">Enter a PIN to get a courier estimate.</p></section>';
         return;
     }
-    echo '<div class="cart-delivery-inline"><form hidden data-cart-delivery data-delivery-compact="true" method="post" action="'.esc_url(admin_url('admin-ajax.php')).'"><input type="hidden" name="action" value="loomara_cart_delivery">';wp_nonce_field('loomara_cart_delivery','delivery_nonce');
+    echo '<div class="cart-delivery-inline"><svg class="cart-delivery-icon" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M3 5h11v12H3zM14 9h4l3 4v4h-7M3 9H1"/><circle cx="6.5" cy="18" r="2"/><circle cx="17.5" cy="18" r="2"/></svg><form hidden data-cart-delivery data-delivery-compact="true" method="post" action="'.esc_url(admin_url('admin-ajax.php')).'"><input type="hidden" name="action" value="loomara_cart_delivery">';wp_nonce_field('loomara_cart_delivery','delivery_nonce');
     echo '<input type="hidden" name="pin" value="'.esc_attr($pin).'"><button type="submit">Check delivery</button></form><p class="cart-delivery-result" data-cart-delivery-result role="status" aria-live="polite">Checking estimated delivery for default PIN code '.esc_html($pin).'…</p></div>';
 }
-add_action('woocommerce_after_cart','loomara_cart_delivery',10);
-add_filter('render_block_woocommerce/cart',function($html){if(is_admin()||!is_cart())return $html;ob_start();loomara_cart_discovery();loomara_cart_delivery();return $html.ob_get_clean();});
+add_action('woocommerce_before_cart','loomara_cart_delivery',5);
+add_filter('render_block_woocommerce/cart',function($html){
+    if(is_admin()||!is_cart())return $html;
+    ob_start();loomara_cart_delivery();$delivery=ob_get_clean();
+    ob_start();loomara_cart_discovery();$addons=ob_get_clean();
+    return $delivery.$html.$addons;
+});
 function loomara_cart_delivery_response() {
     check_ajax_referer('loomara_cart_delivery','delivery_nonce');nocache_headers();
     $pin=is_scalar($_POST['pin']??null)?sanitize_text_field(wp_unslash($_POST['pin'])):'';

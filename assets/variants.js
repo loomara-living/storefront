@@ -1,5 +1,22 @@
 jQuery(function ($) {
   const forms = $('form.variations_form');
+  // The specification row follows the actual selected option's customer label,
+  // not a slug, inferred image colour, or the parent's full colour list.
+  function syncDetailColour(form) {
+    const select = [...form.querySelectorAll('.variations select')].find(s => /^attribute_(?:pa_)?colou?r$/i.test(s.name));
+    if (!select) return;
+    const label = select.value ? select.options[select.selectedIndex]?.textContent.trim() : '';
+    const scope = form.closest('.product') || document;
+    scope.querySelectorAll('[data-detail-colour-selected]').forEach(node => {
+      node.textContent = label || '';
+      node.hidden = !label;
+    });
+    scope.querySelectorAll('[data-detail-colour-default]').forEach(node => { node.hidden = !!label; });
+  }
+  forms.each(function () { syncDetailColour(this); });
+  forms.on('change.loomaraDetailColour found_variation.loomaraDetailColour reset_data.loomaraDetailColour hide_variation.loomaraDetailColour', function () {
+    syncDetailColour(this);
+  });
   const breadcrumbCode = document.querySelector('[data-breadcrumb-product-code]');
   if (breadcrumbCode) {
     forms.on('found_variation.loomaraBreadcrumb', function (event, variation) {

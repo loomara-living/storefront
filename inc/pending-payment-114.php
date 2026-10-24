@@ -1,5 +1,5 @@
 <?php
-/** Pending-payment timers retired. Checkout offer notice remains active. */
+/** Pending-payment timers and cart offer notice retired. */
 defined('ABSPATH') || exit;
 // Do not enrol, remind, verify or fail orders. Old queued hooks have no worker.
 // Abandonment is not cancellation or a verified payment failure. Keep native
@@ -35,13 +35,11 @@ function loomara_reserve_retry_stock($order){
     }
 }
 
-add_action('woocommerce_after_cart','loomara_cart_coupon_note_114',1);
-add_filter('render_block_woocommerce/cart',function($html){if(is_admin()||!is_cart()){return $html;}ob_start();loomara_cart_coupon_note_114();return ob_get_clean().$html;},5);
+// Retain a no-output compatibility function for older callers. No cart hooks
+// or offer-notice stylesheet are registered; checkout coupons are unchanged.
 function loomara_cart_coupon_note_114(){
-    static $shown=false;if($shown||!WC()->cart||WC()->cart->is_empty()){return;}$shown=true;
-    echo '<aside class="loomara-checkout-offers-note" aria-label="Checkout offers"><span aria-hidden="true">✧</span><div><strong>A little more to look forward to</strong><p>All offers applicable to your order will be shown at checkout. Choose an eligible coupon before you pay.</p></div></aside>';
+    return;
 }
-add_action('wp_enqueue_scripts',function(){if(is_cart()){wp_enqueue_style('loomara-pending-114',get_template_directory_uri().'/assets/pending-v114.css',[],wp_get_theme()->get('Version'));}});
 
 function loomara_pending_cleanup_116(){
     $result=wp_unschedule_hook('loomara_pending_check_114');

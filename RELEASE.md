@@ -2,6 +2,17 @@
 
 All release details are maintained in this single file, newest first. Historical notes describe the behaviour and policies at the time of each release.
 
+## v4.3.3 — Product offers, catalogue controls and cart presentation
+
+- Keep the Description tab label but remove the repeated native Description heading inside its panel. Description content and Product details remain unchanged.
+- Remove 01–04 from homepage category cards and reclaim the number column. Shop and category pages share one desktop top sorter with collection search/sidebar sorting hidden; mobile retains collection search and filter-drawer sorting. Refresh the shared stylesheet cache version.
+- Remove the newly added footer logo and adjacent tagline. Preserve the original footer links, contact details and copyright row, plus product-photo rotation and soft animations. Local only.
+- Remove the cart’s “A little more to look forward to” coupon notice and its dedicated stylesheet enqueue from classic and block carts. Checkout coupon availability and all payment/reminder/order logic unchanged.
+- Replace the cart’s delivery section with one compact automatic estimated-date/default-PIN line when a valid default address PIN exists. Show a manual PIN checker in that position only when the default saved PIN is missing/invalid (including guests). Use actual courier dates, with an honest unavailable fallback if no date is returned. Product-page checker unchanged.
+- Keep “A little more comfort” and show only the eligible public coupon with the greatest monetary saving on this item, considering selected variant, quantity and configured cap. Retain Copy and native keyboard/touch-accessible “i” terms control; remove the requested checkout disclaimer sentence. Guests discover WELCOME10 only; signed-in users use native coupon validation against the viewed item/current cart with account/first-order rules. Same deliberately public codes as Magic Checkout, no private coupon enumeration or coupon/data writes. Selection/quantity re-ranking; real limits/expiry/caps in terms.
+- Product details Colour now follows the exact selected variant option label (including taxonomy/custom Colour/Color attributes); clear selection restores the original colour list. Works with native and custom galleries; no product metadata, pricing or cart changes.
+- Revalidate native WooCommerce Cart Blocks data once after page load, browser-history restoration and returning to the cart tab. Avoid relying solely on persisted client cart data when it disagrees with the server cart. Read-only native Store API resolution, coalesced/throttled, no cart writes, storage clearing, optimisation-setting changes or payment invocation. Guest live mismatch observed; isolated fresh guest and signed-in add/cart tests retain the exact variant. Local safeguard pending deployment and affected-session acceptance.
+
 ## v4.3.2 — Footer branding and gentle catalogue motion
 
 - Add a compact existing Loomara logo beside the tagline “Wrap your world in comfort” in the footer. Rotate up to four genuine gallery photographs on visible homepage/shop/category product cards every five seconds, using colour-specific galleries for colour listings. Single-image cards remain static. Pause controls, hover/focus/tab visibility and reduced-motion support; appended catalogue cards are supported. No variation, price, stock, order or payment changes.

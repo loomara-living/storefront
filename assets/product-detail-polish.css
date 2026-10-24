@@ -8,7 +8,16 @@
 .loomara-price-extras small{color:#756f65;font-size:.78rem}
 .loomara-save-badge{background:#96422f;color:white;font-size:.78rem;font-weight:600;border-radius:7px;padding:.35rem .6rem}
 .loomara-save-badge[hidden]{display:none}
-.loomara-product-offer{display:flex;justify-content:space-between;align-items:center;gap:1rem;padding:1rem 1.1rem;margin:0 0 1.3rem;border:1px dashed #b88a43;border-radius:14px;background:#fbf5e9}
+.loomara-product-offers{margin:0 0 1.2rem;padding:.7rem .85rem;border:1px dashed #b88a43;border-radius:10px;background:#fbf5e9}
+.loomara-product-offer{position:relative;display:grid;grid-template-columns:minmax(0,1fr) 44px auto;align-items:center;gap:.45rem;padding:.35rem 0;border-bottom:1px solid #daceb9}
+.loomara-product-offer:last-child{border-bottom:0}
+.loomara-product-offer[hidden],.loomara-product-offers[hidden]{display:none!important}
+.loomara-offer-info summary{list-style:none;display:grid;place-items:center;min-width:44px;min-height:44px;cursor:pointer}
+.loomara-offer-info summary::-webkit-details-marker{display:none}
+.loomara-offer-info summary>span{border:1px solid #9a7a46;border-radius:50%;width:19px;height:19px;text-align:center;font:italic 600 13px/18px Georgia,serif;color:#715529}
+.loomara-offer-info .loomara-offer-terms{position:absolute;top:100%;left:0;right:0;z-index:30;padding:1rem;background:#fffaf2;border:1px solid #daceb9;box-shadow:0 8px 24px #132b4520;border-radius:9px;color:#354354;font-size:.8rem;line-height:1.55}
+.loomara-offer-terms ul{margin:.5rem 0 0;padding-left:1.2rem}
+.loomara-offer-info summary:focus-visible{outline:2px solid #132b45;outline-offset:1px;border-radius:6px}
 .loomara-offer-eyebrow{font-size:.66rem;letter-spacing:.12em;text-transform:uppercase;color:#8c6b37;margin:0 0 .4rem}
 .loomara-product-offer p{margin:.3rem 0;font-size:1rem}.loomara-product-offer strong{color:#946822}
 .loomara-product-offer small{display:block;font-size:.78rem;line-height:1.5}.loomara-offer-terms{color:#756f65;margin-top:.35rem}
@@ -22,4 +31,4 @@
 .loomara-review-eligibility{color:#756f65;max-width:16rem!important}.loomara-customer-reviews #comments>.woocommerce-Reviews-title{display:none}
 .loomara-customer-reviews .button{min-height:44px;border-radius:8px;text-decoration:none}.loomara-description-specifications h3{font-size:1.2rem}
 .loomara-copy-offer:focus-visible,.loomara-detail-rating:focus-visible{outline:2px solid #132b45;outline-offset:4px}
-@media(max-width:767px){.loomara-review-header{align-items:flex-start;flex-direction:column;gap:.6rem}.loomara-product-offer{gap:.7rem;padding:.9rem}.loomara-product-offer>div{min-width:0}.loomara-product-offer small{overflow-wrap:anywhere}.loomara-review-header h2{font-size:1.5rem}.single-product .summary>.price{font-size:1.8rem}}
+@media(max-width:767px){.loomara-review-header{align-items:flex-start;flex-direction:column;gap:.6rem}.loomara-product-offer>div{min-width:0}.loomara-product-offer small{overflow-wrap:anywhere}.loomara-review-header h2{font-size:1.5rem}.single-product .summary>.price{font-size:1.8rem}}

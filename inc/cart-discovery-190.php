@@ -23,8 +23,13 @@ add_action('woocommerce_after_cart','loomara_cart_discovery',5);
 function loomara_cart_delivery() {
     if(!WC()->cart||WC()->cart->is_empty())return;
     $addresses=loomara_saved_addresses();$default=loomara_default_address_id($addresses);$pin=$addresses[$default]['postcode']??'';
-    echo '<section class="cart-discovery-190"><h2>Your delivery estimate</h2><p>Check the default address PIN, or enter another destination.</p><form class="cart-delivery-form" data-cart-delivery method="post" action="'.esc_url(admin_url('admin-ajax.php')).'"><input type="hidden" name="action" value="loomara_cart_delivery">';wp_nonce_field('loomara_cart_delivery','delivery_nonce');
-    echo '<label for="cart-delivery-pin">India PIN code</label><input id="cart-delivery-pin" name="pin" inputmode="numeric" autocomplete="postal-code" pattern="[1-9][0-9]{5}" maxlength="6" required value="'.esc_attr($pin).'"><button class="button" type="submit">Check delivery</button></form><p class="cart-delivery-result" data-cart-delivery-result role="status" aria-live="polite">Enter a PIN to get a courier estimate.</p><p class="cart-delivery-notice">Prepaid courier estimate for the cart’s current weight. Dates are estimates, not a delivery guarantee. Changing this PIN does not change your saved address.</p></section>';
+    if(!loomara_pin_format_valid($pin)){
+        echo '<section class="cart-discovery-190"><h2>Check delivery to your PIN code</h2><form class="cart-delivery-form" data-cart-delivery method="post" action="'.esc_url(admin_url('admin-ajax.php')).'"><input type="hidden" name="action" value="loomara_cart_delivery">';wp_nonce_field('loomara_cart_delivery','delivery_nonce');
+        echo '<label for="cart-delivery-pin">India PIN code</label><input id="cart-delivery-pin" name="pin" inputmode="numeric" autocomplete="postal-code" pattern="[1-9][0-9]{5}" maxlength="6" required><button class="button" type="submit">Check delivery</button></form><p class="cart-delivery-result" data-cart-delivery-result role="status" aria-live="polite">Enter a PIN to get a courier estimate.</p></section>';
+        return;
+    }
+    echo '<div class="cart-delivery-inline"><form hidden data-cart-delivery data-delivery-compact="true" method="post" action="'.esc_url(admin_url('admin-ajax.php')).'"><input type="hidden" name="action" value="loomara_cart_delivery">';wp_nonce_field('loomara_cart_delivery','delivery_nonce');
+    echo '<input type="hidden" name="pin" value="'.esc_attr($pin).'"><button type="submit">Check delivery</button></form><p class="cart-delivery-result" data-cart-delivery-result role="status" aria-live="polite">Checking estimated delivery for default PIN code '.esc_html($pin).'…</p></div>';
 }
 add_action('woocommerce_after_cart','loomara_cart_delivery',10);
 add_filter('render_block_woocommerce/cart',function($html){if(is_admin()||!is_cart())return $html;ob_start();loomara_cart_discovery();loomara_cart_delivery();return $html.ob_get_clean();});
@@ -46,7 +51,7 @@ function loomara_cart_delivery_response() {
     if((int)($data['status']??0)!==200||!is_array($couriers)||!$couriers)wp_send_json_error(['message'=>'No courier estimate was returned for this PIN and cart. Please contact us to confirm delivery options.']);
     $chosen=$couriers[0];foreach($couriers as $courier){if(($courier['courier_company_id']??null)===($data['data']['recommended_courier_company_id']??null)){$chosen=$courier;break;}}
     $date=sanitize_text_field(is_scalar($chosen['etd']??null)?$chosen['etd']:'');
-    wp_send_json_success(['message'=>$date?'Courier-estimated delivery: '.$date.'. Free India shipping. Dispatch within 24 hours; courier dates may change.':'Courier service is available for this cart and PIN. Dispatch within 24 hours; estimated delivery is 5–10 business days after dispatch.']);
+    wp_send_json_success(['estimatedDate'=>$date,'pin'=>$pin,'message'=>$date?'Courier-estimated delivery: '.$date.'. Free India shipping. Dispatch within 24 hours; courier dates may change.':'Courier service is available for this cart and PIN. Dispatch within 24 hours; estimated delivery is 5–10 business days after dispatch.']);
 }
 add_action('wp_ajax_loomara_cart_delivery','loomara_cart_delivery_response');
 add_action('wp_ajax_nopriv_loomara_cart_delivery','loomara_cart_delivery_response');

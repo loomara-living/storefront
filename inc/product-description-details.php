@@ -13,6 +13,12 @@ function loomara_description_details_tabs($tabs) {
 }
 add_filter('woocommerce_product_tabs', 'loomara_description_details_tabs', 99);
 
+// The native tab already labels this section; avoid a second Description title.
+function loomara_description_details_heading($heading) {
+    return '';
+}
+add_filter('woocommerce_product_description_heading', 'loomara_description_details_heading');
+
 function loomara_description_details_render() {
     global $product;
     if (!($product instanceof WC_Product)) { return; }
@@ -45,6 +51,14 @@ function loomara_description_details_attributes($attributes, $product) {
         }
     }
     if (isset($attributes['weight'])) { $attributes['weight']['label'] = 'Shipping weight'; }
+    if ($product->is_type('variable')) {
+        foreach ($attributes as $key => &$row) {
+            if (preg_match('/^attribute_(?:pa_)?colou?r$/i', (string)$key)) {
+                $row['value'] = '<span data-detail-colour-default>' . ($row['value'] ?? '') . '</span><span data-detail-colour-selected hidden></span>';
+            }
+        }
+        unset($row);
+    }
     // Native WooCommerce values use the actual saved dimensions and weight.
     // Never invent textile measurements or override shipment data.
     return $attributes;

@@ -17,9 +17,8 @@
 .collection-sort-apply { min-height:44px; padding:.6rem .8rem; border:1px solid var(--line); border-radius:6px; background:var(--cream); color:var(--ink); font:inherit; cursor:pointer; }
 .collection-sort.is-enhanced .collection-sort-apply { display:none; }
 .collection-sort select:focus-visible,.collection-sort-apply:focus-visible { outline:2px solid var(--ink); outline-offset:3px; }
-.shop-discovery .collection-search-mobile { display:none; }
-@media(min-width:621px) { .woocommerce-shell .shop-discovery .collection-search-mobile,.woocommerce-shell .catalog-filter-panel .catalog-sort { display:none!important; } }
-@media(max-width:620px) { .woocommerce-shell .shop-discovery .collection-sort { display:none!important; } .woocommerce-shell .shop-discovery .collection-search-mobile { display:flex; } }
+@media(min-width:621px) { .catalog-sort { display:none!important; } }
+@media(max-width:620px) { .shop-discovery .collection-sort { display:none!important; } }
 @media(max-width:620px) { .collection-sort { width:100%; } .collection-sort select { flex:1; width:0; } }
 .collection-search { display:flex; width:min(100%,300px); border:1px solid var(--line); background:var(--cream); }
 .collection-search input { width:100%; min-width:0; border:0; padding:.6rem .75rem; background:none; font-size:.8rem; }

@@ -2,6 +2,12 @@
 
 All release details are maintained in this single file, newest first. Historical notes describe the behaviour and policies at the time of each release.
 
+## v5.1.0 — WELCOME20 and catalogue controls
+
+- Change the first-order welcome offer to WELCOME20 at 20%, including the announcement banner, FAQ, product offer and Magic Checkout public-code list. Explicit snapshot-protected administrator update renames the saved coupon while retaining restrictions and usage history; historical orders and other coupons remain unchanged.
+- Restore the pre-v4.3.3 coupon presentation and behaviour, retaining “A little more comfort”, the offer description and Copy button. Remove only the sentence “Eligibility and final discount are checked at checkout.” No coupon-record or checkout changes.
+- Remove collection search on Shop and product-category pages at every screen size. Desktop uses one top Sort by dropdown, with sidebar sorting hidden. Mobile hides that top dropdown and keeps Sort by inside the filter drawer. Preserve selected sorting when applying filters; header search stays unchanged.
+
 ## v4.3.3 — Product offers, catalogue controls and cart presentation
 
 - Keep the Description tab label but remove the repeated native Description heading inside its panel. Description content and Product details remain unchanged.

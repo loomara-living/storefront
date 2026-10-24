@@ -103,7 +103,6 @@ function loomara_shop_discovery() {
     }
     echo '</nav>';
     loomara_catalog_sort_control();
-    echo '<form id="collection-search" class="collection-search collection-search-mobile" role="search" method="get" action="'.esc_url(home_url('/')).'"><label class="sr-only" for="shop-product-search">Search products</label><input id="shop-product-search" name="s" type="search" placeholder="Search the collection" value="'.esc_attr(get_search_query()).'" required><input type="hidden" name="post_type" value="product"><button type="submit" aria-label="Search products">'.loomara_icon('search').'</button></form>';
     echo '</div>';
 }
 

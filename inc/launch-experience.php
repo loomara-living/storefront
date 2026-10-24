@@ -22,7 +22,7 @@ function loomara_faq_content() {
         'Where do you deliver?' => 'We deliver to serviceable PIN codes across India. Shipping is free, with no minimum order value.',
         'When will my order arrive?' => 'In-stock orders are dispatched within 24 hours. Delivery is estimated at 5–10 business days after dispatch. Carrier or destination-related delays may occur.',
         'What sizes are available?' => 'Available sizes vary by product and may include Single, Double, Queen or King. Check each product’s size selector before ordering. Contact us for exact dimensions if they are not listed.',
-        'How do I use WELCOME10?' => 'Sign in or create an account, then enter WELCOME10 in the coupon field at checkout for 10% off your first order. The discount applies to eligible merchandise, not shipping. Your final discount is shown before payment.',
+        'How do I use WELCOME20?' => 'Sign in or create an account, then enter WELCOME20 in the coupon field at checkout for 20% off your first order. The discount applies to eligible merchandise, not shipping. Your final discount is shown before payment.',
         'Can I return an item?' => 'Eligible items may be returned within 7 days of delivery, with no return-shipping or handling fee. Contact hello@loomaraliving.com for approval and instructions. See our Returns & refunds policy for eligibility and exclusions.',
         'How should I care for my bedding?' => 'Follow the care label supplied with your item. Care requirements vary by fabric and product; contact us if you need help before washing.',
         'How do I get help with an order?' => 'Email hello@loomaraliving.com with your order number. Never send your account password or payment credentials.',

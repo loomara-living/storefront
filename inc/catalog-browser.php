@@ -56,10 +56,9 @@ function loomara_catalog_matches_size($product) {
 }
 function loomara_catalog_filters() {
     $category = loomara_catalog_category(); $size = loomara_catalog_size();
-    $orders = loomara_catalog_sort_options();
     $active = (int)($category !== '') + (int)($size !== '') + (int)(loomara_catalog_value('catalog_material') !== '') + (int)(loomara_catalog_price('min_price') !== '' || loomara_catalog_price('max_price') !== '');
-    echo '<aside class="catalog-filter-panel" id="catalog-filter-panel" aria-label="Catalogue filters"><div data-filter-content><div class="catalog-filter-heading"><h2 id="catalog-filter-heading">Filters &amp; sorting</h2><a class="catalog-filter-close" data-filter-close href="#catalog-products" aria-label="Close filters">×</a></div>';
-    echo '<form class="catalog-filters" method="get" action="'.esc_url(wc_get_page_permalink('shop')).'" aria-label="Filter and sort products">';
+    echo '<aside class="catalog-filter-panel" id="catalog-filter-panel" aria-label="Catalogue filters"><div data-filter-content><div class="catalog-filter-heading"><h2 id="catalog-filter-heading">Filters</h2><a class="catalog-filter-close" data-filter-close href="#catalog-products" aria-label="Close filters">×</a></div>';
+    echo '<form class="catalog-filters" method="get" action="'.esc_url(wc_get_page_permalink('shop')).'" aria-label="Filter products">';
     if (is_search()) { echo '<input type="hidden" name="s" value="'.esc_attr(get_search_query()).'"><input type="hidden" name="post_type" value="product">'; }
     if (loomara_collection_selection() !== 'all') { echo '<input type="hidden" name="collection" value="'.esc_attr(loomara_collection_selection()).'">'; }
     echo '<label>Category<select name="catalog_category"><option value="">All categories</option>';
@@ -74,9 +73,10 @@ function loomara_catalog_filters() {
     echo '</select></label><label>Material<select name="catalog_material"><option value="">All materials</option>';
     foreach (loomara_material_options() as $material) { echo '<option value="'.esc_attr($material).'"'.selected(loomara_catalog_value('catalog_material'),$material,false).'>'.esc_html($material).'</option>'; }
     echo '</select></label><label>Minimum price (₹)<input type="number" name="min_price" min="0" step="1" value="'.esc_attr(loomara_catalog_price('min_price')).'"></label><label>Maximum price (₹)<input type="number" name="max_price" min="0" step="1" value="'.esc_attr(loomara_catalog_price('max_price')).'"></label><label class="catalog-sort">Sort by<select name="orderby">';
-    foreach ($orders as $key=>$label) { echo '<option value="'.esc_attr($key).'"'.selected(loomara_catalog_order(),$key,false).'>'.esc_html($label).'</option>'; }
-    echo '</select></label><button class="button" type="submit">Apply filters</button><a class="catalog-clear" href="'.esc_url(wc_get_page_permalink('shop')).'">Clear filters</a></form></div></aside>';
-    echo '<dialog class="catalog-filter-dialog" data-filter-dialog aria-labelledby="catalog-filter-heading"><div data-filter-mount></div></dialog><a class="catalog-filter-toggle" data-filter-toggle href="#catalog-filter-panel" role="button" aria-controls="catalog-filter-panel" aria-expanded="false"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/><circle cx="8" cy="6" r="2" fill="currentColor"/><circle cx="16" cy="12" r="2" fill="currentColor"/><circle cx="10" cy="18" r="2" fill="currentColor"/></svg><span>Filters &amp; sort</span>'.($active ? '<span class="catalog-filter-count">'.esc_html($active).'</span>' : '').'</a>';
+    foreach (loomara_catalog_sort_options() as $key=>$label) { echo '<option value="'.esc_attr($key).'"'.selected(loomara_catalog_order(),$key,false).'>'.esc_html($label).'</option>'; }
+    echo '</select></label>';
+    echo '<button class="button" type="submit">Apply filters</button><a class="catalog-clear" href="'.esc_url(wc_get_page_permalink('shop')).'">Clear filters</a></form></div></aside>';
+    echo '<dialog class="catalog-filter-dialog" data-filter-dialog aria-labelledby="catalog-filter-heading"><div data-filter-mount></div></dialog><a class="catalog-filter-toggle" data-filter-toggle href="#catalog-filter-panel" role="button" aria-controls="catalog-filter-panel" aria-expanded="false"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/><circle cx="8" cy="6" r="2" fill="currentColor"/><circle cx="16" cy="12" r="2" fill="currentColor"/><circle cx="10" cy="18" r="2" fill="currentColor"/></svg><span>Filters</span>'.($active ? '<span class="catalog-filter-count">'.esc_html($active).'</span>' : '').'</a>';
 }
 function loomara_catalog_sort_entries($entries) {
     $order = loomara_catalog_order();

@@ -1,0 +1,12 @@
+.single-product form.cart .quantity.loomara-quantity{display:inline-flex!important;align-items:center;flex:0 0 auto!important;float:none!important;border:1px solid #d6cdbf;border-radius:999px;padding:3px;gap:0;background:#fffdf8;margin:0!important;max-width:100%}
+.single-product .loomara-quantity button{display:grid;place-items:center;width:44px;height:44px;min-width:44px;min-height:44px;padding:0!important;border:0!important;border-radius:50%!important;box-shadow:none!important;background:transparent!important;color:#142944!important;font:500 1.25rem/1 var(--sans,sans-serif)!important;cursor:pointer;transition:background-color .18s ease}
+.single-product .loomara-quantity button:hover:not(:disabled){background:#eee5d6!important}
+.single-product .loomara-quantity button:disabled{opacity:.35;cursor:not-allowed}
+.single-product form.cart .loomara-quantity input.qty{width:48px!important;min-width:0;max-width:70px;height:44px;margin:0;padding:0!important;border:0!important;box-shadow:none!important;background:transparent!important;text-align:center;font:500 1rem/1.4 var(--sans,sans-serif)!important;color:#142944;-moz-appearance:textfield}
+.single-product .loomara-quantity input::-webkit-inner-spin-button,.single-product .loomara-quantity input::-webkit-outer-spin-button{-webkit-appearance:none;margin:0}
+.single-product .loomara-quantity label.screen-reader-text{position:absolute;width:1px;height:1px;padding:0;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
+.single-product .loomara-quantity :is(button,input):focus-visible{outline:2px solid #a57b3d;outline-offset:2px}
+.single-product form.cart .loomara-cart-unit-status{flex:1 1 160px;margin:.35rem 0!important;font:400 .82rem/1.6 var(--sans,sans-serif);color:#526354;align-self:center}
+.single-product form.cart .loomara-cart-unit-status[data-error=true]{color:#8f3028}
+.single-product form.cart .loomara-cart-unit-status[hidden]{display:none!important}
+@media(prefers-reduced-motion:reduce){.single-product .loomara-quantity button{transition:none}}

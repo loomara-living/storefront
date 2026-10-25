@@ -16,3 +16,17 @@
   mobile.addEventListener('change', positionHero);
   hero.addEventListener('focusout', () => queueMicrotask(positionHero));
 })();
+
+// Animate only visible category artwork, without zooming/cropping its text.
+(() => {
+  const cards = [...document.querySelectorAll('.home-category-section .category-card-artwork')];
+  if (!cards.length || !('IntersectionObserver' in window)) return;
+  const visible = new Set();
+  const update = () => cards.forEach(card => card.classList.toggle('category-art-in-view', !document.hidden && visible.has(card)));
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => entry.isIntersecting ? visible.add(entry.target) : visible.delete(entry.target));
+    update();
+  }, {threshold: .12});
+  cards.forEach(card => observer.observe(card));
+  document.addEventListener('visibilitychange', update);
+})();

@@ -13,6 +13,7 @@ require_once get_template_directory() . '/inc/customer-experience.php';
 require_once get_template_directory() . '/inc/discovery.php';
 require_once get_template_directory() . '/inc/footer-guides.php';
 require_once get_template_directory() . '/inc/contact-artwork.php';
+require_once get_template_directory() . '/inc/product-cart-quantity.php';
 require_once get_template_directory() . '/inc/shopping-experience.php';
 require_once get_template_directory() . '/inc/address-book.php';
 require_once get_template_directory() . '/inc/magic-address-sync.php';
@@ -102,7 +103,7 @@ function loomara_assets() {
     }
     wp_enqueue_style('loomara-refinements', get_template_directory_uri() . '/assets/refinements-v179.css', [class_exists('WooCommerce') ? 'loomara-discovery' : 'loomara-theme'], '1.8.0');
     wp_enqueue_script('loomara-theme', get_template_directory_uri() . '/assets/loomara.js', ['jquery'], '1.8.7', true);
-    if (is_front_page()) wp_enqueue_script('loomara-home-mobile-layout', get_template_directory_uri() . '/assets/home-mobile-layout.js', [], '1', true);
+    if (is_front_page()) wp_enqueue_script('loomara-home-mobile-layout', get_template_directory_uri() . '/assets/home-mobile-layout.js', [], '2', true);
     wp_localize_script('loomara-theme', 'loomaraStore', ['ajaxUrl' => admin_url('admin-ajax.php')]);
     if(class_exists('WooCommerce')){
         wp_enqueue_script('loomara-live-search',get_template_directory_uri().'/assets/live-product-search.js',[],'1.0.0',true);

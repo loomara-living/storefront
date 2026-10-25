@@ -252,3 +252,10 @@ h1 em, h2 em { color: var(--gold); font-weight: 500; }
  .home-category-section .category-grid .category-card-artwork{width:100%;aspect-ratio:auto}
 }
 .home-category-section .category-grid .category-card-artwork:focus-visible{outline:3px solid var(--ink,#102a48);outline-offset:4px}
+.home-category-section .category-grid .category-card-artwork{transition:translate .4s ease,box-shadow .4s ease}
+.home-category-section .category-grid .category-card-artwork img{animation:loomara-category-light 8s ease-in-out infinite;animation-play-state:paused}
+.home-category-section .category-grid .category-art-in-view img{animation-play-state:running}
+.home-category-section .category-grid .category-card-artwork:nth-child(even) img{animation-delay:-4s}
+@keyframes loomara-category-light{0%,100%{filter:brightness(1) saturate(1)}50%{filter:brightness(1.045) saturate(1.035)}}
+@media(hover:hover) and (pointer:fine){.home-category-section .category-grid .category-card-artwork:hover{translate:0 -4px;box-shadow:0 12px 24px #14294412}}
+@media(prefers-reduced-motion:reduce){.home-category-section .category-grid .category-card-artwork{transition:none;translate:none!important}.home-category-section .category-grid .category-card-artwork img{animation:none;filter:none}}

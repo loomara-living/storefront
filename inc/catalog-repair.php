@@ -24,5 +24,5 @@ add_action('wp_loaded', function () {
     } finally { delete_option('loomara_route_repair_lock'); }
 }, 99);
 add_action('wp_enqueue_scripts', function () {
-    wp_enqueue_style('loomara-catalog-repair', get_template_directory_uri().'/assets/catalog-layout-v183.css', ['loomara-refinements'], '1.8.3');
+    wp_enqueue_style('loomara-catalog-repair', get_template_directory_uri().'/assets/catalog-layout-v183.css', ['loomara-refinements'], '1.8.3.2');
 });

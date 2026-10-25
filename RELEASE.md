@@ -2,6 +2,16 @@
 
 All release details are maintained in this single file, newest first. Historical notes describe the behaviour and policies at the time of each release.
 
+## v5.3.0 — Category motion and product shopping controls
+
+- Replace colour/size dropdown presentation with accessible labelled option buttons linked to the native WooCommerce selectors, preserving exact labels and disabled options. Navy selected states and subtle hover/tap motion, with reduced-motion support and native dropdown fallback without JavaScript.
+- Product quantity +/− controls show the selected variant's current cart units. Existing cart lines update/remove through WooCommerce Store API using its fresh nonce and native validation; no separate Update cart action. Main CTA is View cart for a positive quantity and Add to cart after removal. Before first add, controls choose the quantity to submit natively. Do not automatically repeat uncertain writes.
+- Apply the lightweight native notice presentation outside WooCommerce wrappers too, removing the competing gold/orange border/background while keeping message roles, error cues and the accessible View cart action.
+
+- Give homepage category artwork a gentle eight-second light shift while visible, plus a small desktop hover lift. No image zoom/crop or duplicate text. Pause off-screen/hidden-tab motion and disable animation for reduced-motion preferences; category navigation remains unchanged.
+
+- Replace the square Shop/category navigation boxes with rounded cream pills, subtle gold borders, a clear navy selected state and gentle desktop hover lift/tap feedback. Preserve native category links and sale/filter behaviour. Keep mobile two-column layout with 46px minimum targets and disable animation for reduced-motion preferences.
+
 ## v5.2.1 — Restore simple footer and mobile homepage layout
 
 - Restore only the original Explore, Say hello and Policies footer links, with a subdued photographic background. Remove the new footer introduction, guide/category links and separate image panel; preserve published guide pages without deleting them. Compact two-column mobile links, full-width contact details and readable touch targets.

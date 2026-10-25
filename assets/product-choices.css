@@ -1,0 +1,15 @@
+.single-product form.variations_form .variations{margin:1.25rem 0;border:0}
+.single-product form.variations_form .variations tr{display:block;margin:0 0 1.1rem}
+.single-product form.variations_form .variations :is(th.label,td.value){display:block;width:100%;padding:0!important;background:transparent;border:0;text-align:left}
+.single-product form.variations_form .variations th.label{margin-bottom:.55rem;font:500 .85rem/1.5 var(--sans,sans-serif);letter-spacing:.02em}
+.single-product .loomara-choice-native{position:absolute!important;width:1px!important;height:1px!important;overflow:hidden!important;clip-path:inset(50%)!important;white-space:nowrap!important;margin:0!important;padding:0!important;border:0!important}
+.single-product .loomara-variation-choices{display:flex;gap:.6rem;flex-wrap:wrap}
+.single-product .loomara-variation-choices button{max-width:100%;overflow-wrap:anywhere}
+.single-product .loomara-variation-choices button{position:relative;min-height:46px;min-width:68px;padding:.65rem 1.1rem!important;border:1px solid #d8cdbb!important;border-radius:12px!important;background:#fffdf8!important;color:#142944!important;font:500 .87rem/1.5 var(--sans,sans-serif)!important;text-transform:none;letter-spacing:.01em;box-shadow:0 2px 5px #14294404;cursor:pointer;transition:transform .2s ease,border-color .2s ease,box-shadow .2s ease,background-color .2s ease}
+.single-product .loomara-variation-choices button[aria-pressed=true]{background:#142944!important;color:#fffdf8!important;border-color:#142944!important;box-shadow:0 3px 10px #1429441c}
+.single-product .loomara-variation-choices button:disabled{opacity:.4;text-decoration:line-through;cursor:not-allowed;box-shadow:none}
+@media(hover:hover) and (pointer:fine){.single-product .loomara-variation-choices button:hover:not(:disabled){transform:translateY(-2px);border-color:#ac874b!important;box-shadow:0 5px 12px #14294416}}
+.single-product .loomara-variation-choices button:active:not(:disabled){transform:scale(.97)}
+.single-product .loomara-variation-choices button:focus-visible{outline:2px solid #a57b3d;outline-offset:3px}
+.single-product .variations .reset_variations{display:inline-flex;align-items:center;min-height:44px;margin-top:.25rem;font:400 .78rem/1.5 var(--sans,sans-serif);text-underline-offset:4px}
+@media(prefers-reduced-motion:reduce){.single-product .loomara-variation-choices button{transition:none;transform:none!important}}

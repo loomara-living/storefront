@@ -4,6 +4,9 @@
 .home-offer-carousel .home-offer-track img{display:block;width:100%;height:auto;aspect-ratio:1983/793;object-fit:contain}
 .home-offer-controls{display:flex;align-items:center;justify-content:center;gap:.7rem;padding:.3rem .8rem;background:#f5efe5;color:#142944;font:400 .8rem/1.4 var(--sans,sans-serif)}
 .home-offer-controls[hidden]{display:none}
+.home-offer-controls [data-offer-position]{display:none}
+/* Keep motion control available to keyboard users without a visible toolbar button. */
+.home-offer-controls [data-offer-pause]:not(:focus){position:absolute!important;width:1px!important;height:1px!important;min-width:0!important;min-height:0!important;padding:0!important;margin:-1px!important;overflow:hidden!important;clip-path:inset(50%);white-space:nowrap;border:0!important}
 .home-offer-controls button{min-width:44px;min-height:44px;border:0;border-radius:50%;background:transparent;color:inherit;font:inherit;cursor:pointer}
 .home-offer-controls button[data-offer-pause]{border-radius:20px;padding:0 .8rem}
 .home-offer-controls button:hover{background:#e9dfcf}

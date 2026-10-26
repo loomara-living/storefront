@@ -2,6 +2,10 @@
 
 All release details are maintained in this single file, newest first. Historical notes describe the behaviour and policies at the time of each release.
 
+## v6.1.1 — Cleaner carousel controls
+
+- Hide numeric slide counters and visible Pause buttons on homepage offers and testimonials. Retain pause on keyboard focus for accessible motion control, and preserve arrows, swipe, rotation and reduced-motion handling.
+
 ## v6.1.0 — Homepage discovery, sizing and order layout
 
 - Rotate Diwali, WELCOME20 and collection artwork every three seconds with pause, swipe, keyboard and reduced-motion support.

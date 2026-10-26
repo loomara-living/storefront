@@ -2,6 +2,10 @@
 
 All release details are maintained in this single file, newest first. Historical notes describe the behaviour and policies at the time of each release.
 
+## v6.2.2 — Mobile introduction placement
+
+- Move the existing mobile introduction and its actions to the end of the homepage, immediately before the bedroom image. Preserve desktop placement, single-copy markup and focus protection.
+
 ## v6.2.1 — Bedroom artwork and desktop filters
 
 - Replace the illustrated homepage bed with the supplied Rest, considered bedroom image, preserving its natural proportions, existing copy and responsive placement.

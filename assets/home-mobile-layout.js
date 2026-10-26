@@ -1,4 +1,4 @@
-// Keep mobile artwork at the bottom, but the existing introduction below offers.
+// Keep the mobile introduction immediately before the artwork at the page end.
 (() => {
   const main = document.querySelector('.home-main');
   const hero = main?.querySelector(':scope > .hero');
@@ -16,7 +16,8 @@
     // Do not move a focused control out from under a keyboard user on resize.
     if (hero.contains(document.activeElement) || intro.contains(document.activeElement)) return;
     if (mobile.matches) {
-      if (copy) { intro.append(copy); intro.hidden = false; }
+      if (copy) copyMarker.after(copy);
+      intro.hidden = true;
       main.append(hero);
     } else {
       if (copy) copyMarker.after(copy);

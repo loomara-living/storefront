@@ -2,6 +2,14 @@
 
 All release details are maintained in this single file, newest first. Historical notes describe the behaviour and policies at the time of each release.
 
+## v6.2.3 — QC corrections
+
+- Bind Ready to Ship to the existing readiness email and verified-tracking worker, preserving legacy settings IDs and once-only markers; no historical replay or additional pickup-stage email enrollment.
+- Preserve filter context/pagination in canonical URLs while dropping empty form fields/defaults; noindex category/subcategory filter-only Shop views as well as other existing filters.
+- Restore Out for Pickup and Picked Up options in customer order filtering; keep unfinished payment attempts and retired Pickup Scheduled hidden from choices.
+- Correct singular/plural wishlist likes wording.
+- Owner explicitly retains Sample publicly; supplied dimensions are confirmed parcel sizes, not finished fabric measurements. No product data/dimension changes included.
+
 ## v6.2.2 — Mobile introduction placement
 
 - Move the existing mobile introduction and its actions to the end of the homepage, immediately before the bedroom image. Preserve desktop placement, single-copy markup and focus protection.

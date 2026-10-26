@@ -14,14 +14,15 @@ class Loomara_Email_Fulfilment_111 extends WC_Email {
         add_action('woocommerce_order_status_'.$this->fulfilment_status.'_notification',[$this,'trigger'],10,2);
         if($this->fulfilment_status==='pickup-scheduled'){
             // Preserve existing settings ID and durable once-only mail marker.
+            add_action('woocommerce_order_status_ready-to-ship_notification',[$this,'trigger'],10,2);
             $this->title='Loomara — Ready to ship';
-            $this->description='One Ready to ship email at Pickup Scheduled, with verified courier/AWB/tracking when available. Later pickup updates do not send separate emails.';
+            $this->description='One Ready to ship email at Ready to Ship (or legacy Pickup Scheduled), with verified courier/AWB/tracking when available. Later pickup updates do not send separate emails.';
         }
         parent::__construct();
     }
-    public function get_default_subject(){return '[{site_title}] Order #{order_number} '.(['pickup-scheduled'=>'pickup is scheduled','shipped'=>'is on its way','out-for-delivery'=>'is out for delivery','delivered'=>'has been delivered'][$this->fulfilment_status]);}
-    public function get_default_heading(){return ['pickup-scheduled'=>'Your order pickup is scheduled','shipped'=>'Your Loomara order is on its way','out-for-delivery'=>'Your order is out for delivery','delivered'=>'Your Loomara order has been delivered'][$this->fulfilment_status];}
-    protected function stage_message(){return ['pickup-scheduled'=>'Courier pickup is scheduled for your Loomara order. The parcel has not yet been confirmed collected.','shipped'=>'Your Loomara order has been shipped. A little comfort is on its way.','out-for-delivery'=>'Your Loomara order is out for delivery. Please keep your phone available for the courier.','delivered'=>'Your Loomara order has been marked Delivered. We hope it feels right at home.'][$this->fulfilment_status];}
+    public function get_default_subject(){return '[{site_title}] Order #{order_number} '.(['pickup-scheduled'=>'is ready to ship','shipped'=>'is on its way','out-for-delivery'=>'is out for delivery','delivered'=>'has been delivered'][$this->fulfilment_status]);}
+    public function get_default_heading(){return ['pickup-scheduled'=>'Your Loomara order is ready to ship','shipped'=>'Your Loomara order is on its way','out-for-delivery'=>'Your order is out for delivery','delivered'=>'Your Loomara order has been delivered'][$this->fulfilment_status];}
+    protected function stage_message(){return ['pickup-scheduled'=>'Your Loomara order is ready to ship. Courier collection has not yet been confirmed.','shipped'=>'Your Loomara order has been shipped. A little comfort is on its way.','out-for-delivery'=>'Your Loomara order is out for delivery. Please keep your phone available for the courier.','delivered'=>'Your Loomara order has been marked Delivered. We hope it feels right at home.'][$this->fulfilment_status];}
     public function init_form_fields(){
         $this->form_fields=[
             'enabled'=>['title'=>'Enable/Disable','type'=>'checkbox','label'=>'Enable this customer email notification','default'=>'yes'],
@@ -35,7 +36,7 @@ class Loomara_Email_Fulfilment_111 extends WC_Email {
         $this->tracking_preview_123=false;
         $this->object=$order instanceof WC_Order?$order:wc_get_order($id);
         $allowed=$this->fulfilment_status==='shipped'?['shipped','in-transit','out-for-delivery']:[$this->fulfilment_status];
-        if($this->fulfilment_status==='pickup-scheduled'){$allowed=$tracking_ready?['pickup-scheduled','out-for-pickup','picked-up']:['pickup-scheduled'];}
+        if($this->fulfilment_status==='pickup-scheduled'){$allowed=$tracking_ready?['ready-to-ship','pickup-scheduled','out-for-pickup','picked-up']:['ready-to-ship','pickup-scheduled'];}
         if(!$this->object||!in_array($this->object->get_status(),$allowed,true)){return;}
         if($this->fulfilment_status!=='delivered'&&$this->object->get_meta('_loomara_delivered_at_111')){return;}
         if($this->fulfilment_status==='pickup-scheduled'&&(get_option('loomara_email_111_shipped_'.$this->object->get_id())||get_option('loomara_email_111_out-for-delivery_'.$this->object->get_id()))){return;}

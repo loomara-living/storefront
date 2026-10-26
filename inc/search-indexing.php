@@ -11,23 +11,32 @@ add_filter('get_canonical_url','loomara_clean_canonical_url',20);
 function loomara_catalog_page_canonical($url){
     if(is_admin() || is_search() || is_feed() || is_preview() || is_404()){return $url;}
     if(!(function_exists('is_shop') && is_shop()) && !is_tax('product_cat')){return $url;}
-    $allowed=['colour_page','v','utm_source','utm_medium','utm_campaign','utm_term','utm_content','gclid','fbclid'];
+    $noise=['v','utm_source','utm_medium','utm_campaign','utm_term','utm_content','gclid','fbclid'];
+    $filters=['catalog_category','catalog_subcategory','collection','orderby','catalog_size','catalog_material','min_price','max_price'];
+    $allowed=array_merge(['colour_page'],$noise,$filters);
     // These explicit defaults describe the same unfiltered results, not a new page.
     $defaults=['collection'=>'all','orderby'=>'menu_order'];
     if(function_exists('loomara_catalog_category') && is_tax('product_cat')){
         $defaults['catalog_category']=loomara_catalog_category();
         $defaults['catalog_subcategory']=loomara_catalog_subcategory();
     }
-    foreach($defaults as $key=>$expected){
-        if(isset($_GET[$key]) && is_scalar($_GET[$key]) && (string)$_GET[$key]===$expected){$allowed[]=$key;}
-    }
     foreach(array_keys($_GET) as $key){if(!in_array($key,$allowed,true)){return $url;}}
-    $page=$_GET['colour_page']??null;
+    $page=$_GET['colour_page']??'1';
     if(!is_scalar($page) || !preg_match('/^[1-9][0-9]{0,5}$/',(string)$page)){return $url;}
     $base=is_shop()?wc_get_page_permalink('shop'):get_term_link(get_queried_object());
     if(is_wp_error($base) || !$base){return $url;}
     // Preserve a deliberately different canonical destination configured by staff.
     if($url && rtrim(strtok($url,'?'),'/')!==rtrim($base,'/')){return $url;}
+    // Self-canonicalise real filtered views (which are noindex), not page one.
+    // Empty native-form fields and explicit defaults must not defeat pagination.
+    foreach($filters as $key){
+        if(!isset($_GET[$key])){continue;}
+        $value=$_GET[$key];
+        if(!is_scalar($value) || strlen((string)$value)>200){return $url;}
+        $value=(string)$value;
+        if($value==='' || (isset($defaults[$key]) && $value===$defaults[$key])){continue;}
+        $base=add_query_arg($key,$value,$base);
+    }
     return (int)$page===1?$base:add_query_arg('colour_page',(int)$page,$base);
 }
 add_filter('aioseo_canonical_url','loomara_catalog_page_canonical',20);
@@ -77,10 +86,14 @@ add_action('template_redirect',function(){
 function loomara_catalog_filter_view(){
     if(is_admin() || is_search() || is_feed() || is_preview() || is_404()){return false;}
     if(!(function_exists('is_shop')&&is_shop()) && !is_tax('product_cat')){return false;}
-    foreach(['collection','orderby','catalog_size','catalog_material','min_price','max_price'] as $key){
+    foreach(['collection','orderby','catalog_category','catalog_subcategory','catalog_size','catalog_material','min_price','max_price'] as $key){
         if(!isset($_GET[$key]) || $_GET[$key]===''){continue;}
         if($key==='collection' && $_GET[$key]==='all'){continue;}
         if($key==='orderby' && $_GET[$key]==='menu_order'){continue;}
+        if(is_tax('product_cat') && function_exists('loomara_catalog_category')){
+            if($key==='catalog_category' && $_GET[$key]===loomara_catalog_category()){continue;}
+            if($key==='catalog_subcategory' && $_GET[$key]===loomara_catalog_subcategory()){continue;}
+        }
         return true;
     }
     return false;

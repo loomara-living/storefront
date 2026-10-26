@@ -41,7 +41,7 @@
     document.querySelectorAll('[data-wishlist-count]').forEach(count=>{
       const button=count.closest('.wishlist-button');if(!button)return;
       const n=Number(count.textContent)||0;
-      const text=`${n} customers likes this product`;
+      const text=n===1?'1 customer likes this product':`${n} customers like this product`;
       const home=document.body.classList.contains('home'),detail=document.body.classList.contains('single-product')&&!!button.closest('.summary,.loomara-gallery-actions');
       button.removeAttribute('title');if(count.textContent!==String(n))count.textContent=String(n);count.setAttribute('aria-label',text);
       const gallery=detail?button.closest('.loomara-gallery-actions'):null;

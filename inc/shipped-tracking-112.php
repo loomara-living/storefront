@@ -53,7 +53,7 @@ function loomara_tracking_worker_112($id,$milestone='shipped') {
     if(!in_array($milestone,['shipped','pickup-scheduled'],true)){return;}
     $id=absint($id);$key=($milestone==='shipped'?'loomara_tracking_job_112_':'loomara_pickup_tracking_job_').$id;$job=get_option($key);
     $event=$milestone==='shipped'?'loomara_tracking_email_112':'loomara_pickup_tracking_email';
-    $allowed=$milestone==='shipped'?['shipped','in-transit','out-for-delivery']:['pickup-scheduled','out-for-pickup','picked-up'];
+    $allowed=$milestone==='shipped'?['shipped','in-transit','out-for-delivery']:['ready-to-ship','pickup-scheduled','out-for-pickup','picked-up'];
     if(!is_array($job)||($job['stage']??'')!=='waiting'||get_option('loomara_email_111_'.$milestone.'_'.$id)){return;}
     $lock='loomara_tracking_lock_112_'.$id;
     if(!add_option($lock,time(),'','no')){if(!wp_next_scheduled($event,[$id])){wp_schedule_single_event(time()+60,$event,[$id]);}return;}

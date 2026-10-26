@@ -106,7 +106,7 @@ function loomara_assets() {
     wp_enqueue_style('loomara-refinements', get_template_directory_uri() . '/assets/refinements-v179.css', [class_exists('WooCommerce') ? 'loomara-discovery' : 'loomara-theme'], '1.8.0');
     wp_enqueue_script('loomara-theme', get_template_directory_uri() . '/assets/loomara.js', ['jquery'], '1.8.7', true);
     if (is_front_page()) {
-        wp_enqueue_script('loomara-home-mobile-layout', get_template_directory_uri() . '/assets/home-mobile-layout.js', [], '2', true);
+        wp_enqueue_script('loomara-home-mobile-layout', get_template_directory_uri() . '/assets/home-mobile-layout.js', [], filemtime(__DIR__.'/assets/home-mobile-layout.js'), true);
         wp_enqueue_style('loomara-home-offers',get_template_directory_uri().'/assets/home-offers.css',[],filemtime(__DIR__.'/assets/home-offers.css'));
         wp_enqueue_script('loomara-home-offers',get_template_directory_uri().'/assets/home-offers.js',[],filemtime(__DIR__.'/assets/home-offers.js'),true);
     }

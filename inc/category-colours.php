@@ -88,7 +88,12 @@ function loomara_category_colour_content() {
     echo '<div class="catalog-layout">';
     loomara_catalog_filters();
     echo '<section class="catalog-results" id="catalog-products" data-catalog-browser data-total="'.esc_attr($total).'" data-shown="'.esc_attr(min($total,$page*$per_page)).'" aria-label="Product results">';
-    if (!$total) { echo '<p class="catalog-empty">No products match these filters. Try another size or category.</p></section></div>'; return; }
+    if (!$total) {
+        $browse=is_product_category()?get_term_link(get_queried_object()):wc_get_page_permalink('shop');
+        echo '<p class="catalog-empty">No products match these filters. Try another size or category.</p>';
+        if(!is_wp_error($browse)){echo '<p><a class="text-link" href="'.esc_url($browse).'">Browse all pieces in this collection →</a></p>';}
+        echo '</section></div>';wp_reset_postdata();wc_reset_loop();$product=null;return;
+    }
     $ordering_priority = has_action('woocommerce_before_shop_loop','woocommerce_catalog_ordering');
     if ($ordering_priority !== false) { remove_action('woocommerce_before_shop_loop','woocommerce_catalog_ordering',$ordering_priority); }
     try { do_action('woocommerce_before_shop_loop'); }

@@ -2,6 +2,16 @@
 
 All release details are maintained in this single file, newest first. Historical notes describe the behaviour and policies at the time of each release.
 
+## v6.2.0 — Search indexing and homepage introduction
+
+- On mobile, place the existing homepage introduction below the offer slider and before categories; keep artwork at the bottom and restore original desktop placement. No duplicated text or artwork.
+- Filter rendered term sitemap entries only: omit Uncategorized and invalid 1970 dates, keeping contained products and genuine modification dates intact.
+
+- Preserve colour pagination canonicals when explicit unfiltered collection/sort defaults are present; retain staff-custom canonical destinations and filtered-query guards.
+- Redirect the exact retired About route to the published Our story page for GET/HEAD only. Keep unavailable destinations, POST requests and unrelated paths untouched.
+- Noindex filter-only catalogue views, feeds, author archives and the Uncategorized archive without changing product indexing, catalogue queries, customer actions or robots.txt. Preserve other robots directives.
+- Empty results offer a clear link back to the unfiltered collection, without silently replacing selected filters or displaying unrelated products.
+
 ## v6.1.2 — Overlay navigation and collection headings
 
 - Place offer arrows on the image edges and testimonial arrows beside the quote, removing separate control-row space. Keep 44px targets, link/swipe access and keyboard pause.

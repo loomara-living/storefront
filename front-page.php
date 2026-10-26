@@ -24,9 +24,8 @@
         <a class="text-link" href="<?php echo esc_url(home_url('/our-story/')); ?>">Discover our point of view <span aria-hidden="true">→</span></a>
       </div>
     </div>
-    <div class="hero-art reveal" aria-label="An abstract arrangement inspired by layered bed linen" role="img">
-      <span class="hero-brand brand-image"><img src="<?php echo esc_url(get_template_directory_uri() . '/assets/loomara-logo-transparent.png'); ?>" alt="Loomara Living" width="1536" height="1024" fetchpriority="high" decoding="async"></span><div class="sun-disc"></div><div class="bed-frame"><div class="pillow pillow-one"></div><div class="pillow pillow-two"></div><div class="duvet"></div><div class="gold-thread"></div></div>
-      <span class="art-note">Rest, considered.</span>
+    <div class="hero-art hero-art-photo reveal">
+      <img src="<?php echo esc_url(get_template_directory_uri() . '/assets/home-rest-considered.jpg'); ?>" width="1317" height="1194" alt="Loomara Living — Rest, considered. A sunlit bedroom with floral bedding, navy cushions and a soft cream throw." loading="lazy" decoding="async">
     </div>
   </section>
   <section class="marquee" aria-label="Loomara values"><div>RESTFUL BY DESIGN <span>✦</span> SOFTLY LAYERED <span>✦</span> MADE FOR HOME <span>✦</span> RESTFUL BY DESIGN <span>✦</span></div></section>

@@ -2,6 +2,11 @@
 
 All release details are maintained in this single file, newest first. Historical notes describe the behaviour and policies at the time of each release.
 
+## v6.2.1 — Bedroom artwork and desktop filters
+
+- Replace the illustrated homepage bed with the supplied Rest, considered bedroom image, preserving its natural proportions, existing copy and responsive placement.
+- Refine desktop catalogue dropdowns with cream/navy styling, rounded borders, accessible focus states and reduced-motion support. Keep native menus and mobile filtering unchanged.
+
 ## v6.2.0 — Search indexing and homepage introduction
 
 - On mobile, place the existing homepage introduction below the offer slider and before categories; keep artwork at the bottom and restore original desktop placement. No duplicated text or artwork.

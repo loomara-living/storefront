@@ -239,6 +239,9 @@ h1 em, h2 em { color: var(--gold); font-weight: 500; }
   .section-grid { padding: 3.5rem 1.25rem; }
 }
 .home-promotion{width:100%;margin:0;padding:0;line-height:0}
+.hero-art.hero-art-photo{min-height:0;height:auto;align-self:center;background:transparent}
+.hero-art.hero-art-photo::before{content:none}
+.hero-art.hero-art-photo>img{display:block;position:static;width:100%;height:auto;max-width:100%;object-fit:contain}
 .home-hero-intro[hidden]{display:none}
 @media(max-width:620px){.home-hero-intro .hero-copy{padding:2.5rem 1.25rem}.home-hero-intro h1{font-size:clamp(2.6rem,11vw,3.6rem)}.home-hero-intro .actions{flex-wrap:wrap}}
 .home-promotion>a{display:block}

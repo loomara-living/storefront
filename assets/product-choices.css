@@ -2,7 +2,8 @@
 .single-product form.variations_form .variations tr{display:block;margin:0 0 1.1rem}
 .single-product form.variations_form .variations :is(th.label,td.value){display:block;width:100%;padding:0!important;background:transparent;border:0;text-align:left}
 .single-product form.variations_form .variations th.label{margin-bottom:.55rem;font:500 .85rem/1.5 var(--sans,sans-serif);letter-spacing:.02em}
-.single-product .loomara-choice-native{position:absolute!important;width:1px!important;height:1px!important;overflow:hidden!important;clip-path:inset(50%)!important;white-space:nowrap!important;margin:0!important;padding:0!important;border:0!important}
+.single-product form.variations_form .variations td.value{position:relative}
+.single-product .loomara-choice-native{position:absolute!important;inset:0 auto auto 0!important;min-width:0!important;max-width:1px!important;width:1px!important;height:1px!important;overflow:hidden!important;clip-path:inset(50%)!important;white-space:nowrap!important;margin:0!important;padding:0!important;border:0!important}
 .single-product .loomara-variation-choices{display:flex;gap:.6rem;flex-wrap:wrap}
 .single-product .loomara-variation-choices button{max-width:100%;overflow-wrap:anywhere}
 .single-product .loomara-variation-choices button{position:relative;min-height:46px;min-width:68px;padding:.65rem 1.1rem!important;border:1px solid #d8cdbb!important;border-radius:12px!important;background:#fffdf8!important;color:#142944!important;font:500 .87rem/1.5 var(--sans,sans-serif)!important;text-transform:none;letter-spacing:.01em;box-shadow:0 2px 5px #14294404;cursor:pointer;transition:transform .2s ease,border-color .2s ease,box-shadow .2s ease,background-color .2s ease}
@@ -13,3 +14,15 @@
 .single-product .loomara-variation-choices button:focus-visible{outline:2px solid #a57b3d;outline-offset:3px}
 .single-product .variations .reset_variations{display:inline-flex;align-items:center;min-height:44px;margin-top:.25rem;font:400 .78rem/1.5 var(--sans,sans-serif);text-underline-offset:4px}
 @media(prefers-reduced-motion:reduce){.single-product .loomara-variation-choices button{transition:none;transform:none!important}}
+.single-product .loomara-size-guide{width:100%;margin:0 0 .6rem;clear:both;font:400 .82rem/1.6 var(--sans,sans-serif)}
+.single-product .loomara-size-guide>summary{display:flex;align-items:center;justify-content:flex-end;gap:.4rem;min-height:44px;cursor:pointer;text-decoration:underline;text-underline-offset:4px;color:#142944;list-style:none}
+.single-product .loomara-size-guide>summary::-webkit-details-marker{display:none}
+.single-product .loomara-size-guide>summary:focus-visible{outline:2px solid #a57b3d;outline-offset:2px}
+.single-product .loomara-size-guide-panel{padding:1rem;background:#f5efe5;border:1px solid #ddd2c0;border-radius:12px;margin:.35rem 0 .75rem;text-align:left}
+.single-product .loomara-size-guide-panel h4{font:500 1.1rem/1.4 var(--serif,serif);margin:0 0 .65rem}
+.single-product .loomara-size-guide-panel p{font:inherit;margin:.65rem 0}
+.single-product .loomara-size-table{max-width:100%;overflow-x:auto}
+.single-product .loomara-size-table table{width:100%;border-collapse:collapse;font:inherit}
+.single-product .loomara-size-table :is(th,td){padding:.6rem .45rem!important;text-align:left;border-bottom:1px solid #ddd2c0;background:transparent;vertical-align:top}
+.single-product .loomara-size-table small{display:block;white-space:nowrap;font-size:.72rem;color:#56616b}
+.single-product .loomara-size-table caption{text-align:left;font-size:.75rem;padding:.5rem 0}

@@ -2,6 +2,15 @@
 
 All release details are maintained in this single file, newest first. Historical notes describe the behaviour and policies at the time of each release.
 
+## v6.1.0 — Homepage discovery, sizing and order layout
+
+- Rotate Diwali, WELCOME20 and collection artwork every three seconds with pause, swipe, keyboard and reduced-motion support.
+- Hide Top rated until genuine qualifying product ratings exist.
+- Add an approximate bedding size reference beside size choices, with confirmed 16-inch cushion-cover sizing.
+- Full-width desktop order cards; keep mobile layout unchanged.
+- Prevent hidden native product-option selectors from causing horizontal overflow.
+- Preserve the deployed shipping adapter and existing order/payment/refund safeguards. No historical replay or settings changes.
+
 ## v5.3.3 — Shipping API label compatibility
 
 - Normalize the eight configured shipping labels to existing WooCommerce status keys at modern single-order REST update and legacy order-edit boundaries. Accept equivalent casing and whitespace/hyphen/underscore separators.

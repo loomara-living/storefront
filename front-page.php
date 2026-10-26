@@ -1,9 +1,18 @@
 <?php get_header(); ?>
 <main id="main" class="home-main">
-  <section class="home-promotion" aria-label="First-order welcome offer">
-    <a href="<?php echo esc_url(class_exists('WooCommerce') ? wc_get_page_permalink('shop') : home_url('/shop/')); ?>" aria-label="Shop bedding — 20% off your first eligible order with WELCOME20">
-      <img src="<?php echo esc_url(get_template_directory_uri() . '/assets/homepage-welcome20-ad.jpg'); ?>" width="1983" height="793" alt="Loomara Living — special for new users: 20% off your first order. Shop now. Premium cotton fabric, soft and breathable, long-lasting quality, comfort for every home." fetchpriority="high" decoding="async">
+  <section class="home-promotion home-offer-carousel" aria-label="Loomara offers" aria-roledescription="carousel">
+    <div class="home-offer-viewport"><div class="home-offer-track">
+    <a href="<?php echo esc_url(class_exists('WooCommerce') ? wc_get_page_permalink('shop') : home_url('/shop/')); ?>" aria-label="Shop the Diwali offer — use DIWALI for 10% off eligible purchases, up to ₹500. Terms apply.">
+      <img src="<?php echo esc_url(get_template_directory_uri() . '/assets/homepage-diwali-ad.jpg'); ?>" width="1983" height="793" alt="Diwali special — 10% off. Brighten your home with soft comforts. Shop now." fetchpriority="high" decoding="async">
     </a>
+    <a href="<?php echo esc_url(class_exists('WooCommerce') ? wc_get_page_permalink('shop') : home_url('/shop/')); ?>" aria-label="Shop bedding — 20% off your first eligible order with WELCOME20">
+      <img src="<?php echo esc_url(get_template_directory_uri() . '/assets/homepage-welcome20-ad.jpg'); ?>" width="1983" height="793" alt="Loomara Living — special for new users: 20% off your first order. Shop now. Premium cotton fabric, soft and breathable, long-lasting quality, comfort for every home." loading="lazy" decoding="async">
+    </a>
+    <a href="<?php echo esc_url(class_exists('WooCommerce') ? wc_get_page_permalink('shop') : home_url('/shop/')); ?>" aria-label="Explore the Loomara collection">
+      <img src="<?php echo esc_url(get_template_directory_uri() . '/assets/homepage-shop-ad.jpg'); ?>" width="1983" height="793" alt="Explore our collection — bedsheets, comforters, cushion covers and combo sets. Shop now." loading="lazy" decoding="async">
+    </a>
+    </div></div>
+    <div class="home-offer-controls" hidden><button type="button" data-offer-prev aria-label="Previous offer">‹</button><span data-offer-position aria-live="off">1 / 3</span><button type="button" data-offer-next aria-label="Next offer">›</button><button type="button" data-offer-pause aria-pressed="false">Pause</button></div>
   </section>
   <section class="hero">
     <div class="hero-copy reveal">
@@ -39,10 +48,12 @@
       <div class="section-heading"><div><p class="eyebrow">Chosen again and again</p><h2>Best sellers</h2></div><a class="text-link" href="<?php echo esc_url(add_query_arg('collection', 'best-sellers', wc_get_page_permalink('shop'))); ?>">Shop best sellers <span aria-hidden="true">→</span></a></div>
       <div class="home-product-grid"><?php loomara_home_collection('best-sellers'); ?></div>
     </section>
+    <?php $top_rated_ids = loomara_top_rated_ids(); if ($top_rated_ids) : ?>
     <section class="home-products home-top-rated">
       <div class="section-heading"><div><p class="eyebrow">Loved in real homes</p><h2>Top rated</h2></div></div>
-      <div class="home-product-grid"><?php loomara_top_rated_collection(); ?></div>
+      <div class="home-product-grid"><?php loomara_top_rated_collection($top_rated_ids); ?></div>
     </section>
+    <?php endif; ?>
   <?php endif; ?>
   <?php loomara_customer_testimonials(); ?>
   <section id="loomara-feeling" class="intro section-grid">

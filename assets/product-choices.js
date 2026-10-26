@@ -30,5 +30,8 @@
     form.addEventListener('change',render);
     window.jQuery?.(form).on('woocommerce_update_variation_values found_variation reset_data hide_variation',render);
     render();
+    const guide = form.querySelector('.loomara-size-guide');
+    const size = choices.find(({select}) => /attribute_(?:pa_)?size$/i.test(select.name));
+    if (guide && size) size.group.before(guide);
   });
 })();

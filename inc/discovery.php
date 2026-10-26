@@ -139,14 +139,9 @@ function loomara_home_collection($selection) {
     }
 }
 
-function loomara_top_rated_collection() {
-    $ids = loomara_top_rated_ids();
+function loomara_top_rated_collection($ids = null) {
+    if ($ids === null) { $ids = loomara_top_rated_ids(); }
     if ($ids) {
         echo do_shortcode('[products ids="' . implode(',', array_map('absint', $ids)) . '" columns="4" orderby="post__in"]');
-    } else {
-        $unrated = get_posts(['post_type' => 'product', 'post_status' => 'publish', 'numberposts' => 8, 'fields' => 'ids', 'orderby' => ['date' => 'DESC', 'ID' => 'DESC'], 'tax_query' => WC()->query->get_tax_query(), 'meta_query' => ['relation' => 'OR', ['key' => '_wc_review_count', 'value' => 0, 'compare' => '=', 'type' => 'NUMERIC'], ['key' => '_wc_review_count', 'compare' => 'NOT EXISTS']]]);
-        echo '<p class="rating-empty-note">Customer favourites are still taking shape. Until pieces earn 4★ or above, discover these unrated new arrivals—not yet top rated.</p>';
-        if ($unrated) { echo do_shortcode('[products ids="' . implode(',', array_map('absint', $unrated)) . '" columns="4" orderby="post__in"]'); }
-        else { echo '<p>No pieces have earned 4★ yet. Your honest ratings will help shape this collection.</p>'; }
     }
 }

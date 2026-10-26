@@ -14,6 +14,7 @@ require_once get_template_directory() . '/inc/discovery.php';
 require_once get_template_directory() . '/inc/footer-guides.php';
 require_once get_template_directory() . '/inc/contact-artwork.php';
 require_once get_template_directory() . '/inc/product-cart-quantity.php';
+require_once get_template_directory() . '/inc/shipping-status-input.php';
 require_once get_template_directory() . '/inc/shopping-experience.php';
 require_once get_template_directory() . '/inc/address-book.php';
 require_once get_template_directory() . '/inc/magic-address-sync.php';

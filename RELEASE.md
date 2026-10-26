@@ -2,6 +2,13 @@
 
 All release details are maintained in this single file, newest first. Historical notes describe the behaviour and policies at the time of each release.
 
+## v5.3.3 — Shipping API label compatibility
+
+- Normalize the eight configured shipping labels to existing WooCommerce status keys at modern single-order REST update and legacy order-edit boundaries. Accept equivalent casing and whitespace/hyphen/underscore separators.
+- Preserve native authentication/permissions and existing validation, status/email/refund hooks. No direct order writes; unknown/unmapped, payment, Processing, return and refund values remain unchanged.
+- 316 local PHP boundary/unit checks passed. No live order mutation or historical replay was used for verification. This adapter does not recover a status push that never arrives.
+- All unrelated pending local changes remain excluded.
+
 ## v5.3.2 — Distinct shipping status labels
 
 - Match the configured Shiprocket stages: Ready to Ship, Out for Pickup, Picked Up, Shipped, In Transit, Out for Delivery and Delivered. Cancelled and all non-shipping statuses retain their existing behaviour.

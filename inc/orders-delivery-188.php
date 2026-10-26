@@ -20,7 +20,6 @@ add_filter('woocommerce_order_number', function ($number, $order) {
 function loomara_order_status_selection() {
     $raw = $_GET['order_status'] ?? 'all';
     $value = is_scalar($raw) ? sanitize_key(wp_unslash($raw)) : '';
-    if(in_array($value,['pickup-scheduled','out-for-pickup','picked-up'],true)){return 'ready-to-ship';}
     if(in_array($value,['pending','checkout-draft','draft'],true)){return 'all';}
     return in_array($value, ['successful','all'], true) || isset(wc_get_order_statuses()['wc-'.$value]) ? $value : 'all';
 }
@@ -40,7 +39,6 @@ function loomara_account_order_query($args) {
     $selected = loomara_order_status_selection();
     $args['status'] = $selected === 'all' ? array_values(array_unique(array_merge(array_keys(wc_get_order_statuses()),['wc-checkout-draft']))) : ($selected === 'successful' ? loomara_successful_order_statuses() : ($selected === 'pending'?['pending','checkout-draft']:[$selected]));
     // Ownership always wins over query parameters or other presentation filters.
-    if($selected==='ready-to-ship'){$args['status']=['ready-to-ship','pickup-scheduled','out-for-pickup','picked-up'];}
     $args['customer'] = get_current_user_id();
     // Exclude before pagination so hidden attempts do not produce empty pages/counts.
     $args['exclude']=array_values(array_unique(array_merge((array)($args['exclude']??[]),loomara_hidden_unpaid_order_ids())));
@@ -92,7 +90,7 @@ function loomara_hidden_unpaid_order_ids(){
 // Preserve the native pending key: payment gateways and stock-release hooks depend on it.
 add_filter('wc_order_statuses',function($statuses){if(isset($statuses['wc-pending'])){$statuses['wc-pending']='Payment attempted';}return $statuses;},100);
 function loomara_customer_order_status_label($status,$order=null){
-    if(in_array($status,['ready-to-ship','pickup-scheduled','out-for-pickup','picked-up'],true)){return 'Ready to ship';}
+    if(function_exists('loomara_fulfilment_labels') && isset(loomara_fulfilment_labels()[$status])){return loomara_fulfilment_labels()[$status];}
     if (function_exists('loomara_cr_job') && $order instanceof WC_Order && in_array($status,['pending','on-hold','processing'],true)) {
         $job=loomara_cr_job($order);if (in_array($job['stage']??'',['requested','shipping_wait','review'],true)) { return 'Cancellation requested'; }
     }

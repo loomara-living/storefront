@@ -2,8 +2,8 @@
 /** Native fulfilment statuses. Registration never migrates orders or confirms payment. */
 defined('ABSPATH') || exit;
 function loomara_fulfilment_labels(){
-    // Exact courier keys remain internal for cancellation safety; one display milestone.
-    return ['ready-to-ship'=>'Ready to ship','pickup-scheduled'=>'Ready to ship','out-for-pickup'=>'Ready to ship','picked-up'=>'Ready to ship','shipped'=>'Shipped','in-transit'=>'In transit','out-for-delivery'=>'Out for delivery','delivered'=>'Delivered'];
+    // Stable machine keys; Pickup Scheduled remains only for historical orders.
+    return ['ready-to-ship'=>'Ready to Ship','pickup-scheduled'=>'Pickup Scheduled (legacy)','out-for-pickup'=>'Out for Pickup','picked-up'=>'Picked Up','shipped'=>'Shipped','in-transit'=>'In Transit','out-for-delivery'=>'Out for Delivery','delivered'=>'Delivered'];
 }
 
 function loomara_register_fulfilment_statuses() {
@@ -23,10 +23,10 @@ function loomara_fulfilment_status_labels($statuses) {
     foreach ($statuses as $key=>$label) {
         $result[$key]=$label;
         if ($key==='wc-processing') {
-            foreach(loomara_fulfilment_labels() as $slug=>$text){$result['wc-'.$slug]=$statuses['wc-'.$slug]??$text;}
+            foreach(loomara_fulfilment_labels() as $slug=>$text){$result['wc-'.$slug]=$text;}
         }
     }
-    foreach(loomara_fulfilment_labels() as $slug=>$text){$result+=['wc-'.$slug=>$text];}return $result;
+    foreach(loomara_fulfilment_labels() as $slug=>$text){$result['wc-'.$slug]=$text;}return $result;
 }
 add_filter('wc_order_statuses','loomara_fulfilment_status_labels',20);
 

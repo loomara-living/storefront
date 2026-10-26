@@ -1,14 +1,13 @@
-// Presentation only: retain a selected legacy courier key to avoid changing an
-// order merely because staff opens/saves it. New selections use ready-to-ship.
+// Retire unmapped Pickup Scheduled from new selections, preserving selected
+// historical values. All other mapped shipping stages remain distinct.
 (() => {
-  const stages=new Set(['ready-to-ship','pickup-scheduled','out-for-pickup','picked-up']);
+  const stages=new Set(['pickup-scheduled']);
   function tidy(select){
     const options=[...select.options].filter(o=>stages.has(o.value.replace(/^wc-/,'')));
     if(!options.length)return;
     const selected=options.find(o=>o.selected);
-    const keep=selected||options.find(o=>o.value.replace(/^wc-/,'')==='ready-to-ship')||options[0];
+    const keep=selected;
     let changed=false;
-    if(!selected&&keep.value.replace(/^wc-/,'')!=='ready-to-ship'){keep.value=(keep.value.startsWith('wc-')?'wc-':'')+'ready-to-ship';changed=true;}
     for(const option of options){if(option!==keep){option.remove();changed=true;}}
     if(changed&&window.jQuery){window.jQuery(select).trigger('change.select2');}
   }

@@ -2,6 +2,13 @@
 
 All release details are maintained in this single file, newest first. Historical notes describe the behaviour and policies at the time of each release.
 
+## v5.3.2 — Distinct shipping status labels
+
+- Match the configured Shiprocket stages: Ready to Ship, Out for Pickup, Picked Up, Shipped, In Transit, Out for Delivery and Delivered. Cancelled and all non-shipping statuses retain their existing behaviour.
+- Remove the previous Ready to ship display/filter consolidation. Keep the distinct mapped stages available in the admin editor.
+- Retire unselected Pickup Scheduled from new admin choices, while preserving its registered key and selected historical values. No order migrations, historical status replay or email-trigger changes.
+- This release excludes all other pending local work, including homepage offers, size guide, order-card width and the separate variation-layout fix.
+
 ## v5.3.0 — Category motion and product shopping controls
 
 - Replace colour/size dropdown presentation with accessible labelled option buttons linked to the native WooCommerce selectors, preserving exact labels and disabled options. Navy selected states and subtle hover/tap motion, with reduced-motion support and native dropdown fallback without JavaScript.

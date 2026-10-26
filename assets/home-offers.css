@@ -1,14 +1,15 @@
+.home-offer-carousel{position:relative}
 .home-offer-viewport{overflow:hidden;touch-action:pan-y}
 .home-offer-carousel .home-offer-track{display:flex;transition:transform .55s ease}
 .home-offer-carousel .home-offer-track>a{display:block;flex:0 0 100%;min-width:0;width:100%}
 .home-offer-carousel .home-offer-track img{display:block;width:100%;height:auto;aspect-ratio:1983/793;object-fit:contain}
-.home-offer-controls{display:flex;align-items:center;justify-content:center;gap:.7rem;padding:.3rem .8rem;background:#f5efe5;color:#142944;font:400 .8rem/1.4 var(--sans,sans-serif)}
+.home-offer-controls{position:absolute;inset:0;display:flex;align-items:center;justify-content:space-between;padding:0 clamp(6px,1.5vw,22px);background:transparent;color:#142944;font:400 .8rem/1.4 var(--sans,sans-serif);pointer-events:none}
 .home-offer-controls[hidden]{display:none}
 .home-offer-controls [data-offer-position]{display:none}
 /* Keep motion control available to keyboard users without a visible toolbar button. */
 .home-offer-controls [data-offer-pause]:not(:focus){position:absolute!important;width:1px!important;height:1px!important;min-width:0!important;min-height:0!important;padding:0!important;margin:-1px!important;overflow:hidden!important;clip-path:inset(50%);white-space:nowrap;border:0!important}
-.home-offer-controls button{min-width:44px;min-height:44px;border:0;border-radius:50%;background:transparent;color:inherit;font:inherit;cursor:pointer}
-.home-offer-controls button[data-offer-pause]{border-radius:20px;padding:0 .8rem}
+.home-offer-controls button{display:inline-flex;align-items:center;justify-content:center;flex:none;width:44px;min-width:44px;height:44px;min-height:44px;padding:0;border:1px solid #ffffffa6;border-radius:50%;background:#fffaf2e6;color:inherit;font:400 1.5rem/1 var(--sans,sans-serif);box-shadow:0 2px 10px #14294418;cursor:pointer;pointer-events:auto}
+.home-offer-controls button[data-offer-pause]{position:absolute;bottom:8px;left:50%;transform:translateX(-50%);width:auto;border-radius:20px;padding:0 .8rem;font-size:.8rem}
 .home-offer-controls button:hover{background:#e9dfcf}
 .home-offer-controls button:focus-visible,.home-offer-track>a:focus-visible{outline:2px solid #142944;outline-offset:-3px}
 @media(prefers-reduced-motion:reduce){.home-offer-carousel .home-offer-track{transition:none}}

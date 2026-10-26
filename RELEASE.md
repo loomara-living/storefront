@@ -2,6 +2,11 @@
 
 All release details are maintained in this single file, newest first. Historical notes describe the behaviour and policies at the time of each release.
 
+## v6.1.2 — Overlay navigation and collection headings
+
+- Place offer arrows on the image edges and testimonial arrows beside the quote, removing separate control-row space. Keep 44px targets, link/swipe access and keyboard pause.
+- Shop and Sale use one “The Loomara collection” heading instead of a repeated Shop title. Category and search headings remain unchanged.
+
 ## v6.1.1 — Cleaner carousel controls
 
 - Hide numeric slide counters and visible Pause buttons on homepage offers and testimonials. Retain pause on keyboard focus for accessible motion control, and preserve arrows, swipe, rotation and reduced-motion handling.

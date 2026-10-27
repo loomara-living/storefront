@@ -53,6 +53,7 @@ require_once get_template_directory() . '/inc/account-order-references.php';
 require_once get_template_directory() . '/inc/order-coupon-details.php';
 require_once get_template_directory() . '/inc/customer-discovery.php';
 require_once get_template_directory() . '/inc/order-journey.php';
+require_once get_template_directory() . '/inc/order-item-presentation.php';
 require_once get_template_directory() . '/inc/store-tools.php';
 require_once get_template_directory() . '/inc/checkout-identity-117.php';
 require_once get_template_directory() . '/inc/shiprocket-connection-195.php';

@@ -49,7 +49,7 @@ function loomara_buy_again_line($item){
         $value=taxonomy_exists($meta)?sanitize_title((string)$old):wc_clean(html_entity_decode((string)$old,ENT_QUOTES,get_bloginfo('charset')));
         if($now!=='' && $now!==$value){return false;}$attrs[$key]=$value;
     }}
-    foreach($item->get_meta_data() as $meta){$key=(string)$meta->key;if($key!==''&&!in_array($key,['_reduced_stock','_restock_refunded_items'],true)&&!array_key_exists('attribute_'.$key,$attrs)){return false;}}
+    foreach($item->get_meta_data() as $meta){$key=(string)$meta->key;if($key!==''&&!in_array($key,['_reduced_stock','_restock_refunded_items','_loomara_purchase_sku','_loomara_purchase_image'],true)&&!array_key_exists('attribute_'.$key,$attrs)){return false;}}
     return ['product'=>$p,'product_id'=>$parent->get_id(),'variation_id'=>$p->is_type('variation')?$p->get_id():0,'attributes'=>$attrs];
 }
 function loomara_buy_again_form($o){

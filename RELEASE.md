@@ -2,6 +2,17 @@
 
 All release details are maintained in this single file, newest first. Historical notes describe the behaviour and policies at the time of each release.
 
+## v6.3.1 — Storefront refinement and workflow detail
+
+- Match New collection image frames: 130px desktop/tablet, 125px mobile, contain fit without cropping. Match homepage horizontal padding, grid gaps and four-to-two-column breakpoint so image widths align as well.
+- Align Shop/category Recently viewed with the existing results rail and its four/three/two-column breakpoints, preserving the same image height and uncropped fit as catalogue cards.
+- Buy again links now open and focus the review on initial, repeated same-page, hash-change and back/forward navigation; scroll after expansion with header clearance. No automatic cart addition or change to availability checks.
+- Redesign room/style with lifestyle imagery, room/category cards, real taxonomy style links and a prominent Shop button. Add a homepage room/style feature immediately before New collection, reusing supplied bedroom artwork.
+- Retire bedding builder: remove Shop link, page provisioning and cart POST handler; old shortcode returns a safe collection link. Existing pages, carts and orders remain unchanged.
+- Show saved order product titles alongside order references in support-case selection, customer case details and private staff list/review screens; existing cases resolve their linked order without a data migration.
+- View order item images and SKU context, retaining native saved names, variant metadata, quantities and line totals; display saved post-discount/tax-inclusive unit purchase price. Save hidden SKU/image references for future native-checkout items only; no historical backfill.
+- Expand read-only workflow records with order status/products, recorded attempts, IST timestamps, scheduler observations, retry limits and stage explanations. Never echo arbitrary error/provider payloads or run workflow jobs.
+
 ## v6.3.0 — Customer discovery, order journey and store tools
 
 - Browser-local recently viewed products on Home, Shop/category and product pages, with a 30-day/20-product cap, selected variant links, current public prices and Clear history. No account/email tracking or third-party recommendation service.

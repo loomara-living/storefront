@@ -16,5 +16,6 @@
     <?php loomara_shop_discovery(); ?>
   <?php endif; ?>
   <div class="woocommerce-content"><?php if (is_shop() || is_product_taxonomy() || (is_search() && in_array('product',(array)get_query_var('post_type'),true))) { loomara_category_colour_content(); } else { woocommerce_content(); } ?></div>
+  <?php if (is_shop() || is_product_taxonomy()) { loomara_recent_products_section(); } ?>
 </main>
 <?php get_footer(); ?>

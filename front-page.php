@@ -54,6 +54,7 @@
     </section>
     <?php endif; ?>
   <?php endif; ?>
+  <?php loomara_recent_products_section(); ?>
   <?php loomara_customer_testimonials(); ?>
   <section id="loomara-feeling" class="intro section-grid">
     <div class="intro-heading reveal"><p class="eyebrow">The Loomara feeling</p><h2>Made for the<br><em>rhythm of home.</em></h2></div>

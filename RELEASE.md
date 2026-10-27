@@ -2,6 +2,17 @@
 
 All release details are maintained in this single file, newest first. Historical notes describe the behaviour and policies at the time of each release.
 
+## v6.3.0 — Customer discovery, order journey and store tools
+
+- Browser-local recently viewed products on Home, Shop/category and product pages, with a 30-day/20-product cap, selected variant links, current public prices and Clear history. No account/email tracking or third-party recommendation service.
+- Owner-only order progress timeline from native dates, known delivery/request metadata and a bounded future status-event ledger. Never fabricate missing historical stages or expose private order notes.
+- Owner-only Buy again review for Delivered, Completed, Cancelled and Refunded orders. Explicit nonce-protected POST, current-product/variant/stock checks, native cart validation, preserved existing cart and short-lived duplicate-request protection. No payment, old-price/coupon copying or original-order mutation. Changed/customised/unavailable lines must be selected again from the catalogue.
+- Replace the native order-again button only on account View order with the safer review form. No historical status replay or provider automation changes.
+- Bedding-set builder with exact available variants at current individual prices; native cart validation, retained existing cart and duplicate-submit protection. Building requires sign-in; no bundle discount.
+- Room/style browsing through real room categories and existing style subcategories. Protected setup creates only missing discovery pages and links published destinations from Shop.
+- Private, order-owned support cases with staff replies shown in the customer's account. No additional emails or automated cancellation/return/refund actions.
+- Administrator-only integration snapshot: saved Shiprocket verification, cron configuration and bounded recent workflow records. No API calls, credentials or automatic retries.
+
 ## v6.2.3 — QC corrections
 
 - Bind Ready to Ship to the existing readiness email and verified-tracking worker, preserving legacy settings IDs and once-only markers; no historical replay or additional pickup-stage email enrollment.

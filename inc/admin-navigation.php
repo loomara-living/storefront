@@ -19,6 +19,8 @@ add_action('admin_head',function(){
 function loomara_admin_settings_page(){
     if(!current_user_can('manage_options')){return;}
     $tools=[
+        ['Integration health','loomara-integration-health','Read-only saved verification and recent workflow observations. No API calls or retries.'],
+        ['Customer support cases','edit.php?post_type=loomara_case','Review private order-linked customer requests and publish account replies.'],
         ['Shiprocket connection','loomara-shiprocket','Manage the shipping connection and run read-only order matching checks.'],
         ['Paid order push to Shiprocket','loomara-order-push','Manage the existing paid-order exporter and review its recent export records.'],
         ['Customer returns','loomara-returns','Review item-level return requests, approve reverse pickups and inspect received returns.'],
@@ -27,9 +29,11 @@ function loomara_admin_settings_page(){
     ];
     echo '<div class="wrap"><h1>Loomara Settings</h1><p>Ongoing store integrations in one place. Opening this page does not change settings or process orders.</p><div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,280px),1fr));gap:16px;max-width:1100px;margin-top:24px">';
     foreach($tools as [$title,$slug,$description]){
-        echo '<section style="background:#fff;border:1px solid #c3c4c7;border-radius:8px;padding:20px"><h2 style="margin-top:0">'.esc_html($title).'</h2><p>'.esc_html($description).'</p><a class="button button-primary" href="'.esc_url(admin_url('admin.php?page='.$slug)).'">Open '.esc_html($title).'</a></section>';
+        $destination=str_starts_with($slug,'edit.php?')?$slug:'admin.php?page='.$slug;
+        echo '<section style="background:#fff;border:1px solid #c3c4c7;border-radius:8px;padding:20px"><h2 style="margin-top:0">'.esc_html($title).'</h2><p>'.esc_html($description).'</p><a class="button button-primary" href="'.esc_url(admin_url($destination)).'">Open '.esc_html($title).'</a></section>';
     }
     echo '</div>';
+    if(function_exists('loomara_store_pages_settings')){loomara_store_pages_settings();}
     if(function_exists('loomara_abandoned_reminder_settings')){loomara_abandoned_reminder_settings();}
     if(function_exists('loomara_restock_settings')){loomara_restock_settings();}
     if(function_exists('loomara_processing_age_settings')){loomara_processing_age_settings();}

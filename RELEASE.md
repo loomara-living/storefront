@@ -2,6 +2,12 @@
 
 All release details are maintained in this single file, newest first. Historical notes describe the behaviour and policies at the time of each release.
 
+## v6.4.0 — Layered bedroom colour visualiser
+
+- Native page with independently selected sheet, comforter and accent-cushion SVG layers; actual catalogue variant thumbnails, prices, stock and product links. Explicit colour-study limitations: no exact textile patterns, size/fit simulation, cart mutation, upload or AI-provider integration.
+- Use the supplied Cozy Home Collection artwork in the homepage room/style feature only, preserving natural proportions and existing destination; room/style destination hero stays unchanged.
+- Provision only a missing Style your bedroom page through the protected discovery-page setup action; link published matching destinations from Shop and room/style. Existing pages remain untouched.
+
 ## v6.3.1 — Storefront refinement and workflow detail
 
 - Match New collection image frames: 130px desktop/tablet, 125px mobile, contain fit without cropping. Match homepage horizontal padding, grid gaps and four-to-two-column breakpoint so image widths align as well.

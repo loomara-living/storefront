@@ -39,7 +39,6 @@
     </div>
   </section>
   <?php if (class_exists('WooCommerce')) : ?>
-    <?php loomara_room_home_feature(); ?>
     <section class="home-products home-products-new">
       <div class="section-heading reveal"><div><p class="eyebrow">Just arrived</p><h2>New collection</h2></div><a class="text-link" href="<?php echo esc_url(wc_get_page_permalink('shop')); ?>">Explore new arrivals <span aria-hidden="true">→</span></a></div>
       <div class="home-product-grid reveal"><?php echo do_shortcode('[products limit="4" columns="4" orderby="date" order="DESC"]'); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></div>

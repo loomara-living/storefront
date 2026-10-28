@@ -2,6 +2,13 @@
 
 All release details are maintained in this single file, newest first. Historical notes describe the behaviour and policies at the time of each release.
 
+## v6.4.1 — Retire room/style browsing and bedroom visualiser
+
+- Remove the homepage room/style feature and automatic Shop/category links for both retired features.
+- Disable the bedroom visualiser module and retain empty compatibility shortcodes; visualiser assets and catalogue queries no longer load.
+- Redirect both retired page routes to Shop with HTTP 301 outside previews. Preserve published page records and existing assets.
+- Remove discovery-page provisioning choices and the settings panel. Cart, orders, payments, refunds, emails and integration settings remain unchanged.
+
 ## v6.4.0 — Layered bedroom colour visualiser
 
 - Native page with independently selected sheet, comforter and accent-cushion SVG layers; actual catalogue variant thumbnails, prices, stock and product links. Explicit colour-study limitations: no exact textile patterns, size/fit simulation, cart mutation, upload or AI-provider integration.

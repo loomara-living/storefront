@@ -10,6 +10,13 @@ body .woocommerce-error{color:#8f3028}
 body .woocommerce-info::before,body .woocommerce-error::before{top:.95rem;left:0;color:currentColor}
 body .woocommerce-error li{margin:.25rem 0}
 body .woocommerce-message a:focus-visible,body .woocommerce-info a:focus-visible,body .woocommerce-error a:focus-visible{outline:2px solid currentColor;outline-offset:4px}
+/* WooCommerce focuses this announcement after adding an item. Give that
+   non-interactive container a quiet focus cue, not the global gold rectangle. */
+body .woocommerce-message{position:relative;column-gap:.75rem;row-gap:.25rem;min-height:48px;margin-bottom:1.5rem!important;overflow-wrap:anywhere}
+body .woocommerce-message:focus-visible{outline:0;box-shadow:0 1px 0 #42644b55!important}
+body .woocommerce-message .button::after{content:'\2192';display:inline-block;margin-left:.5rem;text-decoration:none}
+body .woocommerce-message .button:hover{color:#42644b!important}
+@media(max-width:700px){body .woocommerce-message{padding:.65rem 0!important;column-gap:.5rem}body .woocommerce-message .button{margin-left:2rem!important}}
 .wc-block-components-notice-banner:is(.is-success,.is-info,.is-error,.is-warning){padding:.85rem 0!important;border:0!important;border-radius:0!important;background:transparent!important;box-shadow:none!important;gap:.75rem;line-height:1.6;overflow-wrap:anywhere}
 .wc-block-components-notice-banner.is-success>svg{background:#42644b!important}
 .wc-block-components-notice-banner.is-info>svg{background:#24405f!important}

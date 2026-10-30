@@ -14,6 +14,7 @@
     </div></div>
     <div class="home-offer-controls" hidden><button type="button" data-offer-prev aria-label="Previous offer">‹</button><span data-offer-position aria-live="off">1 / 3</span><button type="button" data-offer-next aria-label="Next offer">›</button><button type="button" data-offer-pause aria-pressed="false">Pause</button></div>
   </section>
+  <?php if (function_exists('loomara_combo_home_banner')) { loomara_combo_home_banner(); } ?>
   <section class="hero">
     <div class="hero-copy reveal">
       <p class="eyebrow">A softer way home</p>

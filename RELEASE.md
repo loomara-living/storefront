@@ -2,6 +2,14 @@
 
 All release details are maintained in this single file, newest first. Historical notes describe the behaviour and policies at the time of each release.
 
+## v6.5.3 — Separate bedding COMBO offer and success notice
+
+- COMBO: 15% off combo sets or separately added bedsheets and comforters together. Pillow/cushion covers qualify only with either eligible bedding option. Unpaired standalone bedding remains excluded even with a combo set. No stacking; native WooCommerce discount validation remains authoritative. Saved coupon only, with no virtual fallback when disabled.
+- Homepage generated lifestyle banner with live accessible offer text; Shop offer and cart comforter-discovery prompt. Artwork is illustrative, not a specific SKU.
+- Allow the saved COMBO coupon in Magic Checkout's promotion list only after order-based WooCommerce validation passes. Other offers retain their existing rules.
+- Quiet success-announcement focus cue instead of oversized gold rectangle; preserve notice content, accessibility and View cart action.
+- Coupon 228 prepared as draft; activate only after deployment verification. No historical order, payment, refund, inventory or email replay.
+
 ## v6.5.2 — Original banners and matching Recently viewed cards
 
 - Revert the three portrait mobile banners, responsive picture sources and mobile aspect-ratio override.

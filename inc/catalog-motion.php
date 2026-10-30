@@ -24,6 +24,6 @@ add_action('wp', function () {
 add_action('wp_enqueue_scripts', function () {
     wp_enqueue_style('loomara-soft-motion', get_template_directory_uri().'/assets/soft-motion.css', ['loomara-theme'], '1.0.0');
     if (function_exists('is_shop') && (is_front_page() || is_shop() || is_product_taxonomy())) {
-        wp_enqueue_script('loomara-card-motion', get_template_directory_uri().'/assets/card-motion.js', [], filemtime(__DIR__.'/../assets/card-motion.js'), true);
+        wp_enqueue_script('loomara-card-motion', get_template_directory_uri().'/assets/card-motion.js', [], '1.0.0', true);
     }
 });

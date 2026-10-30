@@ -55,7 +55,6 @@ require_once get_template_directory() . '/inc/customer-discovery.php';
 require_once get_template_directory() . '/inc/order-journey.php';
 require_once get_template_directory() . '/inc/order-item-presentation.php';
 require_once get_template_directory() . '/inc/store-tools.php';
-require_once get_template_directory() . '/inc/storefront-aesthetics.php';
 require_once get_template_directory() . '/inc/checkout-identity-117.php';
 require_once get_template_directory() . '/inc/shiprocket-connection-195.php';
 require_once get_template_directory() . '/inc/shiprocket-status-196.php';

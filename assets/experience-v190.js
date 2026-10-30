@@ -41,7 +41,7 @@
     rail.addEventListener('pointerdown',e=>{if(e.isPrimary)start={x:e.clientX,y:e.clientY};});
     rail.addEventListener('pointercancel',()=>{start=null;});
     rail.addEventListener('pointerup',e=>{if(!start)return;const dx=e.clientX-start.x,dy=e.clientY-start.y;start=null;if(Math.abs(dx)>45&&Math.abs(dx)>Math.abs(dy)*1.4)move(dx>0?1:-1);});
-    setInterval(()=>{if(paused||document.hidden||section.matches(':hover')||section.contains(document.activeElement)||!section.getBoundingClientRect().height||section.getBoundingClientRect().bottom<=0||section.getBoundingClientRect().top>=innerHeight)return;move(1);},12000);
+    setInterval(()=>{if(paused||document.hidden||section.matches(':hover')||section.contains(document.activeElement))return;move(1);},6500);
   });
   document.querySelectorAll('[data-cart-delivery]').forEach(form=>{
     const result=form.parentElement.querySelector('[data-cart-delivery-result]'),button=form.querySelector('button');

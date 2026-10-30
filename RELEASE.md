@@ -2,6 +2,13 @@
 
 All release details are maintained in this single file, newest first. Historical notes describe the behaviour and policies at the time of each release.
 
+## v6.5.1 — Revert aesthetic refresh; retain mobile artwork only
+
+- Restore pre-v6.5.0 ratings, buttons, product typography, announcement and surrounding animation behaviour.
+- Remove the aesthetic module and stylesheet introduced by v6.5.0.
+- Keep only the three portrait mobile banner images, responsive homepage picture sources and supporting aspect-ratio rules. Original desktop banners remain unchanged.
+- Supersedes the unshipped announcement/font patch. No cart, order, price, coupon, stock, payment, refund, email or integration-setting changes.
+
 ## v6.5.0 — Calmer storefront and mobile artwork
 
 - Render stars only for products with genuine approved rating aggregates. Review submission and moderation rules are unchanged.

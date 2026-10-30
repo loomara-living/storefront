@@ -59,5 +59,5 @@
       preload.onerror = () => { s.busy=false; };
       preload.src=url.href;
     });
-  }, 14000);
+  }, 5000);
 })();

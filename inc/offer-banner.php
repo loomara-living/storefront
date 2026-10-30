@@ -3,10 +3,10 @@
 defined('ABSPATH') || exit;
 function loomara_offer_banner() {
     $text = 'Launch Offer · Use WELCOME20 to get 20% additional discount on First Order. Dispatch across India within 24 hours';
-    echo '<aside class="launch-strip launch-strip-calm" aria-label="Launch offer"><div class="offer-viewport"><div class="offer-track"><span>'.esc_html($text).'</span></div></div></aside>';
+    echo '<aside class="launch-strip" aria-label="Launch offer"><div class="offer-viewport"><div class="offer-track"><span>'.esc_html($text).'</span><span aria-hidden="true">'.esc_html($text).'</span></div></div><button type="button" data-offer-pause aria-label="Pause offer animation" aria-pressed="false">Pause</button></aside>';
 }
 add_action('wp_enqueue_scripts', function () {
-    wp_enqueue_style('loomara-offer-banner', get_template_directory_uri().'/assets/offer-banner.css', ['loomara-refinements'], filemtime(__DIR__.'/../assets/offer-banner.css'));
+    wp_enqueue_style('loomara-offer-banner', get_template_directory_uri().'/assets/offer-banner.css', ['loomara-refinements'], '1.7.7');
     wp_enqueue_script('loomara-offer-banner', get_template_directory_uri().'/assets/offer-banner.js', [], '1.7.7', true);
 });
 // Make the advertised offer usable without silently changing an existing

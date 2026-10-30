@@ -2,6 +2,13 @@
 
 All release details are maintained in this single file, newest first. Historical notes describe the behaviour and policies at the time of each release.
 
+## v6.5.2 — Restore original mobile banners
+
+- Revert the three portrait mobile banners, responsive picture sources and mobile aspect-ratio override.
+- Restore the exact pre-v6.5.0 homepage banner markup/styles; the original desktop artwork now serves all screen sizes again.
+- Remove generated portrait assets from the deployed theme; recoverable in earlier Git history.
+- Recently viewed card-format work remains local and is excluded. No other storefront, customer, commerce or integration data changes.
+
 ## v6.5.1 — Revert aesthetic refresh; retain mobile artwork only
 
 - Restore pre-v6.5.0 ratings, buttons, product typography, announcement and surrounding animation behaviour.

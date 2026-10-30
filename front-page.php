@@ -3,13 +3,13 @@
   <section class="home-promotion home-offer-carousel" aria-label="Loomara offers" aria-roledescription="carousel">
     <div class="home-offer-viewport"><div class="home-offer-track">
     <a href="<?php echo esc_url(class_exists('WooCommerce') ? wc_get_page_permalink('shop') : home_url('/shop/')); ?>" aria-label="Shop the Diwali offer — use DIWALI for 10% off eligible purchases, up to ₹500. Terms apply.">
-      <picture><source media="(max-width:620px)" srcset="<?php echo esc_url(get_template_directory_uri() . '/assets/homepage-diwali-mobile.jpg'); ?>" width="1122" height="1402"><img src="<?php echo esc_url(get_template_directory_uri() . '/assets/homepage-diwali-ad.jpg'); ?>" width="1983" height="793" alt="Diwali special — 10% off. Brighten your home with soft comforts. Shop now." fetchpriority="high" decoding="async"></picture>
+      <img src="<?php echo esc_url(get_template_directory_uri() . '/assets/homepage-diwali-ad.jpg'); ?>" width="1983" height="793" alt="Diwali special — 10% off. Brighten your home with soft comforts. Shop now." fetchpriority="high" decoding="async">
     </a>
     <a href="<?php echo esc_url(class_exists('WooCommerce') ? wc_get_page_permalink('shop') : home_url('/shop/')); ?>" aria-label="Shop bedding — 20% off your first eligible order with WELCOME20">
-      <picture><source media="(max-width:620px)" srcset="<?php echo esc_url(get_template_directory_uri() . '/assets/homepage-welcome20-mobile.jpg'); ?>" width="1122" height="1402"><img src="<?php echo esc_url(get_template_directory_uri() . '/assets/homepage-welcome20-ad.jpg'); ?>" width="1983" height="793" alt="Loomara Living — special for new users: 20% off your first eligible order with WELCOME20. Shop now." loading="lazy" decoding="async"></picture>
+      <img src="<?php echo esc_url(get_template_directory_uri() . '/assets/homepage-welcome20-ad.jpg'); ?>" width="1983" height="793" alt="Loomara Living — special for new users: 20% off your first order. Shop now. Premium cotton fabric, soft and breathable, long-lasting quality, comfort for every home." loading="lazy" decoding="async">
     </a>
     <a href="<?php echo esc_url(class_exists('WooCommerce') ? wc_get_page_permalink('shop') : home_url('/shop/')); ?>" aria-label="Explore the Loomara collection">
-      <picture><source media="(max-width:620px)" srcset="<?php echo esc_url(get_template_directory_uri() . '/assets/homepage-shop-mobile.jpg'); ?>" width="1122" height="1402"><img src="<?php echo esc_url(get_template_directory_uri() . '/assets/homepage-shop-ad.jpg'); ?>" width="1983" height="793" alt="Explore our collection — bedsheets, comforters, cushion covers and combo sets. Shop now." loading="lazy" decoding="async"></picture>
+      <img src="<?php echo esc_url(get_template_directory_uri() . '/assets/homepage-shop-ad.jpg'); ?>" width="1983" height="793" alt="Explore our collection — bedsheets, comforters, cushion covers and combo sets. Shop now." loading="lazy" decoding="async">
     </a>
     </div></div>
     <div class="home-offer-controls" hidden><button type="button" data-offer-prev aria-label="Previous offer">‹</button><span data-offer-position aria-live="off">1 / 3</span><button type="button" data-offer-next aria-label="Next offer">›</button><button type="button" data-offer-pause aria-pressed="false">Pause</button></div>

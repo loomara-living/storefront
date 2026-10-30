@@ -2,6 +2,15 @@
 
 All release details are maintained in this single file, newest first. Historical notes describe the behaviour and policies at the time of each release.
 
+## v6.5.0 — Calmer storefront and mobile artwork
+
+- Render stars only for products with genuine approved rating aggregates. Review submission and moderation rules are unchanged.
+- Consistent 48px action controls and 10px corners; navy primary actions, outlined catalogue/secondary actions, understated product price/cart/wishlist presentation. Preserve hidden/disabled states and circular icon controls.
+- Sans-serif product names, bounded editorial typography and supporting-copy spacing.
+- Static single-copy announcement; stop decorative marquee/category/sale-sparkle loops. Product photos rotate every 14 seconds and visible testimonials every 12 seconds; motion guards remain. Main carousel retains its three-second timing, navigation and accessibility controls.
+- Dedicated portrait Diwali, WELCOME20 and collection artwork for mobile via responsive picture sources; original desktop artwork remains unchanged.
+- Presentation only: no product/price/coupon/stock/order/payment/refund/email/integration-setting changes or historical replay. Local fixtures and source-image copies are excluded.
+
 ## v6.4.1 — Retire room/style browsing and bedroom visualiser
 
 - Remove the homepage room/style feature and automatic Shop/category links for both retired features.

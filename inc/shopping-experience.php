@@ -71,6 +71,8 @@ function loomara_product_rating() {
     if (!$product instanceof WC_Product) { return; }
     $rating = (float) $product->get_average_rating();
     $count = $product->get_rating_count();
+    // Native aggregates contain approved ratings only; never render an empty star row.
+    if ($count < 1 || $rating <= 0) { return; }
     $label = $count ? sprintf('%.1f out of 5, %d ratings', $rating, $count) : 'No ratings yet';
     echo '<span class="loomara-rating" role="img" aria-label="' . esc_attr($label) . '"><span class="rating-stars" aria-hidden="true"><span style="width:' . esc_attr(min(100, max(0, $rating * 20))) . '%">★★★★★</span>☆☆☆☆☆</span><span class="rating-caption">' . esc_html($count ? number_format_i18n($rating, 1) . ' (' . $count . ')' : 'Be the first to rate') . '</span></span>';
 }

@@ -1,4 +1,5 @@
 .home-offer-carousel{position:relative}
+.home-offer-track picture{display:block;width:100%}
 .home-offer-viewport{overflow:hidden;touch-action:pan-y}
 .home-offer-carousel .home-offer-track{display:flex;transition:transform .55s ease}
 .home-offer-carousel .home-offer-track>a{display:block;flex:0 0 100%;min-width:0;width:100%}
@@ -13,3 +14,4 @@
 .home-offer-controls button:hover{background:#e9dfcf}
 .home-offer-controls button:focus-visible,.home-offer-track>a:focus-visible{outline:2px solid #142944;outline-offset:-3px}
 @media(prefers-reduced-motion:reduce){.home-offer-carousel .home-offer-track{transition:none}}
+@media(max-width:620px){.home-offer-carousel .home-offer-track img{aspect-ratio:1122/1402;object-fit:contain}}

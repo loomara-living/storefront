@@ -2,12 +2,13 @@
 
 All release details are maintained in this single file, newest first. Historical notes describe the behaviour and policies at the time of each release.
 
-## v6.5.2 — Restore original mobile banners
+## v6.5.2 — Original banners and matching Recently viewed cards
 
 - Revert the three portrait mobile banners, responsive picture sources and mobile aspect-ratio override.
 - Restore the exact pre-v6.5.0 homepage banner markup/styles; the original desktop artwork now serves all screen sizes again.
 - Remove generated portrait assets from the deployed theme; recoverable in earlier Git history.
-- Recently viewed card-format work remains local and is excluded. No other storefront, customer, commerce or integration data changes.
+- Match Recently viewed with New collection product cards using shared native classes, image frames, titles, ratings, price and product-option links. Public rating metadata only; browser-local history, exact variant links and eight-item endpoint limit are retained. No automatic cart mutation or customer data exposure.
+- Recently viewed browser-state, image/grid and public-visibility tests pass. No other storefront, customer, commerce or integration data changes.
 
 ## v6.5.1 — Revert aesthetic refresh; retain mobile artwork only
 

@@ -6,7 +6,7 @@ function loomara_recent_product_row($id){
     $parent=$p->is_type('variation')?wc_get_product($p->get_parent_id()):$p;
     if(!$parent || $parent->get_status()!=='publish' || !$parent->is_visible() || post_password_required($parent->get_id()) || $p->get_status()!=='publish' || ($p->is_type('variation')&&!$p->variation_is_visible())){return null;}
     $image=$p->get_image_id()?:$parent->get_image_id();
-    return ['id'=>$p->get_id(),'parent'=>$parent->get_id(),'name'=>$p->get_name(),'url'=>$p->get_permalink(),'image'=>$image?wp_get_attachment_image_url($image,'woocommerce_thumbnail'):wc_placeholder_img_src('woocommerce_thumbnail'),'price'=>wp_strip_all_tags(html_entity_decode($p->get_price_html(),ENT_QUOTES,get_bloginfo('charset'))),'stock'=>$p->is_in_stock()?'':'Out of stock'];
+    return ['id'=>$p->get_id(),'parent'=>$parent->get_id(),'name'=>$p->get_name(),'url'=>$p->get_permalink(),'image'=>$image?wp_get_attachment_image_url($image,'woocommerce_thumbnail'):wc_placeholder_img_src('woocommerce_thumbnail'),'price'=>wp_strip_all_tags(html_entity_decode($p->get_price_html(),ENT_QUOTES,get_bloginfo('charset'))),'stock'=>$p->is_in_stock()?'':'Out of stock','rating'=>method_exists($parent,'get_average_rating')?(float)$parent->get_average_rating():0,'rating_count'=>method_exists($parent,'get_rating_count')?(int)$parent->get_rating_count():0,'action'=>$p->is_in_stock()?'Choose options':'Read more'];
 }
 add_action('rest_api_init',function(){
     if(!function_exists('wc_get_product')){return;}
@@ -19,7 +19,7 @@ add_action('rest_api_init',function(){
 });
 function loomara_recent_products_section(){
     static $shown=false;if($shown){return;}$shown=true;
-    echo '<section class="loomara-recent" data-recent-products hidden aria-labelledby="loomara-recent-title"><header><div><p class="eyebrow">Continue exploring</p><h2 id="loomara-recent-title">Recently viewed</h2></div><button type="button" data-recent-clear>Clear history</button></header><p class="recent-privacy">Saved on this browser for up to 30 days. Not shared with other customers.</p><ul class="recent-product-grid"></ul><p role="status" data-recent-status></p></section>';
+    echo '<section class="loomara-recent recent-native-cards home-products" data-recent-products hidden aria-labelledby="loomara-recent-title"><header class="section-heading"><div><p class="eyebrow">Continue exploring</p><h2 id="loomara-recent-title">Recently viewed</h2></div><button type="button" data-recent-clear>Clear history</button></header><p class="recent-privacy">Saved on this browser for up to 30 days. Not shared with other customers.</p><div class="home-product-grid"><div class="woocommerce"><ul class="recent-product-grid products columns-4"></ul></div></div><p role="status" data-recent-status></p></section>';
 }
 add_action('woocommerce_after_single_product_summary','loomara_recent_products_section',25);
 add_action('wp_enqueue_scripts',function(){

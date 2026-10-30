@@ -13,6 +13,11 @@
 @media(min-width:901px){.woocommerce-shell > .loomara-recent{margin-left:248px}}
 @media(min-width:901px) and (max-width:1150px){.woocommerce-shell > .loomara-recent .recent-product-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
 .recent-product-grid h3{font-size:1rem;margin:.75rem 0 .4rem}.recent-product-grid p{margin:.3rem 0}
+/* Use the same native card classes/styles as New collection; no separate mini-card design. */
+.recent-native-cards .woocommerce ul.products{margin-top:1.5rem!important}
+.recent-native-cards .woocommerce ul.products li.product a.button{display:inline-flex;grid-column:1/-1;grid-row:3}
+.recent-native-cards .woocommerce ul.products li.product .price{margin-top:0}
+.recent-native-cards .recent-product-grid .recent-stock{font:500 .72rem/1.4 var(--sans);color:var(--ink-soft)}
 .recent-product-grid a:focus-visible,.loomara-recent button:focus-visible,.loomara-buy-again summary:focus-visible{outline:2px solid currentColor;outline-offset:4px}
 .loomara-order-journey,.loomara-buy-again{margin:2rem 0;padding:1.5rem;border:1px solid #ded4c5;border-radius:14px;background:#fffdf8;color:#102a48}
 .loomara-order-journey h2{margin-top:0;font-size:clamp(1.6rem,3vw,2rem)}.journey-current{padding-bottom:1rem;border-bottom:1px solid #ded4c5}

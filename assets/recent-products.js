@@ -22,8 +22,15 @@
         const saved=rows.find(r=>r.id===item.id&&r.parent===item.parent);
         for(const [key,value] of Object.entries(saved?.attributes||{})){if(/^attribute_[a-z0-9_-]+$/i.test(key)&&typeof value==='string'&&value.length<=200)href.searchParams.set(key,value);}
         const li=document.createElement('li'),a=document.createElement('a'),img=document.createElement('img'),title=document.createElement('h3'),price=document.createElement('p');
+        li.className='product';a.className='woocommerce-LoopProduct-link woocommerce-loop-product__link';title.className='woocommerce-loop-product__title';price.className='price';
         a.href=href.href;img.src=item.image;img.alt=item.name;img.loading='lazy';img.width=320;img.height=320;title.textContent=item.name;price.textContent=item.price;
-        a.append(img,title,price);if(item.stock){const stock=document.createElement('span');stock.textContent=item.stock;a.append(stock);}li.append(a);list.append(li);
+        const rating=document.createElement('span'),stars=document.createElement('span'),fill=document.createElement('span'),caption=document.createElement('span');
+        const average=Math.min(5,Math.max(0,Number(item.rating)||0)),count=Math.max(0,Math.floor(Number(item.rating_count)||0));
+        rating.className='loomara-rating';rating.setAttribute('role','img');rating.setAttribute('aria-label',count?`${average.toFixed(1)} out of 5, ${count} ratings`:'No ratings yet');
+        stars.className='rating-stars';stars.setAttribute('aria-hidden','true');fill.style.width=`${average*20}%`;fill.textContent='★★★★★';stars.append(fill,document.createTextNode('☆☆☆☆☆'));caption.className='rating-caption';caption.textContent=count?`${average.toFixed(1)} (${count})`:'Be the first to rate';rating.append(stars,caption);
+        a.append(img,title,rating,price);if(item.stock){const stock=document.createElement('span');stock.className='recent-stock';stock.textContent=item.stock;a.append(stock);}
+        const action=document.createElement('a');action.className='button';action.href=href.href;action.textContent=item.action==='Read more'?'Read more':'Choose options';action.setAttribute('aria-label',`${action.textContent} for ${item.name}`);
+        li.append(a,action);list.append(li);
       }
       box.hidden=!list.children.length;
     }catch{/* Catalogue remains usable when storage/network is unavailable. */}

@@ -2,6 +2,10 @@
 
 All release details are maintained in this single file, newest first. Historical notes describe the behaviour and policies at the time of each release.
 
+## v6.5.4 — Mobile COMBO heading spacing
+
+- Preserve a word separator when the banner heading's desktop line break is hidden on mobile. No coupon, cart, payment or settings changes.
+
 ## v6.5.3 — Separate bedding COMBO offer and success notice
 
 - COMBO: 15% off combo sets or separately added bedsheets and comforters together. Pillow/cushion covers qualify only with either eligible bedding option. Unpaired standalone bedding remains excluded even with a combo set. No stacking; native WooCommerce discount validation remains authoritative. Saved coupon only, with no virtual fallback when disabled.

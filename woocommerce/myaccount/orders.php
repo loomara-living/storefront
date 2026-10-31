@@ -10,6 +10,12 @@ do_action('woocommerce_before_account_orders', $has_orders);
   <?php if(isset($_GET['testimonial'])&&$_GET['testimonial']==='submitted'): ?><p role="status">Thank you. Your testimonial is awaiting review before it appears publicly.</p><?php endif; ?>
   <div class="testimonial-layout"><div>
   <form method="get" action="<?php echo esc_url(wc_get_account_endpoint_url('orders')); ?>" class="order-status-filter">
+    <label for="order-search">Search orders</label>
+    <input type="search" id="order-search" name="order_search" maxlength="100" placeholder="Order number or product title" value="<?php echo esc_attr(loomara_account_order_search_term()); ?>">
+    <button class="button" type="submit">Search</button>
+  <details class="orders-filter-disclosure">
+    <summary aria-label="Search and filter orders"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/><circle cx="8" cy="6" r="2" fill="currentColor"/><circle cx="16" cy="12" r="2" fill="currentColor"/><circle cx="10" cy="18" r="2" fill="currentColor"/></svg></summary>
+    <div class="orders-filter-content">
     <label for="order-status-filter">Order status</label>
     <select id="order-status-filter" name="order_status">
       <option value="all" <?php selected($selection,'all'); ?>>All orders</option>
@@ -20,6 +26,8 @@ do_action('woocommerce_before_account_orders', $has_orders);
     </select>
     <?php do_action('loomara_orders_filter_fields'); ?>
     <button class="button" type="submit">Apply filter</button>
+    </div>
+  </details>
   </form>
   <p class="orders-filter-note"><?php echo $selection === 'successful' ? 'Showing paid/accepted orders.' : 'Showing '.esc_html($selection === 'all' ? 'all placed orders, including verified payment failures' : loomara_customer_order_status_label($selection)).'.'; ?> Unfinished checkout attempts remain hidden.</p>
   <?php if ($has_orders) : ?>
@@ -50,9 +58,9 @@ do_action('woocommerce_before_account_orders', $has_orders);
     <?php do_action('woocommerce_before_account_orders_pagination'); ?>
     <?php if ($customer_orders->max_num_pages > 1) : ?>
       <nav class="order-card-pagination" aria-label="Order pages">
-      <?php if ($current_page > 1) : ?><a class="button" href="<?php echo esc_url(add_query_arg('order_status',$selection,wc_get_endpoint_url('orders',$current_page-1))); ?>">Previous</a><?php endif; ?>
+      <?php if ($current_page > 1) : ?><a class="button" href="<?php echo esc_url(add_query_arg(['order_status'=>$selection,'order_search'=>loomara_account_order_search_term()],wc_get_endpoint_url('orders',$current_page-1))); ?>">Previous</a><?php endif; ?>
       <span>Page <?php echo absint($current_page); ?> of <?php echo absint($customer_orders->max_num_pages); ?></span>
-      <?php if ($current_page < $customer_orders->max_num_pages) : ?><a class="button" href="<?php echo esc_url(add_query_arg('order_status',$selection,wc_get_endpoint_url('orders',$current_page+1))); ?>">Next</a><?php endif; ?>
+      <?php if ($current_page < $customer_orders->max_num_pages) : ?><a class="button" href="<?php echo esc_url(add_query_arg(['order_status'=>$selection,'order_search'=>loomara_account_order_search_term()],wc_get_endpoint_url('orders',$current_page+1))); ?>">Next</a><?php endif; ?>
       </nav>
     <?php endif; ?>
   <?php else : ?>

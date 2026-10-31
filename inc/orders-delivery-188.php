@@ -35,6 +35,32 @@ function loomara_successful_order_statuses() {
     }
     return array_values(array_unique($statuses));
 }
+function loomara_account_order_search_term() {
+    $raw = $_GET['order_search'] ?? '';
+    return is_scalar($raw) ? substr(sanitize_text_field(wp_unslash((string)$raw)), 0, 100) : '';
+}
+function loomara_account_order_search_ids($term, $statuses) {
+    $uid = get_current_user_id();
+    if (!$uid || $term === '') { return []; }
+    $matches = [];
+    // Native CRUD supports both legacy storage and HPOS. Search purchased item
+    // names, not current catalogue titles, and never query another customer's orders.
+    for ($page = 1; ; $page++) {
+        $batch = wc_get_orders(['customer'=>$uid, 'status'=>$statuses, 'limit'=>100, 'page'=>$page, 'paginate'=>true, 'orderby'=>'ID', 'order'=>'ASC']);
+        foreach ($batch->orders as $order) {
+            if ((int)$order->get_customer_id() !== $uid || loomara_customer_order_hidden($order)) { continue; }
+            $found = stripos((string)$order->get_order_number(), $term) !== false;
+            if (!$found) {
+                foreach ($order->get_items('line_item') as $item) {
+                    if (stripos($item->get_name(), $term) !== false) { $found = true; break; }
+                }
+            }
+            if ($found) { $matches[] = $order->get_id(); }
+        }
+        if ($page >= (int)$batch->max_num_pages) { break; }
+    }
+    return $matches;
+}
 function loomara_account_order_query($args) {
     $selected = loomara_order_status_selection();
     $args['status'] = $selected === 'all' ? array_values(array_unique(array_merge(array_keys(wc_get_order_statuses()),['wc-checkout-draft']))) : ($selected === 'successful' ? loomara_successful_order_statuses() : ($selected === 'pending'?['pending','checkout-draft']:[$selected]));
@@ -42,6 +68,12 @@ function loomara_account_order_query($args) {
     $args['customer'] = get_current_user_id();
     // Exclude before pagination so hidden attempts do not produce empty pages/counts.
     $args['exclude']=array_values(array_unique(array_merge((array)($args['exclude']??[]),loomara_hidden_unpaid_order_ids())));
+    $term = loomara_account_order_search_term();
+    if ($term !== '') {
+        $ids = loomara_account_order_search_ids($term, $args['status']);
+        if (!empty($args['include'])) { $ids = array_values(array_intersect($ids, (array)$args['include'])); }
+        $args['include'] = $ids ?: [0];
+    }
     return $args;
 }
 add_filter('woocommerce_my_account_my_orders_query', 'loomara_account_order_query', 100);

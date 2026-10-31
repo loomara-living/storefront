@@ -67,6 +67,8 @@ function loomara_combo_cart_offer() {
     echo '<aside class="loomara-combo-offer loomara-combo-cart" aria-label="COMBO offer"><span class="combo-cart-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M3 4h8l10 10-7 7L3 10V4Z"/><circle cx="7.5" cy="8" r="1"/></svg></span><div class="combo-cart-copy"><strong>A little better together</strong><p>Save 15% on combo sets, or bedsheets and comforters added separately together, with <strong>COMBO</strong>.</p>';
     if (isset($kinds['sheet']) && !isset($kinds['comforter']) && !isset($kinds['set'])) {
         echo '<a href="'.esc_url(home_url('/product-category/comforters/')).'">Add a matching comforter to unlock COMBO &rarr;</a>';
+    } elseif (isset($kinds['comforter']) && !isset($kinds['sheet']) && !isset($kinds['set'])) {
+        echo '<a href="'.esc_url(home_url('/product-category/bedsheets/')).'">Add a matching bedsheet to unlock COMBO &rarr;</a>';
     }
     echo '</div></aside>';
 }

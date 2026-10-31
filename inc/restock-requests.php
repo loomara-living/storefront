@@ -93,6 +93,6 @@ function loomara_restock_customer_details() {
     if($page*50<count($users))echo '<a class="button" href="'.esc_url(add_query_arg('restock_customers_page',$page+1)).'">More customers</a>';
 }
 add_action('wp_enqueue_scripts',function() {
-    wp_enqueue_style('loomara-restock',get_template_directory_uri().'/assets/restock.css',[],'1');
+    wp_enqueue_style('loomara-restock',get_template_directory_uri().'/assets/restock.css',[],filemtime(__DIR__.'/../assets/restock.css'));
     if (is_product()) { wp_enqueue_script('loomara-restock',get_template_directory_uri().'/assets/restock.js',['jquery','wc-add-to-cart-variation'],'1',true); }
 });

@@ -2,6 +2,14 @@
 
 All release details are maintained in this single file, newest first. Historical notes describe the behaviour and policies at the time of each release.
 
+## v6.5.6 — Catalogue alignment and account order search
+
+- Add the reciprocal bedsheet prompt for comforter-only carts; coupon rules stay unchanged.
+- Preserve native sale-price markup in Recently viewed, with accessibility labels hidden visually and a restricted DOM renderer.
+- Overlay Out of stock badges on catalogue images; reserve mobile rating and price space for aligned cards.
+- Add owner-scoped My Orders search by order reference or purchased product title, retaining status filtering and pagination. Keep mobile search visible and collapse only status controls behind the filter icon.
+- No order, payment, refund, stock, email or coupon-setting changes. Use protected non-SSH deployment.
+
 ## v6.5.5 — Carousel COMBO slide and refined cart-only offer
 
 - Move COMBO into the existing homepage offer carousel as its fourth slide; remove the standalone section. Keep three-second rotation, arrows, swipe, focus/inert handling and reduced-motion safeguards.

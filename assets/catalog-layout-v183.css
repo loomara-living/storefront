@@ -107,3 +107,14 @@
   .catalog-filter-panel .catalog-filters select,.woocommerce-shell .collection-sort select{transition:none}
 }
 
+/* Mobile card rhythm: reserve equal space even when ratings or sale prices wrap. */
+@media(max-width:620px){
+  .woocommerce-shell ul.products li.product .loomara-rating,
+  .home-product-grid ul.products li.product .loomara-rating{box-sizing:border-box;min-height:3rem;flex-shrink:0;align-content:start}
+  .woocommerce-shell ul.products li.product .price,
+  .home-product-grid ul.products li.product .price{box-sizing:border-box;height:auto;min-height:3rem;align-content:flex-start;align-items:baseline;flex-shrink:0;line-height:1.4;row-gap:2px}
+  .woocommerce-shell ul.products li.product .price del,
+  .woocommerce-shell ul.products li.product .price ins,
+  .home-product-grid ul.products li.product .price del,
+  .home-product-grid ul.products li.product .price ins{white-space:nowrap}
+}

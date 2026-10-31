@@ -23,7 +23,22 @@
         for(const [key,value] of Object.entries(saved?.attributes||{})){if(/^attribute_[a-z0-9_-]+$/i.test(key)&&typeof value==='string'&&value.length<=200)href.searchParams.set(key,value);}
         const li=document.createElement('li'),a=document.createElement('a'),img=document.createElement('img'),title=document.createElement('h3'),price=document.createElement('p');
         li.className='product';a.className='woocommerce-LoopProduct-link woocommerce-loop-product__link';title.className='woocommerce-loop-product__title';price.className='price';
-        a.href=href.href;img.src=item.image;img.alt=item.name;img.loading='lazy';img.width=320;img.height=320;title.textContent=item.name;price.textContent=item.price;
+        a.href=href.href;img.src=item.image;img.alt=item.name;img.loading='lazy';img.width=320;img.height=320;title.textContent=item.name;
+        if(typeof item.price_html==='string'){
+          const source=new DOMParser().parseFromString(item.price_html,'text/html');
+          const copy=(node,target)=>{
+            if(node.nodeType===3){target.append(document.createTextNode(node.textContent));return;}
+            if(node.nodeType!==1)return;
+            if(!['SPAN','BDI','DEL','INS','SMALL'].includes(node.tagName))return;
+            const element=document.createElement(node.tagName.toLowerCase());
+            if(node.classList.contains('screen-reader-text'))element.className='screen-reader-text';
+            else if(node.hasAttribute('class'))element.className=node.className;
+            if(node.getAttribute('aria-hidden')==='true')element.setAttribute('aria-hidden','true');
+            for(const child of node.childNodes)copy(child,element);
+            target.append(element);
+          };
+          for(const child of source.body.childNodes)copy(child,price);
+        }else price.textContent=item.price;
         const rating=document.createElement('span'),stars=document.createElement('span'),fill=document.createElement('span'),caption=document.createElement('span');
         const average=Math.min(5,Math.max(0,Number(item.rating)||0)),count=Math.max(0,Math.floor(Number(item.rating_count)||0));
         rating.className='loomara-rating';rating.setAttribute('role','img');rating.setAttribute('aria-label',count?`${average.toFixed(1)} out of 5, ${count} ratings`:'No ratings yet');

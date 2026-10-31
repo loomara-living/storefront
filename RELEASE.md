@@ -2,6 +2,12 @@
 
 All release details are maintained in this single file, newest first. Historical notes describe the behaviour and policies at the time of each release.
 
+## v6.5.9 — Offer cleanup and compact presentation
+
+- Retire Diwali from the carousel, public offers and checkout; prevent new redemption while preserving historical records.
+- Use an original percentage-badge Offers icon, compact Story actions and simplified Cart offer text/inline Explore links.
+- BUY2 and COMBO eligibility, rates and non-stacking rules unchanged. No order/payment/refund/stock/email replay.
+
 ## v6.5.8 — BUY2 and public offer discovery
 
 - Add the saved BUY2 coupon guard: 15% off the merchandise cart, minimum ₹2,499 before coupons, at least two units in one eligible category. Individual use only; no stacking or automatic coupon creation.

@@ -6,6 +6,11 @@ function loomara_offer_plan_113(){return [
     'diwali'=>['rate'=>10,'cap'=>500,'until'=>'2026-11-15','description'=>'10% off, up to ₹500. Valid through 15 November 2026.'],
 ];}
 function loomara_offer_rates_113(){static $rates;return $rates??($rates=new WeakMap);}
+// Retire new redemption without deleting historical coupon/order records.
+add_filter('woocommerce_coupon_is_valid',function($valid,$coupon){
+    if(strtolower($coupon->get_code())==='diwali'){throw new Exception('This offer is no longer available.');}
+    return $valid;
+},50,2);
 function loomara_offer_cap_items_113($items,$coupon,$discounts){
     $plan=loomara_offer_plan_113()[strtolower($coupon->get_code())]??null;
     if(!$plan||$coupon->get_meta('_loomara_offer_113')!=='yes'||$coupon->get_discount_type()!=='percent'){return $items;}
@@ -53,7 +58,7 @@ function loomara_magic_offer_response_113($response,$handler,$request){
     if($order&&$order->needs_payment()){
         foreach($data['promotions'] as $promotion){
             $code=is_string($promotion['code']??null)?strtolower($promotion['code']):'';
-            if(!in_array($code,['welcome20','flat5','diwali','combo','buy2'],true)){continue;}
+            if(!in_array($code,['welcome20','flat5','combo','buy2'],true)){continue;}
             if($code==='welcome20'&&!loomara_welcome_order_eligible_113($order)){continue;}
             $coupon=new WC_Coupon($code);
             if(!$coupon->get_id()||(!in_array($code,['welcome20','combo','buy2'],true)&&$coupon->get_meta('_loomara_offer_113')!=='yes')){continue;}
@@ -69,12 +74,11 @@ add_filter('rest_request_after_callbacks','loomara_magic_offer_response_113',100
 add_action('admin_menu',function(){add_submenu_page('woocommerce','Checkout offer update','Checkout offer update','manage_woocommerce','loomara-offers-113','loomara_offer_admin_113');});
 function loomara_offer_admin_113(){
     if(!current_user_can('manage_woocommerce')){return;}
-    echo '<div class="wrap"><h1>Checkout offers v1.11.3</h1><p>Create FLAT5 (5%, maximum ₹500, through 31 October 2026) and DIWALI (10%, maximum ₹500, through 15 November 2026), each usable on its own. Preserve WELCOME10 limits and add a public description. Move only duplicate NEWUSER to recoverable Trash. Existing orders remain unchanged.</p>';
-    if(get_option('loomara_offers_113_complete')){echo '<p><strong>Update completed.</strong></p></div>';return;}
-    echo '<form method="post" action="'.esc_url(admin_url('admin-post.php')).'"><input type="hidden" name="action" value="loomara_offers_113">';wp_nonce_field('loomara_offers_113');echo '<button class="button button-primary">Apply confirmed offers</button></form></div>';
+    echo '<div class="wrap"><h1>Checkout offer update</h1><p>This one-time offer setup has been retired. Manage current coupons in WooCommerce. Historical orders remain unchanged.</p></div>';
 }
 function loomara_offer_migrate_113(){
     if(!current_user_can('manage_woocommerce')){wp_die('Administrator access required.',403);}check_admin_referer('loomara_offers_113');
+    wp_die('This legacy offer setup has been retired.',410);
     if(get_option('loomara_offers_113_complete')){wp_safe_redirect(admin_url('admin.php?page=loomara-offers-113'));exit;}
     foreach(['flat5','diwali'] as $code){if(wc_get_coupon_id_by_code($code)){wp_die('An offer code already exists. Review it before applying this update.',409);}}
     $welcome=new WC_Coupon('welcome10');$duplicate=new WC_Coupon('newuser');

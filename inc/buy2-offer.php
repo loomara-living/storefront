@@ -32,7 +32,7 @@ add_filter('woocommerce_coupon_get_individual_use', function($value, $coupon) {
 function loomara_buy2_cart_details() {
     $coupon = new WC_Coupon('buy2');
     if (!loomara_buy2_configured($coupon)) { return; }
-    echo '<div class="combo-buy2-details"><strong>More layers. More to love.</strong><p>Use <strong>BUY2</strong> for 15% off your cart when you choose at least two bedsheets, two comforters, two combo sets, or two pillow/cushion-cover items.</p><p class="buy2-terms">Minimum cart subtotal ₹2,499 before coupons. Different designs in the same category count. Cannot be combined with other coupons.</p></div>';
+    echo '<div class="combo-buy2-details"><p>Use <strong>BUY2</strong> for 15% off your cart when you choose at least two items from same category.</p></div>';
 }
 function loomara_buy2_home_banner() {
     if (!loomara_buy2_configured(new WC_Coupon('buy2'))) { return; }

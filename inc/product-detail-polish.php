@@ -27,7 +27,7 @@ add_filter('woocommerce_available_variation',function($data,$parent,$variation){
 function loomara_detail_offer() {
     global $product;if(!$product instanceof WC_Product || !wc_coupons_enabled())return;
     // Display only the owner's intentionally public codes, never enumerate private coupons.
-    foreach(['welcome20','diwali','flat5'] as $code) {
+    foreach(['welcome20','flat5'] as $code) {
         $coupon=new WC_Coupon($code);
         if(!$coupon->get_id() || get_post_status($coupon->get_id())!=='publish')continue;
         $expires=$coupon->get_date_expires();

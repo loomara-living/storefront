@@ -3,7 +3,7 @@
 defined('ABSPATH') || exit;
 function loomara_header_offers_button() {
     if (!is_front_page()) { return; }
-    echo '<button type="button" class="header-icon header-offers" data-offers-open aria-label="Offers" title="Offers" aria-haspopup="dialog" aria-controls="loomara-offers-dialog"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 4h8l10 10-7 7L3 10V4Z"/><circle cx="7.5" cy="8" r="1"/><path d="m11 11 5 5m-1-5h.01M12 16h.01"/></svg></button>';
+    echo '<button type="button" class="header-icon header-offers" data-offers-open aria-label="Offers" title="Offers" aria-haspopup="dialog" aria-controls="loomara-offers-dialog"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m12 2 2.5 1.7 3-.1.9 2.9 2.5 1.7-.9 2.9.9 2.9-2.5 1.7-.9 2.9-3-.1L12 22l-2.5-1.6-3 .1-.9-2.9-2.5-1.7.9-2.9-.9-2.9 2.5-1.7.9-2.9 3 .1L12 2Z"/><path d="m8.5 15.5 7-7"/><circle cx="8.5" cy="8.5" r="1"/><circle cx="15.5" cy="15.5" r="1"/></svg></button>';
 }
 function loomara_header_offers_data() {
     if (!function_exists('WC') || !class_exists('WC_Coupon')) { wp_send_json_error(['message'=>'Offers are temporarily unavailable.'],503); }
@@ -14,7 +14,6 @@ function loomara_header_offers_data() {
     $copy=[
         'welcome20'=>'20% off your first eligible signed-in order.',
         'flat5'=>'5% off, up to ₹500.',
-        'diwali'=>'10% off, up to ₹500.',
         'combo'=>'15% off eligible combo sets or a bedsheet + comforter pair. Covers qualify with eligible bedding.',
         'buy2'=>'15% off your cart: at least two units in one eligible category. Minimum ₹2,499 before coupons. Cannot be combined with other coupons.',
     ];

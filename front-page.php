@@ -11,10 +11,10 @@
     <a href="<?php echo esc_url(class_exists('WooCommerce') ? wc_get_page_permalink('shop') : home_url('/shop/')); ?>" aria-label="Explore the Loomara collection">
       <img src="<?php echo esc_url(get_template_directory_uri() . '/assets/homepage-shop-ad.jpg'); ?>" width="1983" height="793" alt="Explore our collection — bedsheets, comforters, cushion covers and combo sets. Shop now." loading="lazy" decoding="async">
     </a>
+    <?php if (function_exists('loomara_combo_home_banner')) { loomara_combo_home_banner(); } ?>
     </div></div>
     <div class="home-offer-controls" hidden><button type="button" data-offer-prev aria-label="Previous offer">‹</button><span data-offer-position aria-live="off">1 / 3</span><button type="button" data-offer-next aria-label="Next offer">›</button><button type="button" data-offer-pause aria-pressed="false">Pause</button></div>
   </section>
-  <?php if (function_exists('loomara_combo_home_banner')) { loomara_combo_home_banner(); } ?>
   <section class="hero">
     <div class="hero-copy reveal">
       <p class="eyebrow">A softer way home</p>

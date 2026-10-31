@@ -2,6 +2,13 @@
 
 All release details are maintained in this single file, newest first. Historical notes describe the behaviour and policies at the time of each release.
 
+## v6.5.5 — Carousel COMBO slide and refined cart-only offer
+
+- Move COMBO into the existing homepage offer carousel as its fourth slide; remove the standalone section. Keep three-second rotation, arrows, swipe, focus/inert handling and reduced-motion safeguards.
+- Show the owner-approved compact offer text only in Cart, with cream/navy styling, decorative offer icon and code badge. Remove COMBO banners from Shop/Sale/category loops; retain the matching-comforter link for unpaired bedsheets.
+- Eligibility, 15% value, coupon activation, stacking restrictions and financial workflows remain unchanged. No historical replay.
+- Deploy with a temporary core WordPress maintenance file outside the theme, verify AJAX protection before publishing, then remove it and verify recovery. SSH remains disabled.
+
 ## v6.5.4 — Mobile COMBO heading spacing
 
 - Preserve a word separator when the banner heading's desktop line break is hidden on mobile. No coupon, cart, payment or settings changes.

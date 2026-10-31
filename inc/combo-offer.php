@@ -57,8 +57,11 @@ function loomara_combo_home_banner() {
 add_filter('woocommerce_coupon_get_individual_use', function($value, $coupon) {
     return strtolower($coupon->get_code()) === 'combo' ? true : $value;
 }, 30, 2);
-add_action('woocommerce_before_cart', function() {
+function loomara_combo_cart_offer() {
+    static $shown = false;
+    if ($shown) { return; }
     if (!WC()->cart || WC()->cart->is_empty()) { return; }
+    $shown = true;
     $kinds = [];
     foreach (WC()->cart->get_cart() as $line) { $kinds[loomara_combo_kind($line['data'])] = true; }
     echo '<aside class="loomara-combo-offer loomara-combo-cart" aria-label="COMBO offer"><span class="combo-cart-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M3 4h8l10 10-7 7L3 10V4Z"/><circle cx="7.5" cy="8" r="1"/></svg></span><div class="combo-cart-copy"><strong>A little better together</strong><p>Save 15% on combo sets, or bedsheets and comforters added separately together, with <strong>COMBO</strong>.</p>';
@@ -66,6 +69,13 @@ add_action('woocommerce_before_cart', function() {
         echo '<a href="'.esc_url(home_url('/product-category/comforters/')).'">Add a matching comforter to unlock COMBO &rarr;</a>';
     }
     echo '</div></aside>';
+}
+add_action('woocommerce_before_cart', 'loomara_combo_cart_offer');
+add_filter('render_block_woocommerce/cart', function($content) {
+    if (!function_exists('is_cart') || !is_cart() || is_admin()) { return $content; }
+    ob_start();
+    loomara_combo_cart_offer();
+    return ob_get_clean() . $content;
 });
 add_action('wp_enqueue_scripts', function() {
     if (!is_front_page() && !(function_exists('is_cart') && is_cart())) { return; }

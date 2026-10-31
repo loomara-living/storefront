@@ -6,6 +6,7 @@ All release details are maintained in this single file, newest first. Historical
 
 - Move COMBO into the existing homepage offer carousel as its fourth slide; remove the standalone section. Keep three-second rotation, arrows, swipe, focus/inert handling and reduced-motion safeguards.
 - Show the owner-approved compact offer text only in Cart, with cream/navy styling, decorative offer icon and code badge. Remove COMBO banners from Shop/Sale/category loops; retain the matching-comforter link for unpaired bedsheets.
+- Support both classic Cart and the WooCommerce Cart block, with one-per-request rendering to prevent duplicate offers.
 - Eligibility, 15% value, coupon activation, stacking restrictions and financial workflows remain unchanged. No historical replay.
 - Deploy with a temporary core WordPress maintenance file outside the theme, verify AJAX protection before publishing, then remove it and verify recovery. SSH remains disabled.
 

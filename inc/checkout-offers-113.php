@@ -53,10 +53,10 @@ function loomara_magic_offer_response_113($response,$handler,$request){
     if($order&&$order->needs_payment()){
         foreach($data['promotions'] as $promotion){
             $code=is_string($promotion['code']??null)?strtolower($promotion['code']):'';
-            if(!in_array($code,['welcome20','flat5','diwali','combo'],true)){continue;}
+            if(!in_array($code,['welcome20','flat5','diwali','combo','buy2'],true)){continue;}
             if($code==='welcome20'&&!loomara_welcome_order_eligible_113($order)){continue;}
             $coupon=new WC_Coupon($code);
-            if(!$coupon->get_id()||(!in_array($code,['welcome20','combo'],true)&&$coupon->get_meta('_loomara_offer_113')!=='yes')){continue;}
+            if(!$coupon->get_id()||(!in_array($code,['welcome20','combo','buy2'],true)&&$coupon->get_meta('_loomara_offer_113')!=='yes')){continue;}
             try{$valid=(new WC_Discounts($order))->is_coupon_valid($coupon);}catch(Throwable $e){$valid=false;}
             if($valid===true){$visible[]=$promotion;}
         }

@@ -15,6 +15,9 @@ function loomara_restock_badge() {
     }
 }
 add_action('woocommerce_before_shop_loop_item_title', 'loomara_restock_badge', 11);
+// Image-only frame anchors both badges without adding a row above the title.
+add_action('woocommerce_before_shop_loop_item_title', function(){ echo '<span class="loomara-product-image">'; }, 5);
+add_action('woocommerce_before_shop_loop_item_title', function(){ echo '</span>'; }, 20);
 function loomara_restock_form() {
     global $product;
     if (!($product instanceof WC_Product)) { return; }

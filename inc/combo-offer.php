@@ -66,10 +66,11 @@ function loomara_combo_cart_offer() {
     foreach (WC()->cart->get_cart() as $line) { $kinds[loomara_combo_kind($line['data'])] = true; }
     echo '<aside class="loomara-combo-offer loomara-combo-cart" aria-label="COMBO offer"><span class="combo-cart-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M3 4h8l10 10-7 7L3 10V4Z"/><circle cx="7.5" cy="8" r="1"/></svg></span><div class="combo-cart-copy"><strong>A little better together</strong><p>Save 15% on combo sets, or bedsheets and comforters added separately together, with <strong>COMBO</strong>.</p>';
     if (isset($kinds['sheet']) && !isset($kinds['comforter']) && !isset($kinds['set'])) {
-        echo '<a href="'.esc_url(home_url('/product-category/comforters/')).'">Add a matching comforter to unlock COMBO &rarr;</a>';
+        echo '<div class="combo-pair-prompt"><p>One more layer, a little more saving. Add a comforter to your bedsheet and unlock COMBO.</p><a class="combo-pair-link" href="'.esc_url(home_url('/product-category/comforters/')).'"><span>Explore comforters</span><span aria-hidden="true">&rarr;</span></a></div>';
     } elseif (isset($kinds['comforter']) && !isset($kinds['sheet']) && !isset($kinds['set'])) {
-        echo '<a href="'.esc_url(home_url('/product-category/bedsheets/')).'">Add a matching bedsheet to unlock COMBO &rarr;</a>';
+        echo '<div class="combo-pair-prompt"><p>One more layer, a little more saving. Add a bedsheet to your comforter and unlock COMBO.</p><a class="combo-pair-link" href="'.esc_url(home_url('/product-category/bedsheets/')).'"><span>Explore bedsheets</span><span aria-hidden="true">&rarr;</span></a></div>';
     }
+    if (function_exists('loomara_buy2_cart_details')) { loomara_buy2_cart_details(); }
     echo '</div></aside>';
 }
 add_action('woocommerce_before_cart', 'loomara_combo_cart_offer');

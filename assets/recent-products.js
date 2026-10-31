@@ -43,7 +43,10 @@
         const average=Math.min(5,Math.max(0,Number(item.rating)||0)),count=Math.max(0,Math.floor(Number(item.rating_count)||0));
         rating.className='loomara-rating';rating.setAttribute('role','img');rating.setAttribute('aria-label',count?`${average.toFixed(1)} out of 5, ${count} ratings`:'No ratings yet');
         stars.className='rating-stars';stars.setAttribute('aria-hidden','true');fill.style.width=`${average*20}%`;fill.textContent='★★★★★';stars.append(fill,document.createTextNode('☆☆☆☆☆'));caption.className='rating-caption';caption.textContent=count?`${average.toFixed(1)} (${count})`:'Be the first to rate';rating.append(stars,caption);
-        a.append(img,title,rating,price);if(item.stock){const stock=document.createElement('span');stock.className='recent-stock';stock.textContent=item.stock;a.append(stock);}
+        const frame=document.createElement('span');frame.className='loomara-product-image';frame.append(img);
+        if(item.on_sale===true){const sale=document.createElement('span');sale.className='onsale';sale.textContent='Sale';frame.append(sale);}
+        if(item.stock){const stock=document.createElement('span');stock.className='recent-stock';stock.textContent=item.stock;frame.append(stock);}
+        a.append(frame,title,rating,price);
         const action=document.createElement('a');action.className='button';action.href=href.href;action.textContent=item.action==='Read more'?'Read more':'Choose options';action.setAttribute('aria-label',`${action.textContent} for ${item.name}`);
         li.append(a,action);list.append(li);
       }

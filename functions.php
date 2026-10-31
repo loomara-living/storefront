@@ -36,6 +36,8 @@ require_once get_template_directory() . '/inc/email-otp.php';
 require_once get_template_directory() . '/inc/account-profile.php';
 require_once get_template_directory() . '/inc/offer-banner.php';
 require_once get_template_directory() . '/inc/combo-offer.php';
+require_once get_template_directory() . '/inc/buy2-offer.php';
+require_once get_template_directory() . '/inc/header-offers.php';
 require_once get_template_directory() . '/inc/catalog-repair.php';
 require_once get_template_directory() . '/inc/store-refinements.php';
 require_once get_template_directory() . '/inc/verified-ratings.php';

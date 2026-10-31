@@ -1,0 +1,15 @@
+.loomara-offers-dialog{box-sizing:border-box;width:min(520px,calc(100% - 24px));max-height:85dvh;padding:24px;border:1px solid #ded4c4;border-radius:16px;background:#fffaf3;color:#102a48;box-shadow:0 20px 80px #102a4833}
+.loomara-offers-dialog::backdrop{background:#102a4877}
+.loomara-offers-dialog>header{display:flex;align-items:start;justify-content:space-between;gap:12px}
+.loomara-offers-dialog h2{margin:0;font:500 1.8rem/1.2 var(--serif)}
+.loomara-offers-dialog .eyebrow{margin:0 0 8px}
+.loomara-offers-dialog [data-offers-close]{flex:none;width:44px;height:44px;border:0;border-radius:50%;background:#eee7db;color:inherit;font-size:26px;cursor:pointer}
+.offers-checkout-note,.loomara-offers-dialog [role=status]{font:.85rem/1.6 var(--sans);color:#53616e}
+.header-offer-card{border-top:1px solid #ded4c4;padding:18px 0;font:.87rem/1.6 var(--sans)}
+.header-offer-card-top{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.header-offer-card-top strong{letter-spacing:.08em;background:#eee5d5;padding:4px 10px;border-radius:4px}
+.header-offer-card button{min-height:44px;padding:8px 18px;background:transparent;border:1px solid #a49379;border-radius:8px;color:#102a48;font:600 .8rem var(--sans);cursor:pointer}
+.header-offer-card p{margin:8px 0}.header-offer-card small{display:block;color:#53616e}.header-offer-card .offer-eligible{color:#235d43}.header-offer-card .offer-ineligible{color:#765742}
+.offers-cart-link{display:inline-flex;align-items:center;min-height:44px;color:#102a48;text-underline-offset:4px}
+.loomara-offers-dialog button:focus-visible,.offers-cart-link:focus-visible{outline:2px solid #102a48;outline-offset:3px}
+@media(max-width:620px){.home .site-header{gap:4px;padding-inline:12px}.home .site-header .header-actions{gap:0}.home .site-header .header-icon{width:34px;padding:5px;box-sizing:border-box}.home .site-header .header-icon svg{width:23px;height:23px}.home .site-header .wordmark{min-width:0}.loomara-offers-dialog{padding:18px}.loomara-offers-dialog h2{font-size:1.5rem}}

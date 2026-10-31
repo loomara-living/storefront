@@ -29,6 +29,7 @@
   </nav>
   <?php if (class_exists('WooCommerce')) : ?>
     <div class="header-actions">
+      <?php if (function_exists('loomara_header_offers_button')) { loomara_header_offers_button(); } ?>
       <a class="header-icon header-search" href="#header-search-panel" aria-label="Search products" title="Search products" data-search-toggle aria-expanded="false" aria-controls="header-search-panel"><?php echo loomara_icon('search'); ?></a>
       <a class="header-icon header-account" href="<?php echo esc_url(wc_get_page_permalink('myaccount')); ?>" aria-label="Your account" title="Your account"><?php echo loomara_icon('user'); ?></a>
       <a class="header-icon header-wishlist" href="<?php echo esc_url(wc_get_account_endpoint_url('wishlist')); ?>" aria-label="Wishlist" title="Wishlist"><?php echo loomara_icon('heart'); ?></a>

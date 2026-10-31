@@ -54,6 +54,15 @@
 .story-invitation h2 { font-size:clamp(2.5rem,4vw,4.5rem); }
 .story-invitation p:not(.eyebrow) { max-width:650px; margin:0 auto 2rem; color:#d2dbe4; }
 .story-invitation .button { background:var(--cream); color:var(--ink); margin-right:1rem; }
+.story-actions{display:flex;justify-content:center;gap:24px;max-width:840px;margin:2.25rem auto 0}
+.story-invitation .story-action{display:flex;flex:1;align-items:center;justify-content:center;gap:clamp(1rem,3vw,2.5rem);min-width:0;min-height:80px;padding:20px 26px;box-sizing:border-box;border:1.5px solid transparent;border-radius:9px;text-decoration:none;font:600 clamp(1rem,1.7vw,1.25rem)/1.3 var(--sans);transition:background-color .2s,border-color .2s,transform .2s}
+.story-action svg{width:24px;height:24px;flex:none;transition:transform .2s}
+.story-invitation .story-action-shop{background:#ceaa6a;color:#102b4c}
+.story-invitation .story-action-contact{background:transparent;color:#fff;border-color:#bdccdc}
+.story-action:focus-visible{outline:3px solid #fff;outline-offset:5px}
+@media(hover:hover){.story-action-shop:hover{background:#dfbd80}.story-action-contact:hover{background:rgba(255,255,255,.07);border-color:#fff}.story-action:hover svg{transform:translateX(3px)}}
+@media(max-width:620px){.story-actions{flex-direction:column;gap:14px;max-width:380px}.story-invitation .story-action{min-height:64px;justify-content:space-between;padding:18px 24px}}
+@media(prefers-reduced-motion:reduce){.story-invitation .story-action,.story-action svg{transition:none}.story-action:hover svg{transform:none}}
 @media(max-width:900px) {
   .site-header { gap:.5rem; }
   .site-header .header-actions { gap:.1rem; }

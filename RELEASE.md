@@ -2,6 +2,14 @@
 
 All release details are maintained in this single file, newest first. Historical notes describe the behaviour and policies at the time of each release.
 
+## v6.5.8 — BUY2 and public offer discovery
+
+- Add the saved BUY2 coupon guard: 15% off the merchandise cart, minimum ₹2,499 before coupons, at least two units in one eligible category. Individual use only; no stacking or automatic coupon creation.
+- Add the generated BUY2 image as the fifth existing carousel slide and show the terms beside COMBO in Cart, gated on the saved configured coupon.
+- Add a homepage-only Offers icon with a private, uncached eligibility read and copy-code controls. Cart-condition failures show terms, not Not applicable; account restrictions remain labelled. Private/email-only coupon codes are not disclosed.
+- Update Story call-to-action buttons, place Sale/Out of stock badges at image top-left/bottom-left, and refine reciprocal cart pairing prompts.
+- No historical replay, orders, payments, refunds, inventory or email changes. Coupon activation is an explicit WooCommerce deployment step after the guards are verified live.
+
 ## v6.5.7 — Responsive order filter compatibility
 
 - Explicitly open the status controls on desktop and collapse them on mobile using the existing account script. Native details remain usable without JavaScript. Search stays outside the disclosure.

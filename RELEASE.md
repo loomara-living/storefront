@@ -2,6 +2,11 @@
 
 All release details are maintained in this single file, newest first. Historical notes describe the behaviour and policies at the time of each release.
 
+## v6.5.7 — Responsive order filter compatibility
+
+- Explicitly open the status controls on desktop and collapse them on mobile using the existing account script. Native details remain usable without JavaScript. Search stays outside the disclosure.
+- Follow-up from v6.5.6 live verification; no data or integration changes.
+
 ## v6.5.6 — Catalogue alignment and account order search
 
 - Add the reciprocal bedsheet prompt for comforter-only carts; coupon rules stay unchanged.

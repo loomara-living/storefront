@@ -13,7 +13,7 @@ do_action('woocommerce_before_account_orders', $has_orders);
     <label for="order-search">Search orders</label>
     <input type="search" id="order-search" name="order_search" maxlength="100" placeholder="Order number or product title" value="<?php echo esc_attr(loomara_account_order_search_term()); ?>">
     <button class="button" type="submit">Search</button>
-  <details class="orders-filter-disclosure">
+  <details class="orders-filter-disclosure" open>
     <summary aria-label="Search and filter orders"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/><circle cx="8" cy="6" r="2" fill="currentColor"/><circle cx="16" cy="12" r="2" fill="currentColor"/><circle cx="10" cy="18" r="2" fill="currentColor"/></svg></summary>
     <div class="orders-filter-content">
     <label for="order-status-filter">Order status</label>

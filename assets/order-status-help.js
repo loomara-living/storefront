@@ -1,4 +1,10 @@
 (() => {
+  const mobileOrders = window.matchMedia('(max-width: 900px)');
+  document.querySelectorAll('.orders-filter-disclosure').forEach((details) => {
+    const sync = () => { details.open = !mobileOrders.matches; };
+    sync();
+    mobileOrders.addEventListener('change', sync);
+  });
   const hover = window.matchMedia('(min-width: 768px) and (hover: hover) and (pointer: fine)');
   document.querySelectorAll('.order-status-help').forEach((details) => {
     const summary = details.querySelector('summary');
